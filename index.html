@@ -1,0 +1,292 @@
+---
+layout: home
+---
+
+<!--Avatar-->
+<section class="avatar-section">
+	<div class="container-fluid bg-container">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 left-semi">
+			</div>
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 right-semi">
+				<!-- <span class="title">LifeStyle</span> -->
+			</div>
+		</div>
+	</div>
+
+	<div class="container-fluid flow-img">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-lg-push-3 col-md-push-3 col-sm-push-3 col-xs-push-3 img-col">
+				<img class="lazy" src="images/avatar.png">
+			</div>
+		</div>
+	</div>
+</section>
+
+
+<!--Intro-->
+<section class="intro-section">
+	<h2>Average Jo.</h2>
+	<p>This is a personal blog for handcrafted, cameramade photography content, fashion styles from independent creatives around the world.</p>
+	<hr class="invis">
+</section>
+
+
+<!--Logs-->
+<div class="section-title">
+	<span>日常 · Logs<a href="category#Logs" title="">查看更多  <i class="fa fa-ellipsis-v section-title-icon"></i></a></span>
+</div>
+<section class="container-fluid log-section">
+	<div class="row">
+
+		{% for post in site.categories.Logs limit:1 offset:0 %}
+		<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 col-item-big">
+			<div class="masonry-box">
+				<a href="{{ site.baseurl }}{{ post.url }}" title="">
+					<img class="lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="">
+				</a>
+				<div class="shadoweffect">
+					<div class="shadow-desc">
+						<div class="blog-meta">
+							<span class="bg-aqua">{{post.tags | last}}</span>
+							<h4>{{post.title}}</h4>
+							<small>{{post.date | date:'%B %-d, %Y'}}</small>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+
+		<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+			<div class="row">
+
+				{% for post in site.categories.Logs limit:1 offset:1 %}
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-item-small">
+					<div class="masonry-box">
+						<a href="{{ site.baseurl }}{{ post.url }}">
+							<img class="lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="">
+						</a>
+						<div class="shadoweffect">
+							<div class="shadow-desc">
+								<div class="blog-meta">
+									<span>{{post.tags | last}}</span>
+									<h4>{{post.title}}</h4>
+									<small>{{post.date | date:'%B %-d, %Y'}}</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+
+				{% for post in site.categories.Logs limit:1 offset:2 %}
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-item-small">
+					<div class="masonry-box">
+						<a href="{{ site.baseurl }}{{ post.url }}" title="">
+							<img class="lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="">
+						</a>
+						<div class="shadoweffect">
+							<div class="shadow-desc">
+								<div class="blog-meta">
+									<span>{{post.tags | last}}</span>
+									<h4>{{post.title}}</h4>
+									<small>{{post.date | date:'%B %-d, %Y'}}</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+
+				{% for post in site.categories.Logs limit:1 offset:3 %}
+				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-item-small">
+					<div class="masonry-box">
+						<a href="{{ site.baseurl }}{{ post.url }}" title="">
+							<img class="lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="">
+						</a>
+						<div class="shadoweffect">
+							<div class="shadow-desc">
+								<div class="blog-meta">
+									<span>{{post.tags | last}}</span>
+									<h4>{{post.title}}</h4>
+									<small>{{post.date | date:'%B %-d, %Y'}}</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+
+			</div>
+		</div>
+
+		{% for post in site.categories.Logs limit:1 offset:4 %}
+		<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-item-big">
+			<div class="masonry-box">
+				<a href="{{ site.baseurl }}{{ post.url }}" title="">
+					<img class="lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="">
+				</a>
+				<div class="shadoweffect">
+					<div class="shadow-desc">
+						<div class="blog-meta">
+							<span>{{post.tags | last}}</span>
+							<h4>{{post.title}}</h4>
+							<small>{{post.date | date:'%B %-d, %Y'}}</small>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+
+	</div>
+
+<!--     <div class="row">
+		<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12 col-lg-item">
+
+			{% for post in site.categories.Logs limit:1 offset:5 %}
+			<div class="masonry-box">
+				<a href="{{ site.baseurl }}{{ post.url }}" title="">
+					<img class="img-fluid lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="" >
+				</a>
+				<div class="shadoweffect">
+					<div class="shadow-desc">
+						<div class="blog-meta">
+							<span>{{post.tags | last}}</span>
+							<h4><a href="{{ site.baseurl }}{{ post.url }}" title="">{{post.title}}</a></h4>
+							<small>{{post.date | date:'%B %-d, %Y'}}</small>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+
+		</div>
+
+		<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 col-sm-item">
+
+			{% for post in site.categories.Logs limit:1 offset:6 %}
+			<div class="masonry-box">
+				<a href="{{ site.baseurl }}{{ post.url }}" title="">
+					<img class="lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="" class="img-fluid">
+				</a>
+				<div class="shadoweffect">
+					<div class="shadow-desc">
+						<div class="blog-meta">
+							<span>{{post.tags | last}}</span>
+							<h4><a href="{{ site.baseurl }}{{ post.url }}" title="">{{post.title}}</a></h4>
+							<small>{{post.date | date: '%B %-d, %Y'}}</small>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+
+		</div>
+
+
+		<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 col-md-item">
+
+			{% for post in site.categories.Logs limit:1 offset:7 %}
+			<div class="masonry-box">
+				<a href="{{ site.baseurl }}{{ post.url }}" title="">
+					<img class="lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="" class="img-fluid">
+				</a>
+				<div class="shadoweffect">
+					<div class="shadow-desc">
+						<div class="blog-meta">
+							<span>{{post.tags | last}}</span>
+							<h4><a href="{{ site.baseurl }}{{ post.url }}" title="">{{post.title}}</a></h4>
+							<small>{{post.date | date: '%B %-d, %Y'}}</small>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+
+		</div>
+
+	</div> -->
+</section>
+
+
+<!--Published Apps-->
+<div class="section-title">
+	<span>应用 · Apps<a href="category#Apps" title="">查看更多  <i class="fa fa-ellipsis-v section-title-icon"></i></a></span>
+</div>
+<section class="container-fluid design-section">
+
+	{% for post in site.categories.Apps %}
+
+	<div class="row app-box">
+		<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+			<a href="{{ post.hyperlink }}" title="">
+				<div class="blog-meta zoom-box">
+					<h4>{{post.title}}</h4>
+					<h6>{{post.date | date:'%B %-d, %Y'}}</h6>
+					<h6>{{post.tags | last}}, {{post.tags | first}}</h6>
+				</div>
+			</a>
+		</div>
+
+		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+			<div class="app-item-box">
+				<img class="lazy" src="images/loader_big.jpg" data-src="{{post.cover}}" alt="">
+			</div>
+		</div>
+	</div>
+
+	{% endfor %}
+
+</section> 
+
+
+<!--Dev-->
+<div class="section-title">
+	<span>开发 · Dev<a href="category#Dev" title="">查看更多  <i class="fa fa-ellipsis-v section-title-icon"></i></a></span>
+</div>
+<section class="container dev-section"> 
+
+	{% for post in site.categories.Dev limit:18 offset:0 %}
+
+		<div class="blog-meta">
+			<h4><a href="{{ site.baseurl }}{{ post.url }}" title="">{{post.title}}</a></h4>
+			<div>
+				<small>{{ post.tags | first }}</small>
+				<small>{{post.date | date: '%B %-d, %Y'}}</small>
+			</div>
+			<p>{{post.content | strip_html | strip_newlines | truncate: 200 }}</p>
+		</div>
+
+	{% endfor %}
+
+<!-- 	{% for post in paginator.posts %}
+	<div class="blog-meta">
+		<h4><a href="{{ post.url }}" title="">{{post.title}}</a></h4>
+		<div>
+			<small>{{ post.tags | first }}</small>
+			<small>{{post.date | date: '%B %-d, %Y'}}</small>
+		</div>
+		<p>{{post.content | strip_html | strip_newlines | truncate: 200 }}</p>
+	</div>
+	{% endfor %} -->
+
+	<!-- 分页链接 -->
+<!-- 	<div class="pagination">
+	  {% if paginator.previous_page %}
+	    <a href="/page{{ paginator.previous_page }}" class="previous">Previous</a>
+	  {% else %}
+	    <span class="previous">Previous</span>
+	  {% endif %}
+	  <span class="page_number ">Page: {{ paginator.page }} of {{ paginator.total_pages }}</span>
+	  {% if paginator.next_page %}
+	    <a href="/page{{ paginator.next_page }}" class="next">Next</a>
+	  {% else %}
+	    <span class="next ">Next</span>
+	  {% endif %}
+	</div> -->
+
+</section> 
+
+

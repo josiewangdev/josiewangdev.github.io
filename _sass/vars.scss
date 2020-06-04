@@ -1,0 +1,63 @@
+
+// Font
+
+@font-face {
+	font-family: 'Consolas';
+    font-display: swap; /* Read next point */  
+    src: url('../fonts/Consolas.woff') format('woff'); /* Modern Browsers */
+}
+
+@font-face {
+    font-family: 'Brat';
+    font-display: swap; /* Read next point */  
+    src: url('../fonts/Brat.woff') format('woff'); /* Modern Browsers */
+         // url('../fonts/Brat.ttf')  format('truetype') /* Safari, Android, iOS */
+         // url('../fonts/Brat.eot'); /* IE9 Compat Modes */
+         // url('../fonts/Brat#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         // url('../fonts/Brat.svg#Brat') format('svg'); /* Legacy iOS */
+}
+
+// @font-face {  
+//     font-family: 'Custom Font';  
+//     font-weight: 400;  
+//     font-style: normal;  
+//     unicode-range: U+000-5FF; /* Download only latin glyphs */  
+//     src: local('Custom Font'),       
+//     url('/fonts/custom-font.woff2') format('woff2'),        
+//     url('/fonts/custom-font.woff') format('woff');
+// }
+
+
+//Base URL
+$img-baseurl: '{{ site.baseurl }}/images';
+
+//Font Size
+
+$content-font-size: 1.6rem;
+$content-font-size-small: 1.3rem;
+$content-font-size-xsmall: 1rem;
+
+//Font Family
+$title-font-family: inherit, serif;
+$content-font-family: inherit, serif;
+$code-font-family: "Consolas", inherit, serif;
+$artistic-font-family: "Brat", inherit, serif;
+
+// Palette
+$bg-color:           #ffffff;
+$border-color:       #e1e1e1;   
+
+$theme-color:        #303030;
+$highlight-color:    #8dd6f9;
+$link-color:         #363131;
+$link-hover-color:   #dc6476;
+
+$title-color:        #111111;
+$content-color:      #4c4c4c;
+$description-color:  #6c6c6c;
+$code-color:         #f9f9f9;
+
+
+
+
+

@@ -1,0 +1,95 @@
+/* Post Page */
+
+@import "skel";
+
+@include skel-breakpoints((
+	large: '(max-width: 1200px)',
+	mid: '(max-width: 992px)',
+	small: '(max-width: 768px)',
+	xsmall: '(max-width: 480px)'
+));
+
+hr {
+	column-span: all;
+}
+
+.post-container {
+	display: flex;
+	min-height: 100vh;
+	@include breakpoint(mid) {
+		display: block;
+	}
+	.sidebar {
+		width: calc(100% / 6);
+		background-color: $theme-color;
+		.post-intro {
+			position: fixed;
+			top: 5rem;
+			left: 2rem;
+			color: #fff;
+			width: 15vw;
+			h2 {
+				width: 100%;
+				word-break: break-word;
+			}
+			@include breakpoint(mid) {
+				padding: 2rem;
+				position: inherit;
+				width: 100vw;
+			}
+		}
+		@include breakpoint(mid) {
+			width: 100%;
+		}
+	}
+	.post-content {
+		padding: 5rem;
+		// column-count: 2;
+		column-rule: dashed 1px $theme-color;
+		column-gap: 30px;
+		column-fill: auto;
+		flex: 1;
+		.highlight {
+			pre {
+				//设置内容不被分列而截断
+				overflow: auto;
+				height: 100%;
+			}
+		}
+		p {
+			margin: 1rem 0;
+			text-indent: 2rem;
+		} 
+		ul {
+			list-style: square inside;
+			font-size: $content-font-size;
+			li {
+				margin: 0.5rem 0;
+			}
+		}
+		img {
+			max-width: 80%;
+		}
+		strong {
+			margin: 1rem 0;
+			font-family: $title-font-family; 
+			color: $content-color;
+		}
+		table {
+			width: 100%;
+		}
+		td {
+			width: 50%;
+			padding: 1rem;
+			img {
+				width: 100%;
+			}
+			&:nth-child(odd) {
+				border-right: 1px solid #e3e3e3;
+			}
+		}
+		@include breakpoint(mid) {
+			column-count: 1;
+		}
+	}
+}

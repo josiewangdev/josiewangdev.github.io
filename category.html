@@ -1,0 +1,50 @@
+---
+---
+
+<!DOCTYPE html>
+<!--Category Page-->
+<html>
+	{% include head.html %}
+	<body>
+		<div class="category-container">
+			<div class="sidebar">
+				<div class="category_list">
+					<a class="return-home" href="{{ site.baseurl}}/index"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+					<ul>
+						{% assign sorted_categories = site.categories | sort %}
+						{% for category in sorted_categories %}
+						{% capture category_name %}{{ category | first }}{% endcapture %}
+						<li><a href="#{{ category_name }}">{{ category_name }} ({{ category | last | size }})</a></li>
+						{% endfor %}
+					</ul>
+				</div>
+			</div>
+			<div class="category-content">
+				<ul>
+					{% assign category_groups = site.posts | group_by: "categories" | sort: "name" %}
+					{% for category in category_groups %}
+						{% assign category_name = (category.name | remove: '"' | remove: '[' | remove: ']') %}
+						<h3 id="{{ category_name }}">{{ category_name }}</h3>
+						<ul>
+							{% assign tag_groups = category.items | group_by: 'tags' | sort: 'name' %}
+							{% for tag in tag_groups %}
+								{% assign tag_name = tag.name | remove: '"' | remove: '[' | remove: ']' %}
+								<span class="post-tag">{{ tag_name }}</span>
+								<ul>									
+									{% for post in tag.items %}
+									<li><a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a></li>
+									{% endfor %}
+								</ul>
+							{% endfor %}
+						</ul>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+		{% include scripts.html %}
+	</body>
+</html>
+
+
+
+

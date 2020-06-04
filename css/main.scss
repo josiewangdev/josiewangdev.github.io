@@ -1,0 +1,77 @@
+---
+---
+
+@import "font-awesome.min.css";
+@import "bootstrap.min.css";
+@import "skel";
+@import "vars";
+@import "syntax";
+@import "header";
+@import "footer";
+@import "home";
+@import "post";
+@import "category";
+
+@include skel-breakpoints((
+	large: '(max-width: 1200px)',
+	mid: '(max-width: 992px)',
+	small: '(max-width: 768px)',
+	xsmall: '(max-width: 480px)'
+));
+
+// @include skel-layout((
+// 	reset: 'full',
+// 	boxModel: 'border',
+// 	grid: ( gutters: 1.5em )
+// ));
+
+/* Basic */
+
+body {
+
+	font-size: $content-font-size;
+	font-family: $content-font-family;
+	color: $content-color;
+
+	@include breakpoint(small) {
+		font-size: $content-font-size-small;
+	}
+	
+	@include breakpoint(xsmall) {
+		font-size: $content-font-size-xsmall;
+	}
+
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    background-color: rgba(255,255,255,0.85);
+}
+
+h1, h2, h3, h4 {
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+	color: $link-color;
+}
+
+a:hover {
+    text-decoration: none;
+	color: $highlight-color;
+}
+
+pre {
+	white-space:pre-wrap; /* css3.0 */
+	white-space:-moz-pre-wrap; /* Firefox */
+	white-space:-pre-wrap; /* Opera 4-6 */
+	white-space:-o-pre-wrap; /* Opera 7 */
+	word-wrap:break-word; /* Internet Explorer 5.5+ */
+}
+
+

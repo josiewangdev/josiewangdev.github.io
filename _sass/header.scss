@@ -1,0 +1,61 @@
+/* Header */
+
+.header {
+
+    height: 5rem;
+
+    div {
+        height: 100%;
+    }
+
+    .header-left-topsocial {
+        display: flex;
+        align-items: center;
+        a {
+            margin-right: 12px;
+        }
+    }
+
+    .header-right-search-widget {
+        display: flex;
+        // align-items: center;
+        // justify-content: flex-end;
+        // flex-wrap: wrap; 折行效果
+        // flex-direction: row-reverse;
+        .form-inline {
+            width: 100%;
+            margin: 5px 10px 5px 0;
+            display: flex;
+            justify-content: flex-end;
+            .form-control {
+                margin-right: 10px;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.9);
+                border-radius: 0;
+                box-shadow: none;
+                flex: 1;
+                // letter-spacing: 0.3px;
+                // vertical-align: middle;
+            }
+            .btn {
+                border-radius: 0;
+                border: none;
+                background-color: $theme-color;
+                color: #fff;
+            }
+        }
+    }
+
+    .header-right-search-icon {
+        text-align: right;
+        button {
+            margin-right: 10px;
+            height: 100%;
+            border: none;
+            color: $theme-color;
+            background-color: transparent;
+        }
+    }
+
+}
+
