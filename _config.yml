@@ -1,19 +1,15 @@
-# Site settings
-title: Average Jo
-description: Average Jo's Blog
-owner: Average Jo
-first_published: 2017
-email: averagejo@163.com
-baseurl: ""
-permalink: "/:categories/:month-:day-:year/:title"
-url: "https://xniawang.github.io"
+# baseurl: ""
+permalink: "/:categories/:year-:month-:day/:title"
+url: https://coderjosie.xyz
 # paginate: 12
 # paginate_path: "dev/page:num"
-social:
-  github:
 # Gems
 # gems: [jekyll-paginate]
 # Build settings
 markdown: kramdown
+languages: ["zh", "en"]
+defaultLang: zh
+# exclude_from_localizations: ["js", "css", "images"]
+# default_locale_in_subfolder: true
 #sass
   #style:compressed

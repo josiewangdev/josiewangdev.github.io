@@ -26,15 +26,51 @@ layout: home
 
 <!--Intro-->
 <section class="intro-section">
-	<h2>Average Jo.</h2>
-	<p>This is a personal blog for handcrafted, cameramade photography content, fashion styles from independent creatives around the world.</p>
+	<h2>{% t site.name %}</h2>
+	<p>{% t site.description %}</p>
 	<hr class="invis">
 </section>
 
 
+<!--Projects-->
+<div class="section-title">
+	<span>{% t global.categoryNames.app %}
+		<a href="category#Projects" title="">
+			{% t global.more %}  <i class="fa fa-ellipsis-v section-title-icon"></i>
+		</a>
+	</span>
+</div>
+<section class="container-fluid design-section">
+	<div class="row">
+		{% for post in site.categories.Projects %}
+		<div class="col-lg-4 col-md-6 col-sm-6 col-xs-6">
+			<div class="masonry-box">
+				<a href="{{ site.baseurl }}{{ post.url }}" title="">
+					<img class="lazy" src="images/loader_big.jpg" data-src="{{post.cover}}" alt="">
+				</a>
+			</div>
+			<div class="app-box">
+				<a href="{{ site.baseurl }}{{ post.url }}" title="">
+					<div class="blog-meta zoom-box">
+						<h4>{{post.title}}</h4>
+						<h6>{{post.description}}</h6>
+						<h6>{{post.tags | first}}</h6>
+					</div>
+				</a>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</section> 
+
+
 <!--Logs-->
 <div class="section-title">
-	<span>日常 · Logs<a href="category#Logs" title="">查看更多  <i class="fa fa-ellipsis-v section-title-icon"></i></a></span>
+	<span>{% t global.categoryNames.log %}
+		<a href="category#Logs" title="">
+			{% t global.more %}  <i class="fa fa-ellipsis-v section-title-icon"></i>
+		</a>
+	</span>
 </div>
 <section class="container-fluid log-section">
 	<div class="row">
@@ -211,40 +247,13 @@ layout: home
 </section>
 
 
-<!--Published Apps-->
-<div class="section-title">
-	<span>应用 · Apps<a href="category#Apps" title="">查看更多  <i class="fa fa-ellipsis-v section-title-icon"></i></a></span>
-</div>
-<section class="container-fluid design-section">
-
-	{% for post in site.categories.Apps %}
-
-	<div class="row app-box">
-		<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-			<a href="{{ post.hyperlink }}" title="">
-				<div class="blog-meta zoom-box">
-					<h4>{{post.title}}</h4>
-					<h6>{{post.date | date:'%B %-d, %Y'}}</h6>
-					<h6>{{post.tags | last}}, {{post.tags | first}}</h6>
-				</div>
-			</a>
-		</div>
-
-		<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-			<div class="app-item-box">
-				<img class="lazy" src="images/loader_big.jpg" data-src="{{post.cover}}" alt="">
-			</div>
-		</div>
-	</div>
-
-	{% endfor %}
-
-</section> 
-
-
 <!--Dev-->
 <div class="section-title">
-	<span>开发 · Dev<a href="category#Dev" title="">查看更多  <i class="fa fa-ellipsis-v section-title-icon"></i></a></span>
+	<span>{% t global.categoryNames.dev %}
+		<a href="category#Dev" title="">
+			{% t global.more %}  <i class="fa fa-ellipsis-v section-title-icon"></i>
+		</a>
+	</span>
 </div>
 <section class="container dev-section"> 
 
