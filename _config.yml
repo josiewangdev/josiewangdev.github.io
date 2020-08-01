@@ -3,8 +3,6 @@ permalink: "/:categories/:year-:month-:day/:title"
 url: https://coderjosie.xyz
 # paginate: 12
 # paginate_path: "dev/page:num"
-# Gems
-# gems: [jekyll-paginate]
 # Build settings
 markdown: kramdown
 languages: ["zh", "en"]
