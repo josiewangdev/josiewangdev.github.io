@@ -7,8 +7,6 @@ url: https://coderjosie.xyz
 markdown: kramdown
 languages: ["zh", "en"]
 defaultLang: zh
-plugins:
- - jekyll-multiple-languages-plugin
 # exclude_from_localizations: ["js", "css", "images"]
 # default_locale_in_subfolder: true
 #sass
