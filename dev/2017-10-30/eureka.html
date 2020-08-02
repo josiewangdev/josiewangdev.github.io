@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Eureka
+		
+	</title>
+	<meta name="description" content="Eureka">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2017-10-30/eureka">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Eureka</h2>
+					<!-- <p>使用Eureka创建灵活的动态表单</p> -->
+					<span>2017.10</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2017-10-30/eureka" class="enabled">中文 </a>|<a href="/en/dev/2017-10-30/eureka"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="eureka">Eureka</h2>
+
+<hr />
+
+<p>使用语言: <strong>Swift</strong></p>
+
+<hr />
+
+<p>做iOS前端开发的童鞋应该都知道，要实现一个列表样式，我们需要实现TableView的数据源和代理方法（UITableViewDataSource, UITableViewDelegate）, 通常情况下，对于动态从后台获取的数据表单来说，这样的实现无可厚非。但是，我们经常也会使用到一些复杂的静态表单，这个时候如果再去一一定义每个TableViewCell的样式，组装数据源结构，就未免有些太过繁琐与冗杂。不过，通过Eureka这个第三方库就能够使用灵活的控件与整洁的代码结构去创建一个多功能的静态表单。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="usage">实际应用</h4>
+</blockquote>
+
+<p><br /></p>
+
+<p>在App中经常会有让用户填写表单或者输入信息的表单样式。例如，如果要实现这样一个表单样式，用Eureka能以规整简洁的代码结构实现。</p>
+
+<p><br /></p>
+
+<p><img src="/images/eureka/eureka.gif" alt="img" /></p>
+
+<p><br /></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">setupUI</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="c1">//创建一个表单</span>
+    <span class="n">form</span>
+    <span class="c1">//添加一个单元组</span>
+    <span class="o">+++</span> <span class="kt">Section</span><span class="p">()</span>
+    <span class="c1">//添加行（该行为我创建的自定义选择相册图片样式）</span>
+    <span class="o">&lt;&lt;&lt;</span> <span class="kt">MerchandiseAddMainImageRow</span><span class="p">(</span><span class="n">addImageRowTag</span><span class="p">)</span> <span class="p">{[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="n">row</span> <span class="k">in</span>
+
+        <span class="c1">//数据是否有效，其中ImageValues是我对该组件定义的值类型</span>
+        <span class="k">let</span> <span class="nv">ruleRequired</span> <span class="o">=</span> <span class="kt">RuleClosure</span><span class="o">&lt;</span><span class="kt">ImageValues</span><span class="o">&gt;</span> <span class="p">{</span> <span class="n">rowValue</span> <span class="k">in</span>
+            <span class="nf">return</span> <span class="p">(</span><span class="n">rowValue</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">||</span> <span class="n">rowValue</span><span class="o">!.</span><span class="n">imageUrls</span><span class="o">.</span><span class="n">isEmpty</span><span class="p">)</span> <span class="p">?</span> <span class="kt">ValidationError</span><span class="p">(</span><span class="nv">msg</span><span class="p">:</span> <span class="s">"请至少选择一张图片"</span><span class="p">)</span> <span class="p">:</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        <span class="n">row</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="nv">rule</span><span class="p">:</span> <span class="n">ruleRequired</span><span class="p">)</span>
+        
+        <span class="k">let</span> <span class="nv">imageUrls</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="kt">ImageValues</span><span class="p">(</span><span class="nv">imageUrls</span><span class="p">:</span> <span class="n">imageUrls</span><span class="p">)</span>
+
+        <span class="c1">//协议代理实现按钮点击事件</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+
+    <span class="p">}</span>
+
+    <span class="c1">//另添加一单元组</span>
+    <span class="o">+++</span> <span class="kt">Section</span><span class="p">()</span>
+
+    <span class="c1">//添加自定义按钮行样式</span>
+    <span class="o">&lt;&lt;&lt;</span> <span class="kt">GBFormButtonRow</span><span class="p">(</span><span class="n">productBrandRowTag</span><span class="p">)</span> <span class="p">{</span> <span class="n">row</span> <span class="k">in</span>
+    
+        <span class="c1">//行标题</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">mainTitle</span> <span class="o">=</span> <span class="s">"商品品牌"</span>
+        <span class="c1">//自定义改行数据是否必填标志</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">isRequired</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="c1">//行数据符合规则判断</span>
+        <span class="k">let</span> <span class="nv">ruleRequired</span> <span class="o">=</span> <span class="kt">RuleClosure</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="p">{</span> <span class="n">rowValue</span> <span class="k">in</span>
+            <span class="nf">return</span> <span class="p">(</span><span class="n">rowValue</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">||</span> <span class="n">rowValue</span><span class="o">!.</span><span class="n">isEmpty</span><span class="p">)</span> <span class="p">?</span> <span class="kt">ValidationError</span><span class="p">(</span><span class="nv">msg</span><span class="p">:</span> <span class="s">"请选择商品品牌"</span><span class="p">)</span> <span class="p">:</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        <span class="n">row</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="nv">rule</span><span class="p">:</span> <span class="n">ruleRequired</span><span class="p">)</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">displayValue</span> <span class="o">=</span> <span class="s">"Display Value"</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s">"Some Value"</span>
+        
+    <span class="p">}</span><span class="o">.</span><span class="nf">onCellSelection</span><span class="p">({</span> <span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span> <span class="k">in</span>
+        <span class="c1">//在此实现点击选择该行之后需要执行的代码</span>
+    <span class="p">})</span>
+
+    <span class="c1">//添加自定义文字行样式</span>
+    <span class="o">&lt;&lt;&lt;</span> <span class="kt">GBFormTextRow</span><span class="p">(</span><span class="n">productNameRowTag</span><span class="p">)</span> <span class="p">{</span> <span class="n">row</span> <span class="k">in</span>
+
+        <span class="n">row</span><span class="o">.</span><span class="n">mainTitle</span> <span class="o">=</span> <span class="s">"商品名称"</span>
+        <span class="c1">//自定义的文字字数提示</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">hintUnit</span> <span class="o">=</span> <span class="s">"/60"</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">isRequired</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="k">let</span> <span class="nv">ruleRequired</span> <span class="o">=</span> <span class="kt">RuleClosure</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span> <span class="p">{</span> <span class="n">rowValue</span> <span class="k">in</span>
+            <span class="nf">return</span> <span class="p">(</span><span class="n">rowValue</span> <span class="o">==</span> <span class="kc">nil</span> <span class="o">||</span> <span class="n">rowValue</span><span class="o">!.</span><span class="n">isEmpty</span><span class="p">)</span> <span class="p">?</span> <span class="kt">ValidationError</span><span class="p">(</span><span class="nv">msg</span><span class="p">:</span> <span class="s">"请填写商品名称"</span><span class="p">)</span> <span class="p">:</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        <span class="n">row</span><span class="o">.</span><span class="nf">add</span><span class="p">(</span><span class="nv">rule</span><span class="p">:</span> <span class="n">ruleRequired</span><span class="p">)</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="s">"productFullName"</span>
+        
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="自定义选择相册图片样式imagerow代码示例">自定义选择相册图片样式ImageRow代码示例</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">//定义该行的值类型</span>
+<span class="kd">struct</span> <span class="kt">ImageValues</span><span class="p">:</span> <span class="kt">Equatable</span> <span class="p">{</span>
+
+    <span class="k">var</span> <span class="nv">imageUrls</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1">//自定义 row value 必须实现该方法以判断值是否相同</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="o">==</span><span class="p">(</span><span class="nv">lhs</span><span class="p">:</span> <span class="kt">ImageValues</span><span class="p">,</span> <span class="nv">rhs</span><span class="p">:</span> <span class="kt">ImageValues</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">lhs</span><span class="o">.</span><span class="n">imageUrls</span> <span class="o">==</span> <span class="n">rhs</span><span class="o">.</span><span class="n">imageUrls</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">MerchandiseAddMainImageCell</span><span class="p">:</span> <span class="kt">Cell</span><span class="o">&lt;</span><span class="kt">ImageValues</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">CellType</span> <span class="p">{</span>
+
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">imageSlideView</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">!</span>
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">imageSlideShow</span><span class="p">:</span> <span class="kt">ImageSlideshow</span><span class="o">!</span>
+
+    <span class="k">var</span> <span class="nv">addMainImageRow</span><span class="p">:</span> <span class="kt">MerchandiseAddMainImageRow</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">row</span> <span class="k">as!</span> <span class="kt">MerchandiseAddMainImageRow</span>
+    <span class="p">}</span>
+
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="kt">UITableViewCellStyle</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="n">style</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="n">reuseIdentifier</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">coder</span><span class="p">:</span> <span class="n">aDecoder</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">setup</span><span class="p">()</span>
+        <span class="c1">//自定义行高度</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="p">{</span><span class="k">return</span> <span class="mi">250</span><span class="p">}</span>
+        <span class="n">imageSlideShow</span><span class="o">.</span><span class="n">contentScaleMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">scaleAspectFill</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">update</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">update</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">addMainImageButtonClicked</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">addMainImageRow</span><span class="o">.</span><span class="n">delegate</span><span class="p">?</span><span class="o">.</span><span class="nf">didClickedAddImageButton</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">editMainImageButtonClicked</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">addMainImageRow</span><span class="o">.</span><span class="n">delegate</span><span class="p">?</span><span class="o">.</span><span class="nf">didClickedEditImageButton</span><span class="p">()</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="c1">//自定义协议方法</span>
+<span class="kd">protocol</span> <span class="kt">MerchandiseAddMainImageRowDelegate</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">didClickedAddImageButton</span><span class="p">()</span>
+    <span class="kd">func</span> <span class="nf">didClickedEditImageButton</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">final</span> <span class="kd">class</span> <span class="kt">MerchandiseAddMainImageRow</span><span class="p">:</span> <span class="kt">Row</span><span class="o">&lt;</span><span class="kt">MerchandiseAddMainImageCell</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">RowType</span> <span class="p">{</span>
+
+    <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt">MerchandiseAddMainImageRowDelegate</span><span class="p">?</span>
+
+    <span class="k">override</span> <span class="k">var</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">ImageValues</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">didSet</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">imageValue</span> <span class="o">=</span> <span class="n">value</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="n">imageValue</span><span class="o">.</span><span class="n">imageUrls</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+                    <span class="n">cell</span><span class="o">.</span><span class="n">imageSlideView</span><span class="o">.</span><span class="n">isHidden</span> <span class="o">=</span> <span class="kc">false</span>
+                    <span class="k">let</span> <span class="nv">imageInput</span> <span class="o">=</span> <span class="n">imageValue</span><span class="o">.</span><span class="n">imageUrls</span><span class="o">.</span><span class="nf">map</span><span class="p">({</span> <span class="p">(</span><span class="n">imgUrlStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">SDWebImageSource</span> <span class="k">in</span>
+                        <span class="k">return</span> <span class="kt">SDWebImageSource</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">imgUrlStr</span><span class="o">.</span><span class="nf">toURL</span><span class="p">(),</span> <span class="nv">placeholder</span><span class="p">:</span> <span class="kt">UIImage</span><span class="o">.</span><span class="n">defaultProductImage</span><span class="p">)</span>
+                    <span class="p">})</span>
+                    <span class="n">cell</span><span class="o">.</span><span class="n">imageSlideShow</span><span class="o">.</span><span class="nf">setImageInputs</span><span class="p">(</span><span class="n">imageInput</span><span class="p">)</span>
+                <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+                    <span class="n">cell</span><span class="o">.</span><span class="n">imageSlideView</span><span class="o">.</span><span class="n">isHidden</span> <span class="o">=</span> <span class="kc">true</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">(</span><span class="nv">tag</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">tag</span><span class="p">:</span> <span class="n">tag</span><span class="p">)</span>
+        <span class="c1">//用自定义Nib文件设置行样式</span>
+        <span class="n">cellProvider</span> <span class="o">=</span> <span class="kt">CellProvider</span><span class="o">&lt;</span><span class="kt">MerchandiseAddMainImageCell</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="n">kMerchandiseAddMainImageCell</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="自定义文字行样式textrow">自定义文字行样式TextRow</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1">//文字类型</span>
+<span class="kd">enum</span> <span class="kt">GBFormTextRowType</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">plainText</span><span class="p">,</span>
+         <span class="n">number</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">GBFormTextCell</span><span class="p">:</span> <span class="kt">Cell</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">CellType</span><span class="p">{</span>
+
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">asteriskLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">titleLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt">UITextField</span><span class="o">!</span>
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">hintLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">hintUnitLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="kt">UITableViewCellStyle</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="n">style</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="n">reuseIdentifier</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">coder</span><span class="p">:</span> <span class="n">aDecoder</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">setup</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="k">super</span><span class="o">.</span><span class="nf">setup</span><span class="p">()</span>
+        <span class="n">height</span> <span class="o">=</span> <span class="p">{</span><span class="mi">44</span><span class="p">}</span>
+        <span class="n">textField</span><span class="o">.</span><span class="nf">addTarget</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">self.textDidChanged(inTextField:)</span><span class="kd">)</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="o">.</span><span class="n">editingChanged</span><span class="p">)</span>
+
+        <span class="k">let</span> <span class="nv">textRow</span> <span class="o">=</span> <span class="n">row</span> <span class="k">as!</span> <span class="kt">GBFormTextRow</span>
+        <span class="n">titleLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">textRow</span><span class="o">.</span><span class="n">mainTitle</span>
+        <span class="n">hintUnitLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">textRow</span><span class="o">.</span><span class="n">hintUnit</span>
+        
+        <span class="c1">//是否必填</span>
+        <span class="k">if</span> <span class="n">textRow</span><span class="o">.</span><span class="n">isRequired</span> <span class="p">{</span>
+            <span class="n">asteriskLabel</span><span class="o">.</span><span class="n">isHidden</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+            <span class="n">asteriskLabel</span><span class="o">.</span><span class="n">isHidden</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="p">}</span>
+
+        <span class="k">switch</span> <span class="n">textRow</span><span class="o">.</span><span class="n">rowType</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">plainText</span><span class="p">:</span>
+                <span class="n">textField</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">left</span>
+                <span class="n">textField</span><span class="o">.</span><span class="n">keyboardType</span> <span class="o">=</span> <span class="o">.</span><span class="k">default</span>
+                <span class="n">hintLabel</span><span class="o">.</span><span class="n">isHidden</span> <span class="o">=</span> <span class="kc">false</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">number</span><span class="p">:</span>
+                <span class="n">textField</span><span class="o">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="o">.</span><span class="n">right</span>
+                <span class="n">textField</span><span class="o">.</span><span class="n">keyboardType</span> <span class="o">=</span> <span class="o">.</span><span class="n">decimalPad</span>
+                <span class="n">hintLabel</span><span class="o">.</span><span class="n">isHidden</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">update</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">update</span><span class="p">()</span>
+        <span class="n">textField</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">value</span>
+        <span class="n">textField</span><span class="o">.</span><span class="n">isEnabled</span> <span class="o">=</span> <span class="o">!</span><span class="p">(</span><span class="n">row</span><span class="o">.</span><span class="n">isDisabled</span><span class="p">)</span>
+        <span class="n">hintUnitLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">(</span><span class="n">row</span> <span class="k">as!</span> <span class="kt">GBFormTextRow</span><span class="p">)</span><span class="o">.</span><span class="n">hintUnit</span>
+    <span class="p">}</span>
+
+    <span class="c1">//MARK: - Event Response</span>
+
+    <span class="kd">func</span> <span class="nf">textDidChanged</span><span class="p">(</span><span class="n">inTextField</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt">UITextField</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">hintLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"</span><span class="se">\(</span><span class="n">textField</span><span class="o">.</span><span class="n">text</span><span class="p">?</span><span class="o">.</span><span class="n">characters</span><span class="o">.</span><span class="n">count</span> <span class="p">??</span> <span class="mi">0</span><span class="se">)</span><span class="s">"</span>
+        <span class="n">row</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">textField</span><span class="o">.</span><span class="n">text</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="kd">final</span> <span class="kd">class</span> <span class="kt">GBFormTextRow</span><span class="p">:</span> <span class="kt">Row</span><span class="o">&lt;</span><span class="kt">GBFormTextCell</span><span class="o">&gt;</span><span class="p">,</span> <span class="kt">RowType</span> <span class="p">{</span>
+
+    <span class="k">var</span> <span class="nv">mainTitle</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+    <span class="k">var</span> <span class="nv">hintUnit</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span>
+    <span class="k">var</span> <span class="nv">isRequired</span> <span class="o">=</span> <span class="kc">false</span>
+    <span class="k">var</span> <span class="nv">rowType</span><span class="p">:</span> <span class="kt">GBFormTextRowType</span> <span class="o">=</span> <span class="o">.</span><span class="n">plainText</span>
+
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">(</span><span class="nv">tag</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">tag</span><span class="p">:</span> <span class="n">tag</span><span class="p">)</span>
+        <span class="n">cellProvider</span> <span class="o">=</span> <span class="kt">CellProvider</span><span class="o">&lt;</span><span class="kt">GBFormTextCell</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="s">"GBFormTextCell"</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="https://github.com/xmartlabs/XLForm">[参考Github地址] (OC) XLForm</a></p>
+
+<p><a href="https://github.com/xmartlabs/Eureka">[参考Github地址] (Swift) Eureka</a></p>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

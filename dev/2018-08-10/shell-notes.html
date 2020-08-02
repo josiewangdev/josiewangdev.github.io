@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Shell 随笔
+		
+	</title>
+	<meta name="description" content="Shell 随笔">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2018-08-10/shell-notes">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Shell 随笔</h2>
+					<!-- <p></p> -->
+					<span>2018.08</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2018-08-10/shell-notes" class="enabled">中文 </a>|<a href="/en/dev/2018-08-10/shell-notes"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="shell-随笔">Shell 随笔</h2>
+
+<hr />
+
+<h4 id="1-显示隐藏文件">1. <a href="#show-hidden-files">显示隐藏文件</a></h4>
+<h4 id="2-mac文件安装提示文件已损坏解决方法">2. <a href="#p2">Mac文件安装提示文件已损坏解决方法</a></h4>
+<h4 id="3-xcode插件更新">3. <a href="#xcode-plugin">XCode插件更新</a></h4>
+<h4 id="4-命令别名">4. <a href="#command-alias">命令别名</a></h4>
+<h4 id="5-bower的使用">5. <a href="#bower">Bower的使用</a></h4>
+<h4 id="6-卸载nodejs">6. <a href="#uninstall-nodejs">卸载Nodejs</a></h4>
+<h4 id="7-git命令">7. <a href="#git">Git命令</a></h4>
+<h4 id="8-搜索命令历史记录">8. <a href="#cmd-history">搜索命令历史记录</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="show-hidden-files">1. 显示隐藏文件</h4>
+</blockquote>
+
+<p>用以下命令来显示系统隐藏文件</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>defaults write ~/Library/Preferences/com.apple.finder AppleShowAllFiles <span class="nt">-bool</span> <span class="nb">true</span>
+</code></pre></div></div>
+
+<p>撤销命令, 不再显示隐藏文件</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>defaults write ~/Library/Preferences/com.apple.finder AppleShowAllFiles <span class="nt">-bool</span> <span class="nb">false</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p2">2. Mac文件安装提示文件已损坏解决方法</h4>
+</blockquote>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>spctl <span class="nt">--master-disable</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="xcode-plugin">3. XCode插件更新</h4>
+</blockquote>
+
+<p>XCode所有的插件都安装在目录 <code class="highlighter-rouge">~/Library/Application Support/Developer/Shared/Xcode/Plug-ins/</code> 下，如果你更新了Xcode，打开XCode时会出现一个提示询问你是否重新安装插件。</p>
+
+<p>不幸的是如果你跳过了重新安装插件，这个提示则再也不会出现，哪怕你重新安装了 <strong>Alcatraz</strong> 也不行。要想重新安装插件, 则可以手动按照以下步骤去做。</p>
+
+<p><strong>1).</strong> 先删除上一个安装的XCode版本的白名单, 即XCode版本需要对应更新之前的。例如我之前安装的XCode版本为 6.3.2</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>defaults delete com.apple.dt.Xcode DVTPlugInManagerNonApplePlugIns-Xcode-6.3.2
+</code></pre></div></div>
+
+<p><strong>2).</strong> 获取当前当前新版本XCode的UUID – <code class="highlighter-rouge">DVTPlugInCompatibilityUUID</code> 。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>defaults <span class="nb">read</span> /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID
+</code></pre></div></div>
+
+<p><strong>3).</strong> 给每一个插件增加当前新版本XCode的UUID。即上一步操作得到的例如这样的字符串 <code class="highlighter-rouge">9F75337B-21B4-4ADC-B558-F9CADF7073A7</code>。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>find ~/Library/Application<span class="se">\ </span>Support/Developer/Shared/Xcode/Plug-ins <span class="nt">-name</span> Info.plist <span class="nt">-maxdepth</span> 3 | xargs <span class="nt">-I</span><span class="o">{}</span> defaults write <span class="o">{}</span> DVTPlugInCompatibilityUUIDs <span class="nt">-array-add</span> 9F75337B-21B4-4ADC-B558-F9CADF7073A7
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p>也可以将三步合并一个语句来做, 直接输入以下命令行</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find ~/Library/Application<span class="se">\ </span>Support/Developer/Shared/Xcode/Plug-ins <span class="nt">-name</span> Info.plist <span class="nt">-maxdepth</span> 3 | xargs <span class="nt">-I</span><span class="o">{}</span> defaults write <span class="o">{}</span> DVTPlugInCompatibilityUUIDs <span class="nt">-array-add</span> <span class="sb">`</span>defaults <span class="nb">read</span> /Applications/Xcode.app/Contents/Info DVTPlugInCompatibilityUUID<span class="sb">`</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="command-alias">4. 命令别名</h4>
+</blockquote>
+
+<p>我们可以给某个命令自定义一个名字。</p>
+
+<p>比如，你可以将更新pods的命令行操作设置一个别名为 <code class="highlighter-rouge">pod_update</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">alias </span><span class="nv">pod_update</span><span class="o">=</span><span class="s1">'pod update --verbose --no-repo-update'</span>
+</code></pre></div></div>
+
+<p>当之后再更新pods时，就可以直接使用 <code class="highlighter-rouge">pod_update</code> 来执行</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>pod_update
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="bower">5. Bower的使用</h4>
+</blockquote>
+
+<p>Bower 是 Twitter 推出的一款web开发包管理工具。 它可以安装你所需要的对应版本的包以及其相关依赖，也可以管理HTML，CSS Javascript，字体甚至图片文件。</p>
+
+<p><strong>安装Bower:</strong></p>
+
+<p>安装Bower前需要预先安装 <code class="highlighter-rouge">node</code>, <code class="highlighter-rouge">npm</code> 和 <code class="highlighter-rouge">git</code></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>npm <span class="nb">install </span>bower
+</code></pre></div></div>
+
+<p><strong>Bower的使用:</strong></p>
+
+<p>以管理jquery库举例</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//  安装jquery库
+
+<span class="nv">$ </span>bower <span class="nb">install </span>jquery  
+<span class="nv">$ </span>bower <span class="nb">install </span>jquery#1.7.2 //  安装1.7.2版本jquery库
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//  升级jquery库
+
+<span class="nv">$ </span>bower update jquery
+</code></pre></div></div>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//  卸载jquery库 
+
+<span class="nv">$ </span>bower uninstall jquery     
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="uninstall-nodejs">6. 卸载Nodejs</h4>
+</blockquote>
+
+<p><strong>1).</strong> 前往 <code class="highlighter-rouge">/usr/local/lib</code> 文件夹下删除node及其模块</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /usr/local/lib
+<span class="nv">$ </span><span class="nb">sudo rm</span> <span class="nt">-rf</span> node<span class="k">*</span>
+</code></pre></div></div>
+
+<p><strong>2).</strong> 前往 <code class="highlighter-rouge">/usr/local/include</code> 文件夹下删除node及其模块</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /usr/local/include
+<span class="nv">$ </span><span class="nb">sudo rm</span> <span class="nt">-rf</span> node<span class="k">*</span>
+</code></pre></div></div>
+
+<p><strong>3).</strong> 如果你安装了brew，可以使用在终端中用brew卸载node</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew uninstall node
+</code></pre></div></div>
+
+<p><strong>4).</strong> 前往 <code class="highlighter-rouge">/usr/local/bin</code> 文件夹下删除node及其模块</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /usr/local/bin
+<span class="nv">$ </span><span class="nb">sudo rm</span> <span class="nt">-rf</span> /usr/local/bin/npm
+<span class="nv">$ </span><span class="nb">sudo rm</span> <span class="nt">-rf</span> /usr/local/bin/node
+<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-las</span>
+</code></pre></div></div>
+
+<p><strong>5).</strong> 你可能还需要执行以下命令：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo rm</span> <span class="nt">-rf</span> /usr/local/share/man/man1/node.1
+<span class="nv">$ </span><span class="nb">sudo rm</span> <span class="nt">-rf</span> /usr/local/lib/dtrace/node.d
+<span class="nv">$ </span><span class="nb">sudo rm</span> <span class="nt">-rf</span> ~/.npm
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="git">7. Git命令行</h4>
+</blockquote>
+
+<p><strong>1). 硬回退到某一版本</strong></p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git reset <span class="nt">--hard</span> version-number
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="cmd-history">8. 搜索命令历史记录</h4>
+</blockquote>
+
+<p>用以下命令来搜索历史命令行记录</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ctrl-r
+</code></pre></div></div>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

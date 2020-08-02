@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Swift Notes
+		
+	</title>
+	<meta name="description" content="Swift Notes">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/dev/2017-02-06/swift-notes">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Swift Notes</h2>
+					<!-- <p></p> -->
+					<span>2017.02</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/dev/2017-02-06/swift-notes">中文 </a>|<a href="/en/dev/2017-02-06/swift-notes" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="swift-notes">Swift Notes</h2>
+
+<hr />
+
+<h4 id="1-access-control">1. <a href="#access-control">Access control</a></h4>
+<h4 id="2-associate-value-in-enum">2. <a href="#enum-associate">Associate value in enum</a></h4>
+<h4 id="3-encode-enum-type">3. <a href="#enum-encode">Encode enum type</a></h4>
+<h4 id="4-identity-operator">4. <a href="#identity-operator">Identity operator</a></h4>
+<h4 id="5-higher-order-fuctions">5. <a href="#higher-order-funcs">Higher order fuctions</a></h4>
+<h4 id="6-string-to-decimal-number">6. <a href="#string-to-number">String to decimal number</a></h4>
+<h4 id="7-chinese-string-to-pinyin">7. <a href="#string-to-pinyin">Chinese string to Pinyin</a></h4>
+<h4 id="8-generics">8. <a href="#generics">Generics</a></h4>
+<h4 id="9-naming-conflict">9. <a href="#naming-conflict">Naming conflict</a></h4>
+<h4 id="10-sigleton">10. <a href="#singleton">Sigleton</a></h4>
+<h4 id="11-init-array-using-repeated-value">11. <a href="#repeated-value-array">Init array using repeated value</a></h4>
+<h4 id="12-transform-between-class-name-and-class">12. <a href="#class-and-name">Transform between class name and class</a></h4>
+<h4 id="13-predicate-queries">13. <a href="#predicate">Predicate Queries</a></h4>
+<h4 id="14-break-out-of-multiple-loop-levels-using-statements">14. <a href="#break-multiple-loop">Break out of multiple loop levels using statements</a></h4>
+<h4 id="15-subscript">15. <a href="#subscript">Subscript</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="access-control">1. Access control</h4>
+</blockquote>
+
+<p>In Swift, access control restricts access to parts of your code from code in other source files and modules.</p>
+
+<p>This feature enables you to hide the implementation details of your code, and to specify a preferred interface through which your code could be access and used.</p>
+
+<p>Access levels shown like following:</p>
+
+<p><strong><code class="highlighter-rouge">open</code> &gt; <code class="highlighter-rouge">public</code> &gt; <code class="highlighter-rouge">internal</code>(defualt) &gt; <code class="highlighter-rouge">fileprivate</code> &gt; <code class="highlighter-rouge">private</code></strong></p>
+
+<p><code class="highlighter-rouge">open</code> access and <code class="highlighter-rouge">public</code> access enable entities to be used within any source file from their definine module, and also in a source file from another module that imports the defining module. You typically use <code class="highlighter-rouge">open</code> or <code class="highlighter-rouge">public</code> accesss when specifying the public interface to a framework.</p>
+
+<p><code class="highlighter-rouge">open</code> access differs from <code class="highlighter-rouge">public</code> access by allowing code outside the module to subclass and override, but <code class="highlighter-rouge">public</code> only enables subclass and override in the module.</p>
+
+<p><code class="highlighter-rouge">internal</code> access enables entities to be used within any source file from their defining module, but not in any source file outside of that module. You typically use <code class="highlighter-rouge">internal</code> access when defining an app’s or a framework’s internal structure.</p>
+
+<p><code class="highlighter-rouge">fileprivate</code> access restricts the use of an entity to its own defining source file.</p>
+
+<p><code class="highlighter-rouge">private</code> access restricts the use of an entity to the enclosing declaration, and to extensions of that declaration that are in the same file.</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="enum-associate">2. Associate value in enum</h4>
+</blockquote>
+
+<p>In Swift, enum cases could carry many types of values.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">Value</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nf">valueInt</span><span class="p">(</span><span class="kt">Int</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">valueFloat</span><span class="p">(</span><span class="kt">Float</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">valueString</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">describe</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="kt">Value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="n">value</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nf">valueInt</span><span class="p">(</span><span class="k">let</span> <span class="nv">int</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">"Result: </span><span class="se">\(</span><span class="n">int</span><span class="se">)</span><span class="s">"</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nf">valueFloat</span><span class="p">(</span><span class="k">let</span> <span class="nv">float</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">"Result: </span><span class="se">\(</span><span class="n">float</span><span class="se">)</span><span class="s">"</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nf">valueString</span><span class="p">(</span><span class="k">let</span> <span class="nv">string</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">"Result: </span><span class="se">\(</span><span class="n">string</span><span class="se">)</span><span class="s">"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nf">describe</span><span class="p">(</span><span class="kt">Value</span><span class="o">.</span><span class="nf">valueInt</span><span class="p">(</span><span class="mi">1234</span><span class="p">))</span>
+<span class="c1">//return: "Result: 1234"</span>
+<span class="nf">describe</span><span class="p">(</span><span class="kt">Value</span><span class="o">.</span><span class="nf">valueFloat</span><span class="p">(</span><span class="mf">3.14</span><span class="p">))</span>         
+<span class="c1">//return: "Result: 3.14"</span>
+<span class="nf">describe</span><span class="p">(</span><span class="kt">Value</span><span class="o">.</span><span class="nf">valueString</span><span class="p">(</span><span class="s">"hello"</span><span class="p">))</span>     
+<span class="c1">//return: "Result: hello"</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="enum-encode">3. Encode enum type</h4>
+</blockquote>
+
+<p>If we want to make the Enum type encodable, we need to convert the enum to and from the raw value like this.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">enum</span> <span class="kt">Stage</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="kt">DisplayAll</span> <span class="o">=</span> <span class="s">"displayAll"</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">AppState</span> <span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt">NSCoding</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">idx</span>   <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">var</span> <span class="nv">stage</span> <span class="o">=</span> <span class="kt">Stage</span><span class="o">.</span><span class="kt">DisplayAll</span>
+
+    <span class="k">override</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{}</span>
+
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">idx</span> <span class="o">=</span> <span class="n">aDecoder</span><span class="o">.</span><span class="nf">decodeIntegerForKey</span><span class="p">(</span><span class="s">"idx"</span><span class="p">)</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">stage</span> <span class="o">=</span> <span class="kt">Stage</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="p">(</span><span class="n">aDecoder</span><span class="o">.</span><span class="nf">decodeObjectForKey</span><span class="p">(</span><span class="s">"stage"</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">String</span><span class="p">))</span> <span class="p">??</span> <span class="o">.</span><span class="kt">DisplayAll</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">encodeWithCoder</span><span class="p">(</span><span class="nv">aCoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">aCoder</span><span class="o">.</span><span class="nf">encodeInteger</span><span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">idx</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="s">"idx"</span><span class="p">)</span>
+        <span class="n">aCoder</span><span class="o">.</span><span class="nf">encodeObject</span><span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">stage</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span><span class="s">"stage"</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="identity-operator">4. Identity operator</h4>
+</blockquote>
+
+<p><code class="highlighter-rouge">==</code> and <code class="highlighter-rouge">!=</code> are operators to check if their instance values are equal, means <em>equal to</em> .</p>
+
+<p><code class="highlighter-rouge">===</code> and <code class="highlighter-rouge">!==</code> are identity operators and used to check if the references point the same instance, means <em>identical to</em> .</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="n">anyObject1</span> <span class="o">==</span> <span class="n">anyObject2</span> <span class="p">{</span>
+    <span class="c1">//to check whether their values are equal</span>
+<span class="p">}</span>
+
+<span class="k">if</span> <span class="n">anyObject1</span> <span class="o">===</span> <span class="n">anyObject2</span> <span class="p">{</span>
+    <span class="c1">//to check whether they are the same instance</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<blockquote>
+  <h4 id="higher-order-funcs">5. Higher order fuctions</h4>
+</blockquote>
+
+<p><strong>Reduce</strong></p>
+
+<p>Use reduce to combine all items in a collection to create a single new value.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">items</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">4.0</span><span class="p">,</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">7.0</span><span class="p">]</span>
+<span class="k">let</span> <span class="nv">total</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="nv">combine</span><span class="p">:</span> <span class="o">+</span><span class="p">)</span>
+<span class="c1">//  28.0</span>
+
+<span class="k">let</span> <span class="nv">items</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span><span class="mf">4.0</span><span class="p">,</span><span class="mf">5.0</span><span class="p">,</span><span class="mf">7.0</span><span class="p">]</span>
+<span class="k">let</span> <span class="nv">total</span> <span class="o">=</span> <span class="n">items</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="o">+</span><span class="p">)</span>
+<span class="c1">//  28.0</span>
+
+<span class="k">let</span> <span class="nv">codes</span> <span class="o">=</span> <span class="p">[</span><span class="s">"abc"</span><span class="p">,</span><span class="s">"def"</span><span class="p">,</span><span class="s">"ghi"</span><span class="p">]</span>
+<span class="k">let</span> <span class="nv">text</span> <span class="o">=</span> <span class="n">codes</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="s">""</span><span class="p">,</span> <span class="nv">combine</span><span class="p">:</span> <span class="o">+</span><span class="p">)</span>
+<span class="c1">//  "abcdefghi"</span>
+
+<span class="k">let</span> <span class="nv">codes</span> <span class="o">=</span> <span class="p">[</span><span class="s">"abc"</span><span class="p">,</span><span class="s">"def"</span><span class="p">,</span><span class="s">"ghi"</span><span class="p">]</span>
+<span class="k">let</span> <span class="nv">text</span> <span class="o">=</span> <span class="n">codes</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="s">""</span><span class="p">,</span><span class="o">+</span><span class="p">)</span>
+<span class="c1">//  "abcdefghi"</span>
+</code></pre></div></div>
+
+<p><strong>FlatMap</strong></p>
+
+<p>Flatmap is used to flatten a collection of collections.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">collections</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">8</span><span class="p">],[</span><span class="mi">9</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]]</span>
+<span class="k">let</span> <span class="nv">flat</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">flatMap</span> <span class="p">{</span> <span class="nv">$0</span> <span class="p">}</span>
+<span class="c1">//  [5, 2, 7, 4, 8, 9, 1, 3]</span>
+</code></pre></div></div>
+
+<p>Flatmap is also used for removing nil values from a collection.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">people</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">?]</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Tom"</span><span class="p">,</span><span class="kc">nil</span><span class="p">,</span><span class="s">"Peter"</span><span class="p">,</span><span class="kc">nil</span><span class="p">,</span><span class="s">"Harry"</span><span class="p">]</span>
+<span class="k">let</span> <span class="nv">valid</span> <span class="o">=</span> <span class="n">people</span><span class="o">.</span><span class="n">flatMap</span> <span class="p">{</span><span class="nv">$0</span><span class="p">}</span>
+<span class="c1">//  ["Tom", "Peter", "Harry"]</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="string-to-number">6. String to decimal number</h4>
+</blockquote>
+
+<p><strong>Method 1</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">str</span> <span class="p">:</span> <span class="kt">NSString</span> <span class="o">=</span> <span class="n">oriString</span><span class="o">.</span><span class="n">text</span>
+<span class="k">var</span> <span class="nv">floatVal</span> <span class="p">:</span> <span class="kt">Float</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="n">floatValue</span>
+<span class="k">var</span> <span class="nv">doubleVal</span> <span class="p">:</span> <span class="kt">Double</span> <span class="o">=</span> <span class="n">str</span><span class="o">.</span><span class="n">doubleValue</span>
+</code></pre></div></div>
+
+<p><strong>Method 2</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">formatter</span> <span class="o">=</span> <span class="kt">NSNumberFormatter</span><span class="p">()</span>
+<span class="n">formatter</span><span class="o">.</span><span class="n">numberStyle</span> <span class="o">=</span> <span class="kt">NSNumberFormatter</span><span class="o">.</span><span class="kt">DecimalStyle</span>
+<span class="k">var</span> <span class="nv">number</span> <span class="p">:</span> <span class="kt">NSNumber</span><span class="p">?</span> <span class="o">=</span> <span class="n">formatter</span><span class="o">.</span><span class="nf">numberFromString</span><span class="p">(</span><span class="n">oriString</span><span class="p">)</span>
+<span class="k">var</span> <span class="nv">floatVal</span> <span class="o">=</span> <span class="n">number</span><span class="o">.</span><span class="n">floatValue</span>
+<span class="k">var</span> <span class="nv">doubleVal</span> <span class="o">=</span> <span class="n">number</span><span class="o">.</span><span class="n">doubleValue</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="string-to-pinyin">7. Chinese string to Pinyin</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">/// - Parameter hasBlank: contains blank or not</span>
+<span class="kd">func</span> <span class="nf">transformToPinyin</span><span class="p">(</span><span class="nv">hasBlank</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span><span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">stringRef</span> <span class="o">=</span> <span class="kt">NSMutableString</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span> <span class="k">as</span> <span class="kt">CFMutableString</span>
+    <span class="kt">CFStringTransform</span><span class="p">(</span><span class="n">stringRef</span><span class="p">,</span><span class="kc">nil</span><span class="p">,</span> <span class="n">kCFStringTransformToLatin</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="c1">// 转换为带音标的拼音</span>
+    <span class="kt">CFStringTransform</span><span class="p">(</span><span class="n">stringRef</span><span class="p">,</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">kCFStringTransformStripCombiningMarks</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span> <span class="c1">// 去掉音标</span>
+    <span class="k">let</span> <span class="nv">pinyin</span> <span class="o">=</span> <span class="n">stringRef</span> <span class="k">as</span> <span class="kt">String</span>
+    <span class="k">return</span> <span class="n">hasBlank</span> <span class="p">?</span> <span class="nv">pinyin</span> <span class="p">:</span> <span class="n">pinyin</span><span class="o">.</span><span class="nf">replacingOccurrences</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="s">" "</span><span class="p">,</span> <span class="nv">with</span><span class="p">:</span> <span class="s">""</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Convert to string with Pinyin initials</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">/// - Parameter lowercased: 是否小写（默认大写）</span>
+<span class="kd">func</span> <span class="nf">transformToPinyinHead</span><span class="p">(</span><span class="nv">lowercased</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span><span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">pinyin</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">transformToPinyin</span><span class="p">(</span><span class="nv">hasBlank</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span><span class="o">.</span><span class="n">capitalized</span> <span class="c1">// 字符串转换为首字母大写</span>
+    <span class="k">var</span> <span class="nv">headPinyinStr</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="k">for</span> <span class="n">ch</span> <span class="k">in</span> <span class="n">pinyin</span><span class="o">.</span><span class="n">characters</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">ch</span> <span class="o">&lt;=</span> <span class="s">"Z"</span> <span class="o">&amp;&amp;</span> <span class="n">ch</span> <span class="o">&gt;=</span> <span class="s">"A"</span> <span class="p">{</span>
+            <span class="n">headPinyinStr</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span> <span class="c1">// 获取所有大写字母</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">lowercased</span> <span class="p">?</span> <span class="n">headPinyinStr</span><span class="o">.</span><span class="nf">lowercased</span><span class="p">()</span> <span class="p">:</span> <span class="n">headPinyinStr</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="generics">8. Generics</h4>
+</blockquote>
+
+<p>Generic code enables you to write flexible, reusable functions and types that can work with any type, subject to requirements that you define. You can write code that avoids duplication and expresses its intent in a clear, abstracted manner.</p>
+
+<p>As example, following is getting a perferred type of the parent views:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">UIView</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="n">superView</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">UIView</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">for</span> <span class="n">view</span> <span class="k">in</span> <span class="nf">sequence</span><span class="p">(</span><span class="nv">first</span><span class="p">:</span> <span class="k">self</span><span class="o">.</span><span class="n">superview</span><span class="p">,</span> <span class="nv">next</span><span class="p">:</span> <span class="p">{</span> <span class="nv">$0</span><span class="p">?</span><span class="o">.</span><span class="n">superview</span> <span class="p">})</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">father</span> <span class="o">=</span> <span class="n">view</span> <span class="k">as?</span> <span class="kt">T</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">father</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// get the parent view which is a UITableView</span>
+<span class="k">let</span> <span class="nv">superView</span> <span class="o">=</span> <span class="n">view</span><span class="o">.</span><span class="nf">superView</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<h4 id="naming-conflict">9. Naming conflict</h4>
+
+<p>A Swift framework called <strong>FrameworkA</strong> that defines the type <strong>Thing</strong>.</p>
+
+<p>A Swift framework called <strong>FrameworkB</strong> that also defines the type <strong>Thing</strong> and the type <strong>FrameworkA</strong>.</p>
+
+<p>An app that imports both frameworks in the same Swift file.</p>
+
+<p><strong>Q:</strong> How to reference <strong>FrameworkA.Thing</strong> in said file?</p>
+
+<p><strong>A:</strong> Use <strong><code class="highlighter-rouge">typealias</code></strong> to redefine <strong>Thing</strong> to solve the problem.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">FrameworkA</span>
+<span class="kd">typealias</span> <span class="kt">ThingA</span> <span class="o">=</span> <span class="kt">Thing</span>
+<span class="k">let</span> <span class="nv">t</span> <span class="o">=</span> <span class="kt">FrameworkA</span><span class="o">.</span><span class="kt">ThingA</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="singleton">10. Sigleton</h4>
+</blockquote>
+
+<p>In Swift, the lazy initializer for a global variable (also for static members of structs and enums) is run the first time that global is accessed, and is launched as <code class="highlighter-rouge">dispatch_once</code> to make sure that the initialization is atomic. This enables a cool way to use <code class="highlighter-rouge">dispatch_once</code> in your code: just declare a global variable with an initializer and mark it private.</p>
+
+<p>Also, we all know that the static variable still support the <code class="highlighter-rouge">dispatch_once</code> feature, Swift will implement <code class="highlighter-rouge">swift_once_block_invoke</code> when it is inited, so we can use a simpler way to implement singleton.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//use global variable to implement singleton</span>
+<span class="kd">private</span> <span class="k">let</span> <span class="nv">sharedClassName</span> <span class="o">=</span> <span class="kt">TheOneAndOnlyClass</span><span class="p">()</span>
+<span class="kd">class</span> <span class="kt">TheOneAndOnlyClass</span> <span class="p">{</span>
+    <span class="kd">class</span> <span class="k">var</span> <span class="nv">sharedInstance</span><span class="p">:</span> <span class="kt">TheOneAndOnlyClass</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">sharedClassName</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//a more simpler way to implement singleton</span>
+<span class="kd">class</span> <span class="kt">TheOneAndOnlyClass</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">sharedInstance</span> <span class="o">=</span> <span class="kt">TheOneAndOnlyClass</span><span class="p">()</span>
+<span class="err">    </span><span class="kd">private</span><span class="err"> </span><span class="nf">init</span><span class="p">()</span><span class="err"> </span><span class="p">{}</span><span class="err"> </span><span class="c1">//This prevents others from using the default '()' initializer for this class.</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="repeated-value-array">11. Init array using repeated value</h4>
+</blockquote>
+
+<p>When you use the function <code class="highlighter-rouge">init(count:, repeatedValue:)</code> to initialize an array, you should know each value of this array references the same instance. So if you change anyone of them, all the others ones would also be changed.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">array</span> <span class="o">=</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">](</span><span class="nv">count</span><span class="p">:</span> <span class="n">count</span><span class="p">,</span> <span class="nv">repeatedValue</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">()</span><span class="o">.</span><span class="nf">init</span><span class="p">())</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="class-and-name">12. Transform between class name and class</h4>
+</blockquote>
+
+<p><strong>Get class from class name string</strong></p>
+
+<p>We can use <code class="highlighter-rouge">NSClassFromString</code> to get the instance of a class from class name by using</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">model</span> <span class="o">=</span> <span class="kt">NSClassFromString</span><span class="p">(</span><span class="s">"bundleName.className"</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">NSObject</span><span class="o">.</span><span class="k">Type</span><span class="p">;</span>
+<span class="k">let</span> <span class="nv">enity</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="nf">init</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p>But in Swift, the <code class="highlighter-rouge">className</code> needs to be appended by app’s name as prefix, usually app name looks like this: <strong>myAppName_switch</strong>, so we need to change code like this</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="k">let</span> <span class="nv">appName</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kt">NSBundle</span><span class="o">.</span><span class="nf">mainBundle</span><span class="p">()</span><span class="o">.</span><span class="nf">objectForInfoDictionaryKey</span><span class="p">(</span><span class="s">"CFBundleName"</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span>
+
+    <span class="c1">//get the appName</span>
+    <span class="k">let</span> <span class="nv">indexStart</span> <span class="o">=</span> <span class="n">appName</span><span class="o">.</span><span class="n">startIndex</span><span class="o">.</span><span class="nf">advancedBy</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">indexEnd</span> <span class="o">=</span> <span class="n">appName</span><span class="o">.</span><span class="n">endIndex</span><span class="o">.</span><span class="nf">advancedBy</span><span class="p">(</span><span class="o">-</span><span class="mi">6</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">subStr</span> <span class="o">=</span> <span class="n">appName</span><span class="o">.</span><span class="nf">substringToIndex</span><span class="p">(</span><span class="n">indexStart</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">subStr2</span> <span class="o">=</span> <span class="n">appName</span><span class="o">.</span><span class="nf">substringFromIndex</span><span class="p">(</span><span class="n">indexEnd</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">endName</span> <span class="o">=</span> <span class="s">"</span><span class="se">\(</span><span class="n">subStr</span><span class="se">)</span><span class="s">_</span><span class="se">\(</span><span class="n">subStr2</span><span class="se">)</span><span class="s">"</span>
+
+    <span class="c1">//get the className string as appName + className</span>
+    <span class="k">let</span> <span class="nv">classStringName</span> <span class="o">=</span> <span class="s">"</span><span class="se">\(</span><span class="n">endName</span><span class="se">)</span><span class="s">.</span><span class="se">\(</span><span class="n">className</span><span class="se">)</span><span class="s">"</span>
+
+    <span class="c1">//get the instance</span>
+    <span class="k">let</span> <span class="nv">model</span> <span class="o">=</span> <span class="kt">NSClassFromString</span><span class="p">(</span><span class="n">classStringName</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">entity</span> <span class="o">=</span> <span class="n">myClass</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+<p>或者可以这样说， NSClassFromString 在Swift中的参数不只是一个单独的类字符串,而是一个完整的包名加类名组成的字符串,也就是包类名字符串.</p>
+
+<p>如下：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">model</span> <span class="o">=</span> <span class="kt">NSClassFromString</span><span class="p">(</span><span class="s">"包名.类名"</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">NSObject</span><span class="o">.</span><span class="k">Type</span><span class="p">;</span>
+<span class="k">let</span> <span class="nv">enity</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="nf">init</span><span class="p">();</span>
+</code></pre></div></div>
+
+<p><strong>Get class name string from class</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  from a class</span>
+<span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="kt">YourClass</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
+<span class="c1">//  from a type</span>
+<span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//Example</span>
+<span class="kd">struct</span> <span class="kt">Foo</span> <span class="p">{</span>
+    <span class="c1">// Instance Level</span>
+    <span class="k">var</span> <span class="nv">typeName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="kt">Foo</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="c1">// Instance Level - Alternative Way</span>
+    <span class="k">var</span> <span class="nv">otherTypeName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">thisType</span> <span class="o">=</span> <span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="n">thisType</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="c1">// Type Level</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">typeName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">Foo</span><span class="p">()</span><span class="o">.</span><span class="n">typeName</span>       <span class="c1">// = "Foo"</span>
+<span class="kt">Foo</span><span class="p">()</span><span class="o">.</span><span class="n">otherTypeName</span>  <span class="c1">// = "Foo"</span>
+<span class="kt">Foo</span><span class="o">.</span><span class="n">typeName</span>         <span class="c1">// = "Foo"</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="predicate">13. Predicate Queries</h4>
+</blockquote>
+
+<p>Using <code class="highlighter-rouge">NSPredicate</code> in Swift</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">let</span> <span class="nv">predicate</span> <span class="o">=</span> <span class="kt">NSPredicate</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span> <span class="s">"name = %@"</span><span class="p">,</span> <span class="n">txtFieldName</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">predicate</span> <span class="o">=</span> <span class="kt">NSPredicate</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span> <span class="s">"name = %@ AND nickName = %@"</span><span class="p">,</span> <span class="nv">argumentArray</span><span class="p">:</span> <span class="p">[</span><span class="n">name</span><span class="p">,</span> <span class="n">nickname</span><span class="p">])</span>
+<span class="k">let</span> <span class="nv">predicate</span> <span class="o">=</span> <span class="kt">NSPredicate</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span> <span class="s">"name contains[c] %@"</span><span class="p">,</span> <span class="n">searchText</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">predicate</span> <span class="o">=</span> <span class="kt">NSPredicate</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span> <span class="s">"name contains[c]</span><span class="se">\(</span><span class="n">searchText</span><span class="se">)</span><span class="s">"</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">predicate</span> <span class="o">=</span> <span class="kt">NSPredicate</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span> <span class="s">"name contains[c] %@ AND nickName contains[c] %@"</span><span class="p">,</span> <span class="nv">argumentArray</span><span class="p">:</span> <span class="p">[</span><span class="n">name</span><span class="p">,</span> <span class="n">nickname</span><span class="p">])</span>
+<span class="k">let</span> <span class="nv">predicate</span> <span class="o">=</span> <span class="kt">NSPredicate</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span> <span class="s">"SELF contains %@"</span><span class="p">,</span> <span class="n">searchText</span><span class="p">)</span>
+
+<span class="k">let</span> <span class="nv">searchResults</span> <span class="o">=</span> <span class="n">dataSource</span><span class="o">.</span><span class="n">filter</span> <span class="p">{</span> <span class="n">predicate</span><span class="o">.</span><span class="nf">evaluateWithObject</span><span class="p">(</span><span class="nv">$0</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">var</span> <span class="nv">searchResults</span> <span class="o">=</span> <span class="n">dataSource</span><span class="o">.</span><span class="nf">filteredArrayUsingPredicate</span><span class="p">(</span><span class="n">predicate</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="break-multiple-loop">14. Break out of multiple loop levels using statements</h4>
+</blockquote>
+
+<p>In Swift’s labeled statements, execution pickes up directly after the block we labeled.</p>
+
+<p>So if we’re using two loops or more and want to break out ot them all, labeled statements could solve this problem.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">loopOne</span><span class="p">:</span> <span class="k">for</span> <span class="n">item</span> <span class="k">in</span> <span class="n">itemGroup</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="n">subItem</span> <span class="k">in</span> <span class="n">item</span><span class="o">.</span><span class="n">subItems</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">sampleId</span> <span class="o">==</span> <span class="n">subItem</span><span class="o">.</span><span class="n">id</span> <span class="p">{</span>
+            <span class="o">...</span>
+            <span class="k">break</span> <span class="n">loopOne</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="subscript">15. 下标subscript</h4>
+</blockquote>
+
+<p>下标 <code class="highlighter-rouge">subscript</code> 在数组和字典中使用，但是你可以给任何类型（枚举，结构体，类）增加 下标 <code class="highlighter-rouge">subscript</code> 的功能。</p>
+
+<p><code class="highlighter-rouge">subscript</code> 的语法类似实例方法、计算属性，其本质就是方法。例如给 <strong>Matix</strong> 类增加 <strong>indexPath</strong> 下标功能获取其中 <strong>data</strong> 的值。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">Matix</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">]</span>
+    <span class="nf">subscript</span><span class="p">(</span><span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="k">set</span> <span class="p">{</span>
+            <span class="k">guard</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">section</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">section</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">section</span><span class="p">][</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">newValue</span>
+        <span class="p">}</span>
+        <span class="k">get</span> <span class="p">{</span>
+            <span class="k">guard</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">section</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">section</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="o">&amp;&amp;</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="mi">0</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">][</span><span class="n">indexPath</span><span class="o">.</span><span class="n">section</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">var</span> <span class="nv">m</span> <span class="o">=</span> <span class="kt">Matix</span><span class="p">()</span>
+<span class="n">m</span><span class="p">[</span><span class="kt">IndexPath</span><span class="p">(</span><span class="nv">row</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">section</span><span class="p">:</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>  <span class="c1">//  [[1, 0, 0], [0, 3, 0], [0, 0, 1]]</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="kt">IndexPath</span><span class="p">(</span><span class="nv">row</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">section</span><span class="p">:</span> <span class="mi">0</span><span class="p">)])</span> <span class="c1">//  1</span>
+</code></pre></div></div>
+<hr />
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

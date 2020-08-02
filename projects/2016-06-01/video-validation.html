@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			快审
+		
+	</title>
+	<meta name="description" content="快审">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/projects/2016-06-01/video-validation">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>快审</h2>
+					<!-- <p>2016.07 - 2017.01</p> -->
+					<span>2016.06</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/projects/2016-06-01/video-validation" class="enabled">中文 </a>|<a href="/en/projects/2016-06-01/video-validation"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="快审"><a href="https://itunes.apple.com/cn/app/kuai-shen/id1138598976?mt=8">快审</a></h2>
+
+<hr />
+
+<p><img src="/images/apps/kuaishen.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="目录">目录</h3>
+
+<hr />
+
+<h4 id="1-概述">1. <a href="#p1">概述</a></h4>
+
+<p>1.1 <a href="#p11">基本信息</a></p>
+
+<p>1.2 <a href="#p12">结构解读</a></p>
+
+<p>1.3 <a href="#p13">第三方框架的使用</a></p>
+
+<hr />
+
+<h4 id="2-开发随笔">2. <a href="#p2">开发随笔</a></h4>
+
+<p>2.1 <a href="#p21">键盘弹出时列表向上移动</a></p>
+
+<p>2.2 <a href="#p22">扫描二维码</a></p>
+
+<p>2.3 <a href="#p23">身份证号验证</a></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p1">1. 概述</h3>
+
+<hr />
+
+<p>快审是一款用于本地电信营业厅视频审核新购号码用户的 App。</p>
+
+<p>整个 App 包括扫码排队, 视频审核, 资料上传提交, 新购订单查询等功能。</p>
+
+<p>实时音视频对话模块组件是基于网易云信服务实现。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p11">1.1 基本信息</h4>
+</blockquote>
+
+<p>使用语言: <strong>Objective-C</strong></p>
+
+<p>系统要求: <strong>iOS</strong></p>
+
+<p>参与时间: <strong>2016.07 - 2017.01</strong></p>
+
+<p>负责部分: <strong>个人独立开发所有模块</strong></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p12">1.2 结构解读</h4>
+</blockquote>
+
+<h4 id="主要框架">主要框架</h4>
+
+<ul>
+  <li>M – Models
+    <ul>
+      <li>Common models</li>
+      <li>Custom models</li>
+    </ul>
+  </li>
+  <li>Modules
+    <ul>
+      <li>Module 1
+        <ul>
+          <li>V - Views</li>
+          <li>C - Controllers</li>
+        </ul>
+      </li>
+      <li>Module 2
+        <ul>
+          <li>V - Views</li>
+          <li>C - Controllers</li>
+        </ul>
+      </li>
+      <li>Module 2
+        <ul>
+          <li>V - Views</li>
+          <li>C - Controllers</li>
+        </ul>
+      </li>
+    </ul>
+
+    <p>… …</p>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="网络层结构">网络层结构</h4>
+
+<p><img src="/images/video_validation/p12.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p13">1.3 第三方框架的使用</h4>
+</blockquote>
+
+<ul>
+  <li><a href="">DZNPhotoPickerController - 相册图片选择、剪裁编辑器</a></li>
+  <li><a href="">SVProgressHUD - 创建prompt</a></li>
+  <li><a href="">MJRefresh - 列表上拉刷新，下拉加载</a></li>
+  <li><a href="">Masonry - 使用纯代码方案解决屏幕大小自适应问题</a></li>
+  <li><a href="">XLForm - 创建动态表单的框架</a></li>
+  <li><a href="">AFNetworking - 网络层</a></li>
+  <li><a href="">AFNetworkActivityLogger - 使用AFN时的调试打印工具</a></li>
+  <li><a href="">SDWebImage - 网络加载图片</a></li>
+  <li><a href="">MJExtension - 轻量级的模型与字典、数组等数据结构的转换</a></li>
+  <li><a href="">LBXScan - 二维码、条形码识别</a></li>
+  <li><a href="">BlocksKit - 系统方法与组件的一些block封装</a></li>
+  <li><a href="">NIMSDK - 网易云信音视频对话组件</a></li>
+  <li><a href="">Bugly - 崩溃监测统计</a></li>
+</ul>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p2">2. 开发随笔</h3>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p21">2.1 键盘弹出时列表向上移动</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+    <span class="c1">//Add keyboard observer</span>
+    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="nf">defaultCenter</span><span class="p">]</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">keyboardWillShow</span><span class="o">:</span><span class="p">)</span> <span class="n">name</span><span class="o">:</span><span class="n">UIKeyboardWillShowNotification</span> <span class="n">object</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">NSNotificationCenter</span> <span class="nf">defaultCenter</span><span class="p">]</span> <span class="nf">addObserver</span><span class="p">:</span><span class="n">self</span> <span class="nf">selector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">keyboardWillHide</span><span class="o">:</span><span class="p">)</span> <span class="n">name</span><span class="o">:</span><span class="n">UIKeyboardWillHideNotification</span> <span class="n">object</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">keyboardWillShow</span><span class="p">:(</span><span class="n">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">notification</span><span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">updateConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">topLogoImageView</span><span class="p">.</span><span class="n">bottom</span><span class="p">).</span><span class="n">offset</span><span class="p">(</span><span class="o">-</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">21</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+    <span class="p">[</span><span class="n">UIView</span> <span class="nf">animateWithDuration</span><span class="p">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span> <span class="nf">delay</span><span class="p">:</span><span class="mi">0</span> <span class="n">usingSpringWithDamping</span><span class="o">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">7</span> <span class="n">initialSpringVelocity</span><span class="o">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span> <span class="n">options</span><span class="o">:</span><span class="n">kNilOptions</span> <span class="n">animations</span><span class="o">:^</span><span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">layoutIfNeeded</span><span class="p">];</span>
+    <span class="p">}</span> <span class="n">completion</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">keyboardWillHide</span><span class="p">:(</span><span class="n">NSNotification</span> <span class="o">*</span><span class="p">)</span><span class="nv">notification</span><span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">updateConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">topLogoImageView</span><span class="p">.</span><span class="n">bottom</span><span class="p">).</span><span class="n">offset</span><span class="p">(</span><span class="o">-</span><span class="n">kTableViewTopInset</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+    <span class="p">[</span><span class="n">UIView</span> <span class="nf">animateWithDuration</span><span class="p">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span> <span class="nf">delay</span><span class="p">:</span><span class="mi">0</span> <span class="n">usingSpringWithDamping</span><span class="o">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">7</span> <span class="n">initialSpringVelocity</span><span class="o">:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span> <span class="n">options</span><span class="o">:</span><span class="n">kNilOptions</span> <span class="n">animations</span><span class="o">:^</span><span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">layoutIfNeeded</span><span class="p">];</span>
+    <span class="p">}</span> <span class="n">completion</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p22">2.2 扫描二维码</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  ScanCodeViewController.h</span>
+
+<span class="cp">#import &lt;LBXScan/LBXScanViewController.h&gt;
+</span>
+<span class="k">@interface</span> <span class="nc">ScanCodeViewController</span> <span class="p">:</span> <span class="nc">LBXScanViewController</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  ScanCodeViewController.m</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">scanCode</span> <span class="p">{</span>
+    <span class="n">LBXScanViewStyle</span> <span class="o">*</span><span class="n">style</span> <span class="o">=</span> <span class="p">[[</span><span class="n">LBXScanViewStyle</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="c1">//矩形区域中心上移，默认中心点为屏幕中心点</span>
+    <span class="n">style</span><span class="p">.</span><span class="n">centerUpOffset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">style</span><span class="p">.</span><span class="n">xScanRetangleOffset</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+    <span class="n">style</span><span class="p">.</span><span class="n">isNeedShowRetangle</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+    
+    <span class="n">style</span><span class="p">.</span><span class="n">photoframeAngleStyle</span> <span class="o">=</span> <span class="n">LBXScanViewPhotoframeAngleStyle_Outer</span><span class="p">;</span>
+    <span class="n">style</span><span class="p">.</span><span class="n">photoframeAngleW</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+    <span class="n">style</span><span class="p">.</span><span class="n">photoframeAngleH</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+    <span class="n">style</span><span class="p">.</span><span class="n">photoframeLineW</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    
+    <span class="n">style</span><span class="p">.</span><span class="n">anmiationStyle</span> <span class="o">=</span> <span class="n">LBXScanViewAnimationStyle_NetGrid</span><span class="p">;</span>
+    <span class="n">style</span><span class="p">.</span><span class="n">animationImage</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"scan"</span><span class="p">];</span>
+    
+    <span class="n">ScanCodeViewController</span> <span class="o">*</span><span class="n">scanCodeVC</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ScanCodeViewController</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="n">scanCodeVC</span><span class="p">.</span><span class="n">style</span> <span class="o">=</span> <span class="n">style</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">navigationController</span> <span class="nf">pushViewController</span><span class="p">:</span><span class="n">scanCodeVC</span> <span class="nf">animated</span><span class="p">:</span><span class="nb">NO</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p23">2.3 身份证号验证</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  身份证号验证</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">checkIsIdCardNumber</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">idNumber</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">idNumber</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">15</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">idCard15Regex</span> <span class="o">=</span> <span class="s">@"^[1-9]</span><span class="se">\\</span><span class="s">d{7}((0</span><span class="se">\\</span><span class="s">d)|(1[0-2]))(([0|1|2]</span><span class="se">\\</span><span class="s">d)|3[0-1])</span><span class="se">\\</span><span class="s">d{3}$"</span><span class="p">;</span>
+        <span class="n">NSPredicate</span> <span class="o">*</span><span class="n">predicate</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSPredicate</span> <span class="nf">predicateWithFormat</span><span class="p">:</span><span class="s">@"SELF MATCHES %@"</span><span class="p">,</span> <span class="n">idCard15Regex</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">predicate</span> <span class="nf">evaluateWithObject</span><span class="p">:</span><span class="n">idNumber</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="c1">//将15位身份证转为18位验证</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">self</span> <span class="nf">checkIs18BitIdCardNumber</span><span class="p">:[</span><span class="n">self</span> <span class="nf">convert15IdCardTo18Bit</span><span class="p">:</span><span class="n">idNumber</span><span class="p">]];</span>
+        
+    <span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">idNumber</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">18</span><span class="p">){</span>
+
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">idCard18Regex</span>  <span class="o">=</span> <span class="s">@"^[1-9]</span><span class="se">\\</span><span class="s">d{5}[1-9]</span><span class="se">\\</span><span class="s">d{3}((0</span><span class="se">\\</span><span class="s">d)|(1[0-2]))(([0|1|2]</span><span class="se">\\</span><span class="s">d)|3[0-1])</span><span class="se">\\</span><span class="s">d{3}([</span><span class="se">\\</span><span class="s">d|x|X]{1})$"</span><span class="p">;</span>
+        <span class="n">NSPredicate</span> <span class="o">*</span><span class="n">predicate</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSPredicate</span> <span class="nf">predicateWithFormat</span><span class="p">:</span><span class="s">@"SELF MATCHES %@"</span><span class="p">,</span> <span class="n">idCard18Regex</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">predicate</span> <span class="nf">evaluateWithObject</span><span class="p">:</span><span class="n">idNumber</span><span class="p">])</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">self</span> <span class="nf">checkIs18BitIdCardNumber</span><span class="p">:</span><span class="n">idNumber</span><span class="p">];</span>
+        
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="c1">//  将15位的身份证转成18位身份证</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">convert15IdCardTo18Bit</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">idNumber15</span><span class="p">{</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">newBirthStr</span> <span class="o">=</span> <span class="p">[</span><span class="s">@"19"</span> <span class="nf">stringByAppendingString</span><span class="p">:[</span><span class="n">idNumber15</span> <span class="nf">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]];</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">idNumber17</span> <span class="o">=</span> <span class="p">[</span><span class="n">idNumber15</span> <span class="nf">stringByReplacingCharactersInRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span> <span class="nf">withString</span><span class="p">:</span><span class="n">newBirthStr</span><span class="p">];</span>
+
+    <span class="n">NSArray</span> <span class="o">*</span><span class="n">powerFactors</span> <span class="o">=</span> <span class="p">@[</span> <span class="s">@"7"</span><span class="p">,</span> <span class="s">@"9"</span><span class="p">,</span> <span class="s">@"10"</span><span class="p">,</span> <span class="s">@"5"</span><span class="p">,</span> <span class="s">@"8"</span><span class="p">,</span> <span class="s">@"4"</span><span class="p">,</span> <span class="s">@"2"</span><span class="p">,</span> <span class="s">@"1"</span><span class="p">,</span> <span class="s">@"6"</span><span class="p">,</span> <span class="s">@"3"</span><span class="p">,</span> <span class="s">@"7"</span><span class="p">,</span> <span class="s">@"9"</span><span class="p">,</span> <span class="s">@"10"</span><span class="p">,</span> <span class="s">@"5"</span><span class="p">,</span> <span class="s">@"8"</span><span class="p">,</span> <span class="s">@"4"</span><span class="p">,</span> <span class="s">@"2"</span> <span class="p">];</span>
+    <span class="n">NSArray</span> <span class="o">*</span><span class="n">verifyCodes</span> <span class="o">=</span> <span class="p">@[</span> <span class="s">@"1"</span><span class="p">,</span> <span class="s">@"0"</span><span class="p">,</span> <span class="s">@"X"</span><span class="p">,</span> <span class="s">@"9"</span><span class="p">,</span> <span class="s">@"8"</span><span class="p">,</span> <span class="s">@"7"</span><span class="p">,</span> <span class="s">@"6"</span><span class="p">,</span> <span class="s">@"5"</span><span class="p">,</span> <span class="s">@"4"</span><span class="p">,</span> <span class="s">@"3"</span><span class="p">,</span> <span class="s">@"2"</span> <span class="p">];</span>
+    <span class="n">NSInteger</span> <span class="n">powerSum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">17</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">powerSum</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">idNumber17</span> <span class="nf">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span> <span class="nf">intValue</span><span class="p">]</span> <span class="o">*</span> <span class="p">[</span><span class="n">powerFactors</span><span class="p">[</span><span class="nf">i</span><span class="p">]</span> <span class="nf">intValue</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="n">NSInteger</span> <span class="n">verifyCodeIndex</span> <span class="o">=</span> <span class="n">powerSum</span><span class="o">%</span><span class="mi">11</span><span class="p">;</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">idNumber18</span> <span class="o">=</span> <span class="p">[</span><span class="n">idNumber17</span> <span class="nf">stringByAppendingString</span><span class="p">:</span><span class="n">verifyCodes</span><span class="p">[</span><span class="nf">verifyCodeIndex</span><span class="p">]];</span>
+    
+    <span class="k">return</span> <span class="n">idNumber18</span><span class="p">;</span>   
+<span class="p">}</span>
+
+
+<span class="c1">//  18位身份证号码校验</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">checkIs18BitIdCardNumber</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">idNumber18</span><span class="p">{</span>
+    <span class="c1">//判断省份代码</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">provinceCode</span> <span class="o">=</span> <span class="p">[</span><span class="n">idNumber18</span> <span class="nf">substringToIndex</span><span class="p">:</span><span class="mi">2</span><span class="p">];</span>
+    <span class="n">NSArray</span> <span class="o">*</span><span class="n">cityCodeArray</span> <span class="o">=</span> <span class="p">@[</span><span class="s">@"11"</span><span class="p">,</span> <span class="s">@"12"</span><span class="p">,</span> <span class="s">@"13"</span><span class="p">,</span> <span class="s">@"14"</span><span class="p">,</span> <span class="s">@"15"</span><span class="p">,</span> <span class="s">@"21"</span><span class="p">,</span> <span class="s">@"22"</span><span class="p">,</span><span class="s">@"23"</span><span class="p">,</span> <span class="s">@"31"</span><span class="p">,</span>
+                               <span class="s">@"32"</span><span class="p">,</span> <span class="s">@"33"</span><span class="p">,</span> <span class="s">@"34"</span><span class="p">,</span> <span class="s">@"35"</span><span class="p">,</span> <span class="s">@"36"</span><span class="p">,</span> <span class="s">@"37"</span><span class="p">,</span> <span class="s">@"41"</span><span class="p">,</span> <span class="s">@"42"</span><span class="p">,</span> <span class="s">@"43"</span><span class="p">,</span><span class="s">@"44"</span><span class="p">,</span>
+                               <span class="s">@"45"</span><span class="p">,</span> <span class="s">@"46"</span><span class="p">,</span> <span class="s">@"50"</span><span class="p">,</span> <span class="s">@"51"</span><span class="p">,</span> <span class="s">@"52"</span><span class="p">,</span> <span class="s">@"53"</span><span class="p">,</span> <span class="s">@"54"</span><span class="p">,</span> <span class="s">@"61"</span><span class="p">,</span> <span class="s">@"62"</span><span class="p">,</span> <span class="s">@"63"</span><span class="p">,</span>
+                               <span class="s">@"64"</span><span class="p">,</span> <span class="s">@"65"</span><span class="p">,</span> <span class="s">@"71"</span><span class="p">,</span> <span class="s">@"81"</span><span class="p">,</span> <span class="s">@"82"</span><span class="p">,</span> <span class="s">@"91"</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">[</span><span class="n">cityCodeArray</span> <span class="nf">containsObject</span><span class="p">:</span><span class="n">provinceCode</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">//判断生日是否合法</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">birthStr</span> <span class="o">=</span> <span class="p">[</span><span class="n">idNumber18</span> <span class="nf">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">)];</span>
+    <span class="n">NSDateFormatter</span> <span class="o">*</span><span class="n">formatter</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDateFormatter</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="n">formatter</span><span class="p">.</span><span class="n">dateFormat</span> <span class="o">=</span> <span class="s">@"yyyyMMdd"</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">([</span><span class="n">formatter</span> <span class="nf">dateFromString</span><span class="p">:</span><span class="n">birthStr</span><span class="p">]</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">){</span>
+        <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">//判断校验位</span>
+    <span class="c1">//前17位加权因子</span>
+    <span class="n">NSArray</span> <span class="o">*</span><span class="n">powerFactors</span> <span class="o">=</span> <span class="p">@[</span><span class="s">@"7"</span><span class="p">,</span> <span class="s">@"9"</span><span class="p">,</span> <span class="s">@"10"</span><span class="p">,</span> <span class="s">@"5"</span><span class="p">,</span> <span class="s">@"8"</span><span class="p">,</span> <span class="s">@"4"</span><span class="p">,</span> <span class="s">@"2"</span><span class="p">,</span> <span class="s">@"1"</span><span class="p">,</span> <span class="s">@"6"</span><span class="p">,</span> <span class="s">@"3"</span><span class="p">,</span> <span class="s">@"7"</span><span class="p">,</span> <span class="s">@"9"</span><span class="p">,</span> <span class="s">@"10"</span><span class="p">,</span> <span class="s">@"5"</span><span class="p">,</span> <span class="s">@"8"</span><span class="p">,</span> <span class="s">@"4"</span><span class="p">,</span> <span class="s">@"2"</span><span class="p">];</span>
+    <span class="c1">// 除以11后，可能产生的11位余数、第18位校检码</span>
+    <span class="n">NSArray</span> <span class="o">*</span><span class="n">verifyCodes</span> <span class="o">=</span> <span class="p">@[</span><span class="s">@"1"</span><span class="p">,</span> <span class="s">@"0"</span><span class="p">,</span> <span class="s">@"X"</span><span class="p">,</span> <span class="s">@"9"</span><span class="p">,</span> <span class="s">@"8"</span><span class="p">,</span> <span class="s">@"7"</span><span class="p">,</span> <span class="s">@"6"</span><span class="p">,</span> <span class="s">@"5"</span><span class="p">,</span> <span class="s">@"4"</span><span class="p">,</span> <span class="s">@"3"</span><span class="p">,</span> <span class="s">@"2"</span><span class="p">];</span>
+    <span class="c1">//加权因子总和</span>
+    <span class="n">NSInteger</span> <span class="n">powerSum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">17</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">powerSum</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">idNumber18</span> <span class="nf">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span> <span class="nf">intValue</span><span class="p">]</span> <span class="o">*</span> <span class="p">[</span><span class="n">powerFactors</span><span class="p">[</span><span class="nf">i</span><span class="p">]</span> <span class="nf">intValue</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="c1">//计算出校验码所在数组的位置</span>
+    <span class="n">NSInteger</span> <span class="n">verifyCodeIndex</span> <span class="o">=</span> <span class="n">powerSum</span><span class="o">%</span><span class="mi">11</span><span class="p">;</span>
+    <span class="c1">//计算出校验码所在数组的位置</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">lastNumber</span> <span class="o">=</span> <span class="p">[</span><span class="n">idNumber18</span> <span class="nf">substringWithRange</span><span class="p">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span><span class="mi">1</span><span class="p">)];</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">lastNumber</span> <span class="nf">caseInsensitiveCompare</span><span class="p">:</span><span class="n">verifyCodes</span><span class="p">[</span><span class="nf">verifyCodeIndex</span><span class="p">]]</span> <span class="o">!=</span> <span class="n">NSOrderedSame</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

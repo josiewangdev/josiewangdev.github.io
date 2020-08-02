@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			列表视图
+		
+	</title>
+	<meta name="description" content="列表">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2018-10-21/tableview">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>列表视图</h2>
+					<!-- <p></p> -->
+					<span>2018.10</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2018-10-21/tableview" class="enabled">中文 </a>|<a href="/en/dev/2018-10-21/tableview"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="列表">列表</h2>
+
+<hr />
+
+<h4 id="1-列表章节索引">1. <a href="#p1">列表章节索引</a></h4>
+<h4 id="2-动态高度的列表头尾">2. <a href="#p2">动态高度的列表头尾</a></h4>
+<h4 id="3-延迟操作至列表重载完成">3. <a href="#p3">延迟操作至列表重载完成</a></h4>
+<h4 id="4-列表项左滑样式">4. <a href="#p4">列表项左滑样式</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p1">1. 列表章节索引</h4>
+</blockquote>
+
+<p>我们只需要实现以下协议方法, 就可以为列表创建一个索引</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  返回section的索引标题</span>
+<span class="kd">func</span> <span class="nf">sectionIndexTitles</span><span class="p">(</span><span class="k">for</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">String</span><span class="p">]?</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">allTitles</span>
+<span class="p">}</span>
+
+<span class="c1">//  返回每个标题对应的section索引值</span>
+<span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">sectionForSectionIndexTitle</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">at</span> <span class="nv">index</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">tpIndex</span><span class="p">:</span><span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">allTitles</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span>
+        <span class="k">if</span> <span class="nv">$0</span> <span class="o">==</span> <span class="n">title</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">tpIndex</span>
+        <span class="p">}</span>
+        <span class="n">tpIndex</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="p">})</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p2">2. 动态高度的列表头尾</h4>
+</blockquote>
+
+<p>列表视图可以设置表头和表尾，但问题是表头和表尾不能动态布局，必须手动设置一个固定高度。当你的表头表尾需要用动态内容填充的时候，手动设置的这个尺寸可能并不能适配所有的手机型号。</p>
+
+<p>使用以下代码可以根据自动布局的约束重新将表头和表尾调整成合适的大小。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">sizeHeaderToFit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">headerView</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">tableHeaderView</span> <span class="p">{</span>
+        <span class="n">headerView</span><span class="o">.</span><span class="nf">setNeedsLayout</span><span class="p">()</span>
+        <span class="n">headerView</span><span class="o">.</span><span class="nf">layoutIfNeeded</span><span class="p">()</span>
+        <span class="k">let</span> <span class="nv">height</span> <span class="o">=</span> <span class="n">headerView</span><span class="o">.</span><span class="nf">systemLayoutSizeFitting</span><span class="p">(</span><span class="kt">UILayoutFittingCompressedSize</span><span class="p">)</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">var</span> <span class="nv">frame</span> <span class="o">=</span> <span class="n">headerView</span><span class="o">.</span><span class="n">frame</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="n">headerView</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">tableHeaderView</span> <span class="o">=</span> <span class="n">headerView</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+    
+<span class="kd">func</span> <span class="nf">sizeFooterToFit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">footerView</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">tableFooterView</span> <span class="p">{</span>
+        <span class="n">footerView</span><span class="o">.</span><span class="nf">setNeedsLayout</span><span class="p">()</span>
+        <span class="n">footerView</span><span class="o">.</span><span class="nf">layoutIfNeeded</span><span class="p">()</span>
+        <span class="k">let</span> <span class="nv">height</span> <span class="o">=</span> <span class="n">footerView</span><span class="o">.</span><span class="nf">systemLayoutSizeFitting</span><span class="p">(</span><span class="kt">UILayoutFittingCompressedSize</span><span class="p">)</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">var</span> <span class="nv">frame</span> <span class="o">=</span> <span class="n">footerView</span><span class="o">.</span><span class="n">frame</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="n">footerView</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">tableFooterView</span> <span class="o">=</span> <span class="n">footerView</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>你只需要在表头表尾填充内容改变的时候调用这些方法。例如</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">configTableViewHeader</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//  update the table view header content</span>
+    <span class="o">...</span>
+    <span class="nf">sizeHeaderToFit</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p3">3. 延迟操作至列表重载完成</h4>
+</blockquote>
+
+<p>在实际的项目开发中，经常会有需求等待列表视图刷新或重载完成之后，才能进行下一步操作。</p>
+
+<p>以下两种方法可以解决这个问题：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">reloadData</span><span class="p">];</span>
+<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">layoutIfNeeded</span><span class="p">];</span>
+<span class="c1">//  reload finish</span>
+<span class="c1">//  layoutIfNeeded will force to reload the view and wait the reload finishing</span>
+<span class="o">&lt;</span><span class="err">#</span> <span class="n">write</span> <span class="n">you</span> <span class="n">next</span> <span class="n">step</span> <span class="n">code</span> <span class="n">here</span> <span class="err">#</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">reloadData</span><span class="p">];</span>
+<span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+<span class="c1">//  reload finish</span>
+    <span class="o">&lt;</span><span class="err">#</span> <span class="n">write</span> <span class="n">you</span> <span class="n">next</span> <span class="n">step</span> <span class="n">code</span> <span class="n">here</span> <span class="err">#</span><span class="o">&gt;</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p4">4. 列表项左滑样式</h4>
+</blockquote>
+
+<p><br /></p>
+
+<h4 id="系统默认左滑样式">系统默认左滑样式</h4>
+
+<p><br /></p>
+
+<p>如果只需要使用默认左滑样式，只需要实现 <code class="highlighter-rouge">tableView:commitEditingStyle:forRowAtIndexPath</code> 数据源方法。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">commitEditingStyle</span> <span class="nv">editingStyle</span><span class="p">:</span> <span class="kt">UITableViewCellEditingStyle</span><span class="p">,</span> <span class="n">forRowAtIndexPath</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">NSIndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">editingStyle</span> <span class="o">==</span> <span class="kt">UITableViewCellEditingStyleDelete</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//  do the remove action</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">//  handle other other actions</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>想要改变系统默认左滑删除选项按钮上的文字，可以用以下方法简单实现</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">titleForDeleteConfirmationButtonForRowAtIndexPath</span> <span class="nv">indexPath</span><span class="p">:</span><span class="kt">NSIndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span> 
+    <span class="k">return</span> <span class="s">"自定义删除"</span><span class="p">;</span> 
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="自定义列表左滑样式">自定义列表左滑样式</h4>
+
+<p><br /></p>
+
+<p>如果要显示自定义的左滑选项, 必须实现下面的协议方法让列表处于可编辑状态</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">canEditRowAtIndexPath</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">NSIndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>同时，需要实现代理方法<code class="highlighter-rouge">tableView:editActionsForRowAtIndexPath</code>，并在里面创建自定义的<code class="highlighter-rouge">UITableViewRowAction</code>，当然你也可以定义多个左滑选项</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">editActionsForRowAtIndexPath</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">NSIndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">]?</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">more</span> <span class="o">=</span> <span class="kt">UITableViewRowAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="kt">Normal</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"More"</span><span class="p">)</span> <span class="p">{</span> <span class="n">action</span><span class="p">,</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"more button tapped"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">more</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="nf">lightGrayColor</span><span class="p">()</span>
+    
+    <span class="k">let</span> <span class="nv">favorite</span> <span class="o">=</span> <span class="kt">UITableViewRowAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="kt">Normal</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"Favorite"</span><span class="p">)</span> <span class="p">{</span> <span class="n">action</span><span class="p">,</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="c1">//  推出编辑模式, 隐藏左滑菜单</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="nf">setEditing</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>  
+        <span class="nf">println</span><span class="p">(</span><span class="s">"favorite button tapped"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">favorite</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="nf">orangeColor</span><span class="p">()</span>
+    
+    <span class="k">let</span> <span class="nv">share</span> <span class="o">=</span> <span class="kt">UITableViewRowAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="kt">Normal</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"Share"</span><span class="p">)</span> <span class="p">{</span> <span class="n">action</span><span class="p">,</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"share button tapped"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">share</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="nf">blueColor</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">[</span><span class="n">share</span><span class="p">,</span> <span class="n">favorite</span><span class="p">,</span> <span class="n">more</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<h4 id="参考链接">参考链接</h4>
+
+<ul>
+  <li><a href="https://www.jianshu.com/p/779f36c21632">UITableView左滑删除自定义 - 实现多选项并使用自定义图片</a></li>
+  <li><a href="https://spin.atomicobject.com/2017/08/11/swift-extending-uitableviewcontroller/">Extending UITableViewController</a></li>
+  <li><a href="https://tech.glowing.com/cn/practice-in-uiscrollview/">UIScrollView 实践经验</a></li>
+</ul>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

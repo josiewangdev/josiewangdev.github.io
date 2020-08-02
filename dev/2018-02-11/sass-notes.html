@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Sass 随笔
+		
+	</title>
+	<meta name="description" content="Sass 随笔">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2018-02-11/sass-notes">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Sass 随笔</h2>
+					<!-- <p>Use Sass to implement blog's css style</p> -->
+					<span>2018.02</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2018-02-11/sass-notes" class="enabled">中文 </a>|<a href="/en/dev/2018-02-11/sass-notes"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="sass-随笔">Sass 随笔</h2>
+
+<hr />
+
+<h4 id="1-语法">1. <a href="#syntax">语法</a></h4>
+<h4 id="2-变量">2. <a href="#varibles">变量</a></h4>
+<h4 id="3-混合宏">3. <a href="#mixin">混合宏</a></h4>
+<h4 id="4-jekyll项目内使用sass">4. <a href="#sass-in-jekyll">Jekyll项目内使用Sass</a></h4>
+<h4 id="5-pre标签内代码段换行样式">5. <a href="#">pre标签内代码段换行样式</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="syntax">1. 语法</h4>
+</blockquote>
+
+<div class="language-sass highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">ul</span> <span class="err">{</span>
+    <span class="nl">list-style</span><span class="p">:</span> <span class="nb">disc</span><span class="err">;</span>
+    <span class="nt">li</span> <span class="err">{</span>
+        <span class="nl">font-size</span><span class="p">:</span> <span class="nv">$content-font-size</span><span class="err">;</span>
+        <span class="nl">line-height</span><span class="p">:</span> <span class="m">2rem</span><span class="err">;</span>
+        <span class="nl">font-family</span><span class="p">:</span> <span class="nv">$content-font-family</span><span class="err">;</span>
+        <span class="nt">a</span> <span class="err">{</span>
+            <span class="nl">color</span><span class="p">:</span> <span class="nv">$sidebar-item-color</span><span class="err">;</span>
+            <span class="k">&amp;</span><span class="nd">:hover</span> <span class="err">{</span>
+                <span class="nl">color</span><span class="p">:</span> <span class="nv">$link-hover-color</span><span class="err">;</span>
+            <span class="err">}</span>
+        <span class="err">}</span>
+    <span class="err">}</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="varibles">2. 变量</h4>
+</blockquote>
+
+<p>Sass中使用变量非常简单。</p>
+
+<p>你可以以 <code class="highlighter-rouge">$</code> 开头命名一个值，这个值则可以使用它的名称在其他地方被引用。这样极大的减少了代码的重复性。</p>
+
+<p>同样你也可以定义一个变量文件用来存储公共值，例如颜色与字体等。然后在其他样式文件中通过 <code class="highlighter-rouge">@import</code> 进行引用。</p>
+
+<div class="language-sass highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  vars.scss</span>
+
+<span class="nv">$bg-color</span><span class="p">:</span>      <span class="mh">#ffffff</span><span class="err">;</span>
+<span class="nv">$title-color</span><span class="p">:</span>   <span class="mh">#f8f8f2</span><span class="err">;</span>
+<span class="nv">$content-color</span><span class="p">:</span>	<span class="mh">#272822</span><span class="err">;</span>
+<span class="nv">$border-color</span><span class="p">:</span>	<span class="mh">#e1e1e1</span><span class="err">;</span>  
+</code></pre></div></div>
+
+<div class="language-sass highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  main.scss</span>
+
+<span class="k">@import</span> <span class="s">"vars";</span>
+<span class="nt">h1</span> <span class="err">{</span>
+    <span class="nl">color</span><span class="p">:</span> <span class="nv">$title-color</span><span class="err">;</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="mixin">3. 混合宏</h4>
+</blockquote>
+
+<p>混合宏可以组合代码片段成为一个宏，类似局部文件，它可以让我们避免使用非语义的类。</p>
+
+<p>同时也可以在其他项目样式文件的任何地方来复用。</p>
+
+<p>通过使用 <code class="highlighter-rouge">@mixin</code> 来组合代码片段并用 <code class="highlighter-rouge">@include</code> 在其他地方引用。</p>
+
+<div class="language-sass highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@mixin</span> <span class="nf">border-radius</span><span class="p">(</span><span class="nv">$radius</span><span class="p">)</span> <span class="err">{</span>
+    <span class="na">-webkit-border-radius</span><span class="p">:</span> <span class="nv">$radius</span><span class="err">;</span>
+    <span class="na">-moz-border-radius</span><span class="p">:</span> <span class="nv">$radius</span><span class="err">;</span>
+    <span class="na">-khtml-border-radius</span><span class="p">:</span> <span class="nv">$radius</span><span class="err">;</span>
+    <span class="nl">border-radius</span><span class="p">:</span> <span class="nv">$radius</span><span class="err">;</span> 
+<span class="err">}</span>
+<span class="nt">a</span> <span class="err">{</span>
+    <span class="k">@include</span> <span class="nd">border-radius</span><span class="p">(</span><span class="m">10px</span><span class="p">)</span><span class="err">;</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="sass-in-jekyll">4. Jekyll项目内使用Sass</h4>
+</blockquote>
+
+<p>Jekyll已经内置了对Sass的支持，可以直接将Sass文件预编译为Css文件。</p>
+
+<p>但是，要使用Sass，你在创建Sass样式文件时一定要使用正确的扩展名 （<code class="highlighter-rouge">.sass</code>, <code class="highlighter-rouge">.scss</code>, 或者 <code class="highlighter-rouge">.coffee</code>）并且在文件内容开始时加上预处理头 <code class="highlighter-rouge">===</code> ，才能生效。</p>
+
+<div class="language-sass highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  main.scss</span>
+<span class="nt">---</span>
+<span class="c1">//  此处为预处理头</span>
+<span class="nt">---</span>
+
+<span class="nt">body</span> <span class="err">{</span>
+    <span class="nc">...</span>
+<span class="err">}</span>
+<span class="nt">a</span> <span class="err">{</span>
+    <span class="nc">...</span>
+<span class="err">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="5-pre标签内代码段换行样式-1">5. <a href="#">pre标签内代码段换行样式</a></h4>
+</blockquote>
+
+<p>在博客书写中，我们通常会使用 <code class="highlighter-rouge">&lt;pre&gt;&lt;/pre&gt;</code> 来展示代码片段。但是有的时候单行代码过长并且没有折行，所以我用了下面的样式代码使其变成多行展示。</p>
+
+<div class="language-scss highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">pre</span> <span class="p">{</span>
+    <span class="nt">white-space</span><span class="nd">:pre-wrap</span><span class="p">;</span> <span class="cm">/* css3.0 */</span>
+    <span class="nl">white-space</span><span class="p">:</span><span class="o">-</span><span class="n">moz-pre-wrap</span><span class="p">;</span> <span class="cm">/* Firefox */</span>
+    <span class="nl">white-space</span><span class="p">:</span><span class="o">-</span><span class="n">pre-wrap</span><span class="p">;</span> <span class="cm">/* Opera 4-6 */</span>
+    <span class="nl">white-space</span><span class="p">:</span><span class="o">-</span><span class="n">o-pre-wrap</span><span class="p">;</span> <span class="cm">/* Opera 7 */</span>
+    <span class="nt">word-wrap</span><span class="nd">:break-word</span><span class="p">;</span> <span class="cm">/* Internet Explorer 5.5+ */</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

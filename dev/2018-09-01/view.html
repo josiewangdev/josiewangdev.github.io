@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			界面
+		
+	</title>
+	<meta name="description" content="界面">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2018-09-01/view">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>界面</h2>
+					<!-- <p></p> -->
+					<span>2018.09</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2018-09-01/view" class="enabled">中文 </a>|<a href="/en/dev/2018-09-01/view"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="界面">界面</h2>
+
+<hr />
+
+<h4 id="1-可视化变量">1. <a href="#inspectable-value">可视化变量</a></h4>
+<h4 id="2-bounds-vs-frame">2. <a href="#bounds-vs-frame">Bounds Vs. Frame</a></h4>
+
+<hr />
+
+<blockquote>
+  <h4 id="inspectable-value">1. 可视化变量</h4>
+</blockquote>
+
+<p>通过设置一个变量为 <code class="highlighter-rouge">IBInspectable</code>, 可以让该变量的值可通过 <strong>xib</strong> 文件可视化编辑。</p>
+
+<p>例如给一个视图类 <code class="highlighter-rouge">MyCustomView</code> 添加圆角属性</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">MyCustomView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span>
+    <span class="kd">@IBInspectable</span> <span class="k">var</span> <span class="nv">cornerRadius</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">{</span>
+        <span class="k">didSet</span> <span class="p">{</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">cornerRadius</span> <span class="o">=</span> <span class="n">cornerRadius</span>
+            <span class="n">layer</span><span class="o">.</span><span class="n">masksToBounds</span> <span class="o">=</span> <span class="n">cornerRadius</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><img src="/images/20170901/IBInspectable.png" alt="xib" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="2-bounds-vs-frame-1">2. <a href="#bounds-vs-frame">Bounds Vs. Frame</a></h4>
+</blockquote>
+
+<p><img src="/images/20170901/bounds_frame.png" alt="Illustration" /></p>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

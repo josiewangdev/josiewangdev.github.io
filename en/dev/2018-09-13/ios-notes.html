@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			iOS Develop Notes
+		
+	</title>
+	<meta name="description" content="iOS Develop Notes">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/dev/2018-09-13/ios-notes">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>iOS Develop Notes</h2>
+					<!-- <p></p> -->
+					<span>2018.09</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/dev/2018-09-13/ios-notes">中文 </a>|<a href="/en/dev/2018-09-13/ios-notes" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="ios-develop-notes">iOS Develop Notes</h2>
+
+<hr />
+
+<h4 id="1-nstimer-memory-management">1. <a href="#nstimer">NSTimer memory management</a></h4>
+<h4 id="2-system-version-check">2. <a href="#system-version">System Version Check</a></h4>
+<h4 id="3-prevent-the-dylib-hooks">3. <a href="#dylib-hooks">Prevent the dylib hooks</a></h4>
+<h4 id="4-play-video-fullscreen-in-portrait-mode-locked">4. <a href="#play-video-fullscreen">Play video fullscreen in portrait mode locked</a></h4>
+<h4 id="5-gcd-timer">5. <a href="#gcd-timer">GCD Timer</a></h4>
+<h4 id="6-podfile语法">6. <a href="#pod">Podfile语法</a></h4>
+<h4 id="7-不同的-url-scheme-进入app展示不同的-launch-image">7. <a href="#launch-image">不同的 URL scheme 进入App展示不同的 launch image</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="nstimer">1. NSTimer memory management</h4>
+</blockquote>
+
+<p>NSTimer will maintain a strong reference to the target, which can cause (especially in repeating timers) strong reference cycles (a.k.a. retain cycles).</p>
+
+<p>A common example of an unresolved strong reference cycle would be to have a UIViewController with a NSTimer property that repeats, but because the NSTimer has a strong reference to the UIViewController, the controller will end up being retained.</p>
+
+<p>So, if you’re keeping the NSTimer as an instance variable, then, yes, you should <code class="highlighter-rouge">invalidate</code> it, to resolve the strong reference cycle.</p>
+
+<p>If you’re just calling the <code class="highlighter-rouge">scheduledTimerWithTimeInterval</code>, but not saving it to an instance variable, then your strong 
+reference cycle will be resolved when the NSTimer is complete.</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="system-version">2. System Version Check</h4>
+</blockquote>
+
+<p>The system version is higher than iOS 8.0.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">os</span> <span class="o">=</span> <span class="kt">NSProcessInfo</span><span class="p">()</span><span class="o">.</span><span class="n">operatingSystemVersion</span>
+<span class="k">switch</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">majorVersion</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">minorVersion</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">patchVersion</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">case</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &gt;= 8.0.0"</span><span class="p">)</span>
+<span class="k">case</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &gt;= 7.0.0, &lt; 7.1.0"</span><span class="p">)</span>
+<span class="k">case</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &gt;= 7.1.0, &lt; 8.0.0"</span><span class="p">)</span>
+<span class="k">default</span><span class="p">:</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &lt; 7.0.0"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The system version is lower than iOS 8.0.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">switch</span> <span class="kt">UIDevice</span><span class="o">.</span><span class="nf">currentDevice</span><span class="p">()</span><span class="o">.</span><span class="n">systemVersion</span><span class="o">.</span><span class="nf">compare</span><span class="p">(</span><span class="s">"8.0.0"</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">NSStringCompareOptions</span><span class="o">.</span><span class="kt">NumericSearch</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">case</span> <span class="o">.</span><span class="kt">OrderedSame</span><span class="p">,</span> <span class="o">.</span><span class="kt">OrderedDescending</span><span class="p">:</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &gt;= 8.0"</span><span class="p">)</span>
+<span class="k">case</span> <span class="o">.</span><span class="kt">OrderedAscending</span><span class="p">:</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &lt; 8.0"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="dylib-hooks">3. Prevent the dylib hooks</h4>
+</blockquote>
+
+<p>Add the following code in <em>Other Linker Flags</em> could help to prevent the most of dylib hooks.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-Wl</span>,-sectcreate,__RESTRICT,__restrict,/dev/null
+</code></pre></div></div>
+
+<p><img src="/images/dylib_hook/dylib_hook.jpg" alt="dylib" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="play-video-fullscreen">4. Play video fullscreen in portrait mode locked</h4>
+</blockquote>
+
+<p>How to play video fullscreen in landscape mode when the application is lock in portrait mode?</p>
+
+<p><strong>1).</strong> Check <strong>Device Orientation</strong> to <code class="highlighter-rouge">Portrait</code>, <code class="highlighter-rouge">Landscape left</code>, <code class="highlighter-rouge">Landscape right</code> in your <strong>project target</strong>.</p>
+
+<p><strong>2).</strong> Do the below code in <code class="highlighter-rouge">AppDelegate</code></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span><span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nf">application</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">supportedInterfaceOrientationsForWindow</span><span class="p">:(</span><span class="n">UIWindow</span> <span class="o">*</span><span class="p">)</span><span class="nv">window</span><span class="p">{</span>
+
+    <span class="n">UIStoryboard</span> <span class="o">*</span><span class="n">mainStoryboard</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIStoryboard</span> <span class="nf">storyboardWithName</span><span class="p">:</span><span class="s">@"Main"</span> <span class="nf">bundle</span><span class="p">:</span> <span class="nb">nil</span><span class="p">];</span>
+
+    <span class="n">ViewControllerThatPlaysVideo</span> <span class="o">*</span><span class="n">currentViewController</span> <span class="o">=</span> <span class="n">ViewControllerThatPlaysVideo</span><span class="o">*</span><span class="p">)[</span><span class="n">mainStoryboard</span> <span class="nf">instantiateViewControllerWithIdentifier</span><span class="p">:</span><span class="s">@"postDetailView"</span><span class="p">];</span>
+    
+    <span class="k">if</span><span class="p">(</span><span class="n">navigationController</span><span class="p">.</span><span class="n">visibleViewController</span> <span class="n">isKindOfClass</span><span class="o">:</span> <span class="p">[</span><span class="n">ViewControllerThatPlaysVideo</span> <span class="nf">class</span><span class="p">]]){</span>
+       <span class="k">if</span><span class="p">([</span><span class="n">currentViewController</span> <span class="nf">playerState</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">UIInterfaceOrientationMaskLandscape</span><span class="o">|</span><span class="n">UIInterfaceOrientationMaskPortrait</span><span class="p">;</span>
+       <span class="k">return</span> <span class="n">UIInterfaceOrientationMaskPortrait</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">UIInterfaceOrientationMaskPortrait</span><span class="p">;</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="gcd-timer">5. GCD Timer</h4>
+</blockquote>
+
+<p><strong>1).</strong> Decide what kind of queue to execute the GCD timer’s callback.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="p">=</span> <span class="nf">dispatch_get_global_queue</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span> 
+</code></pre></div></div>
+
+<p><strong>2).</strong> Create a timer.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dispatch_source_t</span> <span class="n">timer</span> <span class="p">=</span> <span class="nf">dispatch_source_create</span><span class="p">(</span><span class="n">DISPATCH_SOURCE_TYPE_TIMER</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">queue</span><span class="p">);</span> 
+</code></pre></div></div>
+
+<p><strong>3).</strong> Set up timer’s start time, repeat time interval and the leeway for accurateness.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">dispatch_source_set_timer</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span> <span class="p">&lt;</span><span class="err">#</span><span class="n">intervalInSeconds</span><span class="err">#</span><span class="p">&gt;</span> <span class="p">*</span> <span class="n">NSEC_PER_SEC</span><span class="p">,</span> <span class="p">&lt;</span><span class="err">#</span><span class="n">leewayInSeconds</span><span class="err">#</span><span class="p">&gt;</span> <span class="p">*</span> <span class="n">NSEC_PER_SEC</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>4).</strong> Set up timer callback.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">dispatch_source_set_event_handler</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="p">^{</span>
+    <span class="p">&lt;</span><span class="err">#</span><span class="n">code</span> <span class="n">to</span> <span class="n">be</span> <span class="n">executed</span> <span class="n">when</span> <span class="n">timer</span> <span class="n">fires</span><span class="err">#</span><span class="p">&gt;</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p><strong>5).</strong> Start the timer (the default status of the timer is stoped).</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">dispatch_resume</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>Example:</strong> Using GCD timer to implement the count down captcha button.</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__block</span> <span class="n">NSInteger</span> <span class="n">time</span> <span class="p">=</span> <span class="m">59</span><span class="p">;</span> <span class="c1">//count down time</span>
+
+<span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="p">=</span> <span class="nf">dispatch_get_global_queue</span><span class="p">(</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+
+<span class="n">dispatch_source_t</span> <span class="n">timer</span> <span class="p">=</span> <span class="nf">dispatch_source_create</span><span class="p">(</span><span class="n">DISPATCH_SOURCE_TYPE_TIMER</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">queue</span><span class="p">);</span>
+
+<span class="nf">dispatch_source_set_timer</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span><span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span><span class="m">1.0</span><span class="p">*</span><span class="n">NSEC_PER_SEC</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+
+<span class="nf">dispatch_source_set_event_handler</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="p">^{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">time</span> <span class="p">&lt;=</span> <span class="m">0</span><span class="p">){</span>
+        <span class="nf">dispatch_source_cancel</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>
+        <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">(),</span> <span class="p">^{</span>            
+            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">captchaButton</span> <span class="n">setTitle</span><span class="p">:</span><span class="s">@"send again"</span> <span class="n">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">timeLabel</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="s">@"start"</span><span class="p">;</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">captchaButton</span><span class="p">.</span><span class="n">userInteractionEnabled</span> <span class="p">=</span> <span class="n">YES</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="kt">int</span> <span class="n">seconds</span> <span class="p">=</span> <span class="n">time</span> <span class="p">%</span> <span class="m">60</span><span class="p">;</span>
+        <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">(),</span> <span class="p">^{</span>  
+            <span class="n">self</span><span class="p">.</span><span class="n">timeLabel</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="n">stringWithFormat</span><span class="p">:</span><span class="s">@"send again (%.2d)s"</span><span class="p">,</span><span class="n">seconds</span><span class="p">];</span>
+            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">captchaButton</span> <span class="n">setTitle</span><span class="p">:</span><span class="s">@"sent"</span> <span class="n">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">captchaButton</span><span class="p">.</span><span class="n">userInteractionEnabled</span> <span class="p">=</span> <span class="n">NO</span><span class="p">;</span>
+        <span class="p">});</span>
+        <span class="n">time</span><span class="p">--;</span>
+    <span class="p">}</span>
+<span class="p">});</span> 
+
+<span class="nf">dispatch_resume</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="pod">6. Podfile语法</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">Objection</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="mf">0.9</span><span class="err">'</span> <span class="c1">//指定版本号</span>
+</code></pre></div></div>
+
+<p><strong>对版本号的操作除了指定与不指定，你还可以做其他操作</strong></p>
+
+<p>&gt;0.1 高于0.1的任何版本</p>
+
+<p>&gt;=0.1 版本0.1和任何更高版本</p>
+
+<p>&lt;0.1 低于0.1的任何版本</p>
+
+<p>&lt;=0.1 版本0.1和任何较低的版本</p>
+
+<p>〜&gt;0.1.2 版本 0.1.2的版本到0.2 ，不包括0.2。这个基于你指定的版本号的最后一个部分。这个例子等效于&gt;= 0.1.2并且 &lt;0.2.0，并且始终是你指定范围内的最新版本</p>
+
+<blockquote>
+  <p>默认情况下， 依赖项会被安装在所有target的build configuration中。为了调试或者处于其他原因，依赖项只能在给定的build configuration中被启用</p>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">PonyDebugger</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">configurations</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="err">'</span><span class="kt">Release</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="kt">App</span> <span class="kt">Store</span><span class="err">'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>当你用一个名字装Pod的时候，它将安装所有定义在podspec里面的默认subspec。你可以这样指定:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">QueryKit</span><span class="o">/</span><span class="kt">Attribute</span><span class="err">'</span>
+</code></pre></div></div>
+
+<p>也可以指定一个集合，像下面这样:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">QueryKit</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">subspecs</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="err">'</span><span class="kt">Attribute</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="kt">QuerySet</span><span class="err">'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>如果你想用一个自己开发的本地的Pod，你可以用path选项,使用这个选项后，Cocoapods会将给定的文件夹认为是Pod的源，并且在工程中直接引用这些文件。这就意味着你编辑的部分可以保留在CocoaPods安装中。注意：Pod的podspec文件也应该被放在这个文件夹当中</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="o">~/</span><span class="kt">Documents</span><span class="o">/</span><span class="kt">AFNetworking</span><span class="err">'</span>
+</code></pre></div></div>
+
+<p>有的时候你可能想要使用一个最新的开发版本，或者某一个二次开发版本。如果是这样，你可以在pod声明中特别标明</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  使用仓库中的master分支:</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">git</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/gowalla/AFNetworking.git'</span>
+<span class="c1">//  使用仓库的其他分支:</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">git</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/gowalla/AFNetworking.git', :branch =&gt; 'dev'</span>
+<span class="c1">//  使用仓库的某个tag:</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">git</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/gowalla/AFNetworking.git', :tag =&gt; '0.7.0'</span>
+<span class="c1">//  或者指定一个提交记录:</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">git</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/gowalla/AFNetworking.git', :commit =&gt; '082f8319af'</span>
+</code></pre></div></div>
+
+<p><strong>inhibit_all_warnings</strong></p>
+
+<p>屏蔽cocoapods库里面的所有警告,这个特性也能在子target里面定义,如果你想屏蔽某pod里面的警告也是可以的:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">SSZipArchive</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">inhibit_warnings</span> <span class="o">=&gt;</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="launch-image">7. Outdated: 不同的 URL scheme 进入App展示不同的 launch image</h4>
+</blockquote>
+
+<p>If I want to specify launch images for the custom url scheme “myscheme”, I need to use the following naming convention,
+ even though I’m already using assets catalog (.xcassets file) for the standard launch image:</p>
+
+<ul>
+  <li>Default-myscheme~iphone.png –&gt; for no Retina Display 3,5’’ iPhones</li>
+  <li>Default-myscheme@2x~iphone.png –&gt; for Retina Display 3.5’’ iPhones</li>
+  <li>Default-myscheme-568h@2x~iphone.png –&gt; for Retina Display 4’’ iPhones</li>
+  <li>Default-myscheme-Portrait~ipad.png –&gt; for no Retina Display iPads in portrait</li>
+  <li>Default-myscheme-Portrait@2x~ipad.png –&gt; for Retina Display iPads in portrait</li>
+  <li>Default-myscheme-Landscape~ipad.png –&gt; for no Retina Display iPads in landscape</li>
+  <li>Default-myscheme-Landscape@2x~ipad.png –&gt; for Retina Display iPads in landscape</li>
+</ul>
+
+<p><em>These files need to be in the app bundle in order to be found for the system when launching the app.</em></p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="reference-links">Reference links</h4>
+</blockquote>
+
+<ul>
+  <li><a href="https://www.jianshu.com/p/8af475c4f717">Podfile语法参考（译)</a></li>
+</ul>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

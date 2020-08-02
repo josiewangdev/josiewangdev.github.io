@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Trade X
+		
+	</title>
+	<meta name="description" content="Trade X">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/projects/2018-08-01/tradex">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Trade X</h2>
+					<!-- <p></p> -->
+					<span>2018.08</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/projects/2018-08-01/tradex">中文 </a>|<a href="/en/projects/2018-08-01/tradex" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="trade-x"><a href="https://apps.apple.com/cn/app/trade-x-global/id1449450298">Trade X</a></h2>
+
+<p><strong>2018.08 - 2019.12</strong></p>
+
+<h4 id="使用语言">使用语言</h4>
+
+<p>Swift 4</p>
+
+<hr />
+
+<h4 id="项目结构">项目结构</h4>
+
+<ol>
+  <li>
+    <p>Models</p>
+
+    <ul>
+      <li>Enums</li>
+      <li>Custom models</li>
+    </ul>
+  </li>
+  <li>
+    <p>Views</p>
+
+    <ul>
+      <li>Toast View</li>
+      <li>Alert View</li>
+      <li>Table View Cells</li>
+      <li>Custom Views</li>
+    </ul>
+  </li>
+  <li>
+    <p>Controllers</p>
+
+    <ul>
+      <li>Common Controllers</li>
+      <li>Custom Controllers</li>
+    </ul>
+  </li>
+  <li>
+    <p>Helpers</p>
+
+    <ul>
+      <li><a href="#网络层">Network – 网络层的枚举使用</a></li>
+      <li>Language</li>
+      <li>MapKit</li>
+      <li>Notification</li>
+      <li>Deep Link</li>
+      <li>Analytics</li>
+      <li>Shortcuts</li>
+      <li>Spotlight</li>
+      <li>UI Helpers</li>
+    </ul>
+  </li>
+  <li>
+    <p>Pod</p>
+
+    <ul>
+      <li><a href="/tech/2018-11-09/alamofire">Alamofire</a></li>
+      <li>ObjectMapper</li>
+      <li>Realm</li>
+      <li>SnapKit</li>
+      <li><a href="/tech/2019-10-30/eureka">Eureka</a></li>
+      <li>SkeletonView</li>
+      <li>Chatto</li>
+      <li>JPush</li>
+      <li>CVCalendar</li>
+      <li>CollectinoKit</li>
+      <li>Drawsana</li>
+      <li>Intercom</li>
+      <li>Starscream</li>
+      <li><a href="#R文件">R.swift</a></li>
+    </ul>
+  </li>
+  <li>
+    <p>Other</p>
+
+    <ul>
+      <li>wallet pass</li>
+      <li>Web Socket Manager</li>
+    </ul>
+  </li>
+  <li>
+    <p>Bugs</p>
+
+    <ul>
+      <li><a href="#label-color-bug">The bug of setting UILabel text color using asset color</a></li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h4 id="需求与解决方案">需求与解决方案</h4>
+
+<ol>
+  <li>
+    <p>VIPER</p>
+  </li>
+  <li>
+    <p>Deep linking</p>
+
+    <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">DeeplinkType</span> <span class="p">{</span>
+    <span class="kd">enum</span> <span class="kt">Messages</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">root</span>
+        <span class="k">case</span> <span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="kd">enum</span> <span class="kt">RFQs</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">root</span>
+        <span class="k">case</span> <span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="kd">enum</span> <span class="kt">Ads</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">market</span>
+        <span class="k">case</span> <span class="n">myGarage</span>
+        <span class="k">case</span> <span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="kd">enum</span> <span class="kt">Orders</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">root</span>
+        <span class="c1">//Only supported for sub-order IDs, not main order IDs.</span>
+        <span class="k">case</span> <span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nf">messages</span><span class="p">(</span><span class="kt">Messages</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">activity</span>
+    <span class="k">case</span> <span class="n">newListing</span>
+    <span class="k">case</span> <span class="nf">rfqs</span><span class="p">(</span><span class="kt">RFQs</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">ads</span><span class="p">(</span><span class="kt">Ads</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">orders</span><span class="p">(</span><span class="kt">Orders</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">search</span><span class="p">(</span><span class="nv">query</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">gatepass</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<blockquote>
+  <h4 id="deep-link">2.3 Deep Link</h4>
+</blockquote>
+
+<p>目前处理 deep linking，主要有两种方式：</p>
+
+<h3 id="custom-url-scheme">Custom URL Scheme</h3>
+
+<p>在 universal links 出现之前的很长一段时间里，iOS 上主要通过 custom URL scheme 来实现 deep linking，以及 app 间的通信。
+<br />
+在 info plist 里设置了自定义 URL后，handle URL 的入口是 app delegate 方法
+ application:openURL:sourceApplication:annotation:（iOS 9 开始被 deprecate）或 application:openURL:options:
+ （iOS 9 引入，但如果没有实现这个方法，在 iOS 9 上还是会向前兼容 call 老方法，所以一般还是实现老方法）。</p>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">application</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">openURL</span><span class="p">:(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span>
+        <span class="nf">sourceApplication</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceApplication</span> <span class="nf">annotation</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">annotation</span> <span class="p">{</span>
+    <span class="n">BOOL</span> <span class="n">handled</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="c1">// code to handle the URL</span>
+    <span class="k">return</span> <span class="n">handled</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>一个比较完整的 NSURL 可以包含以下部分：
+<br />
+scheme://user:password@host:port/path?query#fragment。但对于 deep linking 来说大部分时候只需要
+ scheme://host/path?query。有时候会省去 path 部分，把 host 直接作为 command，如上文提到的点评的 link；也有些 app
+  会省去 query 部分，用 path 传参，更接近 RESTful API 的风格。这取决于具体业务逻辑复杂程度以及 handler 的实现方式。
+<br />
+有一点需要注意的是，规范的 URL 是 percentage encoded 的，所以取出来的参数需要用 stringByReplacingPercentEscapesUsingEncoding:
+ 或 stringByRemovingPercentEncoding（iOS 7+）方法 decode。反之，拼 URL 的时候应该使用 stringByAddingPercentEscapesUsingEncoding:
+  或 stringByAddingPercentEncodingWithAllowedCharacters:（iOS 7+）方法 encode。</p>
+
+<h3 id="universal-links">Universal Links</h3>
+
+<p>Apple 在 iOS 9 上引入了 universal links，相较 custom URL scheme，universal links 有以下好处：</p>
+
+<ul>
+  <li>Custom URL scheme 因为是自定义的协议，所以在没有安装 app 的情况下是无法直接打开的，而 universal links 本身是一个 HTTP/HTTPS 链接，所以有更好的兼容性。</li>
+  <li>不同的 app 是可以定义相同的 custom URL scheme 的，所以会存在抢占或冲突的问题，而 universal links 是从 server 查询由哪个 app 打开的，所以不存在上述问题。</li>
+  <li>Universal links 支持从其他 app 的 MKWebView 或 UIWebView 中跳转到目标 app。</li>
+  <li>Universal links 本身可以被搜索引擎索引。</li>
+</ul>
+
+<p><br />
+Universal links 的具体实现可以参考官方文档：Support Universal Links。简单来说你需要：</p>
+
+<ul>
+  <li>添加一个 apple-app-site-association 文件到你的网站来描述 URL 和 app 的关联。</li>
+  <li>添加 com.apple.developer.associated-domains entitlement 来指定要从哪些域名查询 universal links support。</li>
+  <li>在 app delegate 的 application:continueUserActivity:restorationHandler: 方法中 handle userActivity.webpageURL。</li>
+</ul>
+
+<p>处理 URL 本身的方法跟前面处理 custom URL 类似，不再赘述。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">DeeplinkType</span> <span class="p">{</span>
+    <span class="kd">enum</span> <span class="kt">Messages</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">root</span>
+        <span class="k">case</span> <span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="kd">enum</span> <span class="kt">RFQs</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">root</span>
+        <span class="k">case</span> <span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="kd">enum</span> <span class="kt">Ads</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">market</span>
+        <span class="k">case</span> <span class="n">myGarage</span>
+        <span class="k">case</span> <span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="kd">enum</span> <span class="kt">Orders</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">root</span>
+        <span class="c1">//Only supported for sub-order IDs, not main order IDs.</span>
+        <span class="k">case</span> <span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="nf">messages</span><span class="p">(</span><span class="kt">Messages</span><span class="p">)</span>
+    <span class="k">case</span> <span class="n">activity</span>
+    <span class="k">case</span> <span class="n">newListing</span>
+    <span class="k">case</span> <span class="nf">rfqs</span><span class="p">(</span><span class="kt">RFQs</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">ads</span><span class="p">(</span><span class="kt">Ads</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">orders</span><span class="p">(</span><span class="kt">Orders</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">search</span><span class="p">(</span><span class="nv">query</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">gatepass</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// MARK: Deeplinks</span>
+    <span class="kd">func</span> <span class="nf">application</span><span class="p">(</span><span class="n">_</span> <span class="nv">app</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span> <span class="kd">open</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIApplication</span><span class="o">.</span><span class="kt">OpenURLOptionsKey</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:])</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">Deeplinker</span><span class="o">.</span><span class="nf">handleDeeplink</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  DeepLinkManager.swift</span>
+<span class="c1">//</span>
+
+<span class="k">let</span> <span class="nv">Deeplinker</span> <span class="o">=</span> <span class="kt">DeepLinkManager</span><span class="p">()</span>
+
+<span class="kd">class</span> <span class="kt">DeepLinkManager</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">deeplinkType</span><span class="p">:</span> <span class="kt">DeeplinkType</span><span class="p">?</span>
+    
+    <span class="c1">// check existing deeplink and perform action</span>
+    <span class="kd">func</span> <span class="nf">checkDeepLink</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">deeplinkType</span> <span class="o">=</span> <span class="n">deeplinkType</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+        
+        <span class="kt">DeeplinkNavigator</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">proceedToDeeplink</span><span class="p">(</span><span class="n">deeplinkType</span><span class="p">)</span>
+        <span class="c1">// reset deeplink after handling</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">deeplinkType</span> <span class="o">=</span> <span class="kc">nil</span> <span class="c1">// (1)</span>
+    <span class="p">}</span>
+    
+    <span class="kd">@discardableResult</span>
+    <span class="kd">func</span> <span class="nf">handleShortcut</span><span class="p">(</span><span class="nv">item</span><span class="p">:</span> <span class="kt">UIApplicationShortcutItem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="n">deeplinkType</span> <span class="o">=</span> <span class="kt">ShortcutParser</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">handleShortcut</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deeplinkType</span> <span class="o">!=</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+    
+    <span class="kd">@discardableResult</span>
+    <span class="kd">func</span> <span class="nf">handleDeeplink</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">isWebURL</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="n">deeplinkType</span> <span class="o">=</span> <span class="kt">DeeplinkParser</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">parseDeepLink</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nv">isWebURL</span><span class="p">:</span> <span class="n">isWebURL</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deeplinkType</span> <span class="o">!=</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+    
+    <span class="kd">@discardableResult</span>
+    <span class="kd">func</span> <span class="nf">handleActivity</span><span class="p">(</span><span class="n">_</span> <span class="nv">activity</span><span class="p">:</span> <span class="kt">NSUserActivity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="n">deeplinkType</span> <span class="o">=</span> <span class="kt">SpotLightParser</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">handleSpotLightActivity</span><span class="p">(</span><span class="n">activity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deeplinkType</span> <span class="o">!=</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">handleRemoteNotification</span><span class="p">(</span><span class="n">_</span> <span class="nv">notification</span><span class="p">:</span> <span class="p">[</span><span class="kt">AnyHashable</span><span class="p">:</span> <span class="kt">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">DeeplinkType</span><span class="p">?</span> <span class="p">{</span>
+        <span class="n">deeplinkType</span> <span class="o">=</span> <span class="kt">NotificationParser</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">handleNotification</span><span class="p">(</span><span class="n">notification</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">deeplinkType</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  DeeplinkParser.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">class</span> <span class="kt">DeeplinkParser</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">DeeplinkParser</span><span class="p">()</span>
+    <span class="kd">private</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+    
+    
+    <span class="kd">func</span> <span class="nf">parseDeepLink</span><span class="p">(</span><span class="n">_</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="nv">isWebURL</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DeeplinkType</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">components</span> <span class="o">=</span> <span class="kt">URLComponents</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="nv">resolvingAgainstBaseURL</span><span class="p">:</span> <span class="kc">true</span><span class="p">),</span> <span class="k">let</span> <span class="nv">host</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">host</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        <span class="k">var</span> <span class="nv">pathComponents</span> <span class="o">=</span> <span class="n">components</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="nf">components</span><span class="p">(</span><span class="nv">separatedBy</span><span class="p">:</span> <span class="s">"/"</span><span class="p">)</span>
+        <span class="c1">// the first component is empty</span>
+        <span class="n">pathComponents</span><span class="o">.</span><span class="nf">removeFirst</span><span class="p">()</span>
+        
+        <span class="k">var</span> <span class="nv">decider</span><span class="p">:</span><span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="n">host</span>
+        <span class="k">var</span> <span class="nv">param</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="n">pathComponents</span><span class="o">.</span><span class="n">first</span>
+        <span class="c1">//Check if the url is a web/universal URL or deep link url</span>
+        <span class="k">if</span> <span class="n">isWebURL</span> <span class="p">{</span>
+            <span class="n">decider</span> <span class="o">=</span> <span class="n">pathComponents</span><span class="o">.</span><span class="n">first</span>
+            <span class="c1">//Check if the url contains another path component and use it as a param</span>
+            <span class="n">param</span> <span class="o">=</span> <span class="n">pathComponents</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="p">?</span> <span class="n">pathComponents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">:</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        
+        <span class="k">switch</span> <span class="n">decider</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="s">"messages"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">messageId</span> <span class="o">=</span> <span class="n">param</span><span class="p">,</span> <span class="o">!</span><span class="n">messageId</span><span class="o">.</span><span class="n">isEmpty</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">messages</span><span class="p">(</span><span class="o">.</span><span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">messageId</span><span class="p">))</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">messages</span><span class="p">(</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">case</span> <span class="s">"ads"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">adId</span> <span class="o">=</span> <span class="n">param</span><span class="p">,</span> <span class="o">!</span><span class="n">adId</span><span class="o">.</span><span class="n">isEmpty</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">ads</span><span class="p">(</span><span class="o">.</span><span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">adId</span><span class="p">))</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">ads</span><span class="p">(</span><span class="o">.</span><span class="n">market</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">case</span> <span class="s">"requests"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">rfqId</span> <span class="o">=</span> <span class="n">param</span><span class="p">,</span> <span class="o">!</span><span class="n">rfqId</span><span class="o">.</span><span class="n">isEmpty</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">rfqs</span><span class="p">(</span><span class="o">.</span><span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">rfqId</span><span class="p">))</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">rfqs</span><span class="p">(</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">case</span> <span class="s">"gatepass"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">passId</span> <span class="o">=</span> <span class="n">param</span><span class="p">,</span> <span class="o">!</span><span class="n">passId</span><span class="o">.</span><span class="n">isEmpty</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">gatepass</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">passId</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">case</span> <span class="s">"orders"</span><span class="p">:</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">orderId</span> <span class="o">=</span> <span class="n">param</span><span class="p">,</span> <span class="o">!</span><span class="n">orderId</span><span class="o">.</span><span class="n">isEmpty</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">orders</span><span class="p">(</span><span class="o">.</span><span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">orderId</span><span class="p">))</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">orders</span><span class="p">(</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="outdated-different-launch-image-for-different-url-scheme">Outdated: Different launch image for different URL scheme</h4>
+
+<p>不同的URL scheme进入App展示不同的Launch Image</p>
+
+<p>If I want to specify launch images for the custom url scheme “myscheme”, I need to use the following naming convention,
+ even though I’m already using assets catalog (.xcassets file) for the standard launch image:</p>
+
+<ul>
+  <li>Default-myscheme~iphone.png –&gt; for no Retina Display 3,5’’ iPhones</li>
+  <li>Default-myscheme@2x~iphone.png –&gt; for Retina Display 3.5’’ iPhones</li>
+  <li>Default-myscheme-568h@2x~iphone.png –&gt; for Retina Display 4’’ iPhones</li>
+  <li>Default-myscheme-Portrait~ipad.png –&gt; for no Retina Display iPads in portrait</li>
+  <li>Default-myscheme-Portrait@2x~ipad.png –&gt; for Retina Display iPads in portrait</li>
+  <li>Default-myscheme-Landscape~ipad.png –&gt; for no Retina Display iPads in landscape</li>
+  <li>Default-myscheme-Landscape@2x~ipad.png –&gt; for Retina Display iPads in landscape</li>
+</ul>
+
+<p><em>These files need to be in the app bundle in order to be found for the system when launching the app.</em></p>
+
+<hr />
+
+<ol>
+  <li>XCode configuraiton - 配置更多的开发环境，如Staging，Beta等</li>
+</ol>
+
+<p>Typically, Xcode starts us out with two configurations: Debug and Release. You will find them in your project’s info page. You can create more configurations like Beta, Staging etc on demand. You can edit these configurations as required (Just create a duplicate of release or debug versions and rename it appropriately).</p>
+
+<p>You can then add swift compiler flags so that we can check the current configuration through code.</p>
+
+<p>To do that, goto <strong>Project (not target)→Build settings → Swift Compiler → Custom flags → Other swift flags</strong> section and edit the different configuration flags. Add the flags using the syntax <code class="highlighter-rouge">-D &lt;flag_name&gt;</code> .</p>
+
+<p><img src="/images/xcode_configuration/configuration_flag.jpg" alt="img" /></p>
+
+<ol>
+  <li>Bridging header</li>
+</ol>
+
+<hr />
+
+<h4 id="网络层">网络层</h4>
+
+<p>定义API请求返回消息的枚举类型</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">CSMessage</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nf">success</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span>
+    <span class="k">case</span> <span class="nf">fail</span><span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="kt">NetworkResponseErrorCode</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>定义API及其扩展协议</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">NetworkAPI</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nf">clientUpdate</span><span class="p">(</span><span class="nv">params</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]?)</span>
+    <span class="k">case</span> <span class="nf">signin</span><span class="p">(</span><span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">code</span><span class="p">:</span><span class="kt">String</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>对API枚举类型做扩展</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">NetworkAPI</span> <span class="p">{</span>
+    
+    <span class="k">var</span> <span class="nv">urlPath</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">BASEURL</span> <span class="o">+</span> <span class="n">customUrlPath</span>
+    <span class="p">}</span>
+    
+    <span class="k">var</span> <span class="nv">customUrlPath</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">clientUpdate</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"settings/client_update/"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">signin</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"users/signup-signin/"</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">method</span><span class="p">:</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">HTTPMethod</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">clientUpdate</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">.</span><span class="k">get</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">.</span><span class="n">post</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]?</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">paramDic</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">AnyObject</span><span class="p">]()</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nf">clientUpdate</span><span class="p">(</span><span class="k">let</span> <span class="nv">params</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">params</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nf">signin</span><span class="p">(</span><span class="k">let</span> <span class="nv">phone</span><span class="p">,</span> <span class="k">let</span> <span class="nv">code</span><span class="p">):</span>
+            <span class="n">paramDic</span><span class="p">[</span><span class="s">"phone"</span><span class="p">]</span> <span class="o">=</span> <span class="n">phone</span> <span class="k">as</span> <span class="kt">AnyObject</span>
+            <span class="n">paramDic</span><span class="p">[</span><span class="s">"code"</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span> <span class="k">as</span> <span class="kt">AnyObject</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">paramDic</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">headers</span><span class="p">:</span> <span class="kt">HTTPHeaders</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Content-Type"</span><span class="p">:</span><span class="s">"application/json"</span><span class="p">,</span> <span class="s">"Accept-Language"</span><span class="p">:</span> <span class="kt">Locale</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">languageCode</span> <span class="p">??</span> <span class="s">""</span><span class="p">]</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">signin</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">headers</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="n">headers</span><span class="p">[</span><span class="s">"Authorization"</span><span class="p">]</span> <span class="o">=</span> <span class="s">"Token </span><span class="se">\(</span><span class="kt">UserDefaults</span><span class="o">.</span><span class="n">standard</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="kt">TOKEN</span><span class="p">)</span> <span class="p">??</span> <span class="s">""</span><span class="se">)</span><span class="s">"</span>
+            <span class="k">return</span> <span class="n">headers</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">encoding</span><span class="p">:</span> <span class="kt">ParameterEncoding</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">clientUpdate</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kt">URLEncoding</span><span class="o">.</span><span class="k">default</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kt">JSONEncoding</span><span class="o">.</span><span class="k">default</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>定义网络请求协议及其实现</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Requestable</span><span class="p">:</span> <span class="kd">class</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="n">setupNetworkComponentWith</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">Mappable</span><span class="o">&gt;</span><span class="p">(</span>
+	    <span class="nv">netapi</span><span class="p">:</span> <span class="kt">NetworkAPI</span><span class="p">,</span> 
+	    <span class="nv">mapType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> 
+	    <span class="nv">mappedObjectHandle</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> 
+	    <span class="nv">moreInfo</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">CSMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">Requestable</span> <span class="k">where</span> <span class="k">Self</span><span class="p">:</span> <span class="kt">NSObject</span> <span class="p">{</span>
+    <span class="c1">/// NetworkComponent init</span>
+    <span class="kd">func</span> <span class="n">setupNetworkComponentWith</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">Mappable</span><span class="o">&gt;</span><span class="p">(</span>
+        <span class="nv">netapi</span><span class="p">:</span> <span class="kt">NetworkAPI</span><span class="p">,</span> 
+        <span class="nv">mapType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> 
+        <span class="nv">mappedObjectHandle</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">)?,</span> 
+        <span class="nv">moreInfo</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">CSMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">)?</span>
+    <span class="p">)</span> <span class="p">{</span>
+        
+        <span class="c1">// start request address</span>
+        <span class="k">let</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">SessionManager</span><span class="o">.</span><span class="k">default</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+        	<span class="n">netapi</span><span class="o">.</span><span class="n">urlPath</span><span class="p">,</span> 
+        	<span class="nv">method</span><span class="p">:</span> <span class="n">netapi</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> 
+        	<span class="nv">parameters</span><span class="p">:</span> <span class="n">netapi</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> 
+        	<span class="nv">encoding</span><span class="p">:</span> <span class="n">netapi</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span> 
+        	<span class="nv">headers</span><span class="p">:</span><span class="n">netapi</span><span class="o">.</span><span class="n">headers</span>
+    	<span class="p">)</span><span class="o">.</span><span class="n">responseJSON</span> <span class="p">{</span> <span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="k">in</span>
+
+            <span class="k">switch</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">value</span><span class="p">):</span>
+                <span class="k">guard</span> <span class="k">let</span> <span class="nv">responseJSON</span> <span class="o">=</span> <span class="n">value</span> <span class="k">as?</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="c1">//We should be able to read the response as JSON</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="kt">CSMessage</span><span class="o">.</span><span class="nf">fail</span><span class="p">(</span><span class="kt">DEFAULTERROR</span><span class="p">,</span> <span class="kt">NetworkResponseErrorCode</span><span class="o">.</span><span class="n">unknown</span><span class="p">))</span>
+                    <span class="k">return</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="k">let</span> <span class="nv">code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">response</span><span class="p">?</span><span class="o">.</span><span class="n">statusCode</span><span class="p">,</span> 
+                   <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">getStatusCodeError</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="n">error</span><span class="p">)</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">mapObject</span> <span class="o">=</span> <span class="kt">Mapper</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">()</span><span class="o">.</span><span class="nf">map</span><span class="p">(</span><span class="kt">JSON</span><span class="p">:</span> <span class="n">responseJSON</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nf">mappedObjectHandle</span><span class="p">?(</span><span class="n">mapObject</span><span class="p">)</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="kt">CSMessage</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="kt">MAPSUCCESS</span><span class="p">))</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="kt">CSMessage</span><span class="o">.</span><span class="nf">fail</span><span class="p">(</span><span class="kt">MAPFAILED</span><span class="p">,</span> <span class="kt">NetworkResponseErrorCode</span><span class="o">.</span><span class="n">unknown</span><span class="p">))</span>
+                <span class="p">}</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                <span class="k">if</span> <span class="k">let</span> <span class="nv">code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">response</span><span class="p">?</span><span class="o">.</span><span class="n">statusCode</span><span class="p">,</span> 
+                   <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">getStatusCodeError</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="n">error</span><span class="p">)</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="kt">CSMessage</span><span class="o">.</span><span class="nf">fail</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">,</span> <span class="kt">NetworkResponseErrorCode</span><span class="o">.</span><span class="n">unknown</span><span class="p">))</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">getStatusCodeError</span><span class="p">(</span><span class="n">_</span> <span class="nv">code</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CSMessage</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">httpStatusCode</span> <span class="o">=</span> <span class="kt">HTTPStatusCode</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="n">code</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="k">return</span> <span class="kc">nil</span><span class="p">}</span>
+        <span class="k">var</span> <span class="nv">errorString</span> <span class="o">=</span> <span class="s">""</span>
+        <span class="k">switch</span> <span class="n">httpStatusCode</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">internalServerError</span><span class="p">:</span>
+            <span class="n">errorString</span> <span class="o">=</span> <span class="s">"Internal Server Error"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">forbidden</span><span class="p">:</span>
+            <span class="n">errorString</span> <span class="o">=</span> <span class="s">"Access Issue, please contact the admin"</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="n">errorString</span> <span class="o">=</span> <span class="kt">DEFAULTERROR</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kt">CSMessage</span><span class="o">.</span><span class="nf">fail</span><span class="p">(</span><span class="n">errorString</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>在其他类中调用方法请求网络接口:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//调用client update API</span>
+<span class="k">let</span> <span class="nv">params</span> <span class="o">=</span> <span class="p">[</span><span class="s">"client"</span><span class="p">:</span> <span class="s">"iOS"</span><span class="p">]</span> <span class="k">as</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]</span>
+<span class="nf">setupNetworkComponentWith</span><span class="p">(</span>
+	<span class="nv">netapi</span><span class="p">:</span> <span class="kt">NetworkAPI</span><span class="o">.</span><span class="nf">clientUpdate</span><span class="p">(</span><span class="nv">params</span><span class="p">:</span> <span class="n">params</span><span class="p">),</span> 
+	<span class="nv">mapType</span><span class="p">:</span> <span class="kt">Update</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> 
+	<span class="nv">mappedObjectHandle</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">clientUpdate</span><span class="p">)</span> <span class="k">in</span>
+	<span class="c1">//TODO: Client data update</span>
+<span class="p">},</span> <span class="nv">moreInfo</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="k">in</span>
+	<span class="c1">//TODO: Handle message</span>
+<span class="p">})</span>
+
+
+<span class="c1">//调用sign in API</span>
+<span class="nf">setupNetworkComponentWith</span><span class="p">(</span>
+    <span class="nv">netapi</span><span class="p">:</span> <span class="kt">NetworkAPI</span><span class="o">.</span><span class="nf">signin</span><span class="p">(</span><span class="nv">phone</span><span class="p">:</span> <span class="n">phoneNumber</span><span class="p">,</span> <span class="nv">code</span><span class="p">:</span> <span class="n">verificationCode</span><span class="p">),</span> 
+    <span class="nv">mapType</span><span class="p">:</span> <span class="kt">User</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> 
+    <span class="nv">mappedObjectHandle</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">userResponse</span><span class="p">)</span> <span class="k">in</span>
+    <span class="c1">//TODO: Sign in finished</span>
+<span class="p">},</span> <span class="nv">moreInfo</span><span class="p">:{</span> <span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="k">in</span>
+	<span class="c1">//TODO: Handle message</span>
+<span class="p">})</span>
+
+</code></pre></div></div>
+<hr />
+
+<h4 id="localized-string">Localized String</h4>
+
+<p><strong>1. Add new language</strong></p>
+
+<p><em>PROJECT -&gt; Info -&gt; Localizations -&gt; Add another language</em></p>
+
+<p><img src="/images/localized_app/localized_step1.png" alt="Step1" /></p>
+
+<hr />
+
+<p><strong>2. Create strings file</strong></p>
+
+<p>In project, choose <em>Strings File</em> in <em>Resource</em> tab, create new file named <em>Localizable.strings</em> .</p>
+
+<p><img src="/images/localized_app/localized_step2.png" alt="Step2" /></p>
+
+<hr />
+
+<p><strong>3. Localize the strings file</strong></p>
+
+<p>Select the <em>Localizable.strings</em> you create, and right click on it and select <em>Localize…</em> to create localized strings file.</p>
+
+<p><img src="/images/localized_app/localized_step3.png" alt="Step3" /></p>
+
+<hr />
+
+<p><strong>4. Use localized strings in your project</strong></p>
+
+<p>Configure the same <code class="highlighter-rouge">key</code> for different display value in each language strings files.</p>
+
+<p>Use <code class="highlighter-rouge">NSLocalizedString</code> with the <code class="highlighter-rouge">key</code> you set up to display the values.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">//Localizable.strings(English)</span>
+<span class="s">"key"</span> <span class="o">=</span> <span class="s">"Welcome"</span><span class="p">;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">//Localizable.strings(Simplified)</span>
+<span class="s">"key"</span> <span class="o">=</span> <span class="s">"欢迎"</span><span class="p">;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">//key is configed in strings files</span>
+<span class="kt">NSLocalizedString</span><span class="p">(</span><span class="s">"key"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span> <span class="nv">comment</span><span class="p">:</span> <span class="s">""</span><span class="p">)</span></code></pre></figure>
+
+<hr />
+
+<p>**5. Localized App Name **</p>
+
+<p>Just set the different value use the same key <code class="highlighter-rouge">CFBundleDisplayName</code> in each language’s <code class="highlighter-rouge">.strings</code> file, and then use <code class="highlighter-rouge">CFBundleDisplayName</code> in the <code class="highlighter-rouge">info.plist</code> file.</p>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">//Localizable.strings(English)</span>
+<span class="s">"CFBundleDisplayName"</span> <span class="o">=</span> <span class="s">"English App"</span><span class="p">;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-swift" data-lang="swift"><span class="c1">//Localizable.strings(Simplified)</span>
+<span class="s">"CFBundleDisplayName"</span> <span class="o">=</span> <span class="s">"中文应用"</span><span class="p">;</span></code></pre></figure>
+
+<hr />
+<p>目前处理 deep linking，主要有两种方式：</p>
+
+<h3 id="custom-url-scheme-1">Custom URL Scheme</h3>
+
+<p>在 universal links 出现之前的很长一段时间里，iOS 上主要通过 custom URL scheme 来实现 deep linking，以及 app 间的通信。
+<br />
+在 info plist 里设置了自定义 URL后，handle URL 的入口是 app delegate 方法
+ application:openURL:sourceApplication:annotation:（iOS 9 开始被 deprecate）或 application:openURL:options:
+ （iOS 9 引入，但如果没有实现这个方法，在 iOS 9 上还是会向前兼容 call 老方法，所以一般还是实现老方法）。</p>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">application</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">openURL</span><span class="p">:(</span><span class="n">NSURL</span> <span class="o">*</span><span class="p">)</span><span class="nv">url</span>
+        <span class="nf">sourceApplication</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceApplication</span> <span class="nf">annotation</span><span class="p">:(</span><span class="n">id</span><span class="p">)</span><span class="nv">annotation</span> <span class="p">{</span>
+    <span class="n">BOOL</span> <span class="n">handled</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="c1">// code to handle the URL</span>
+    <span class="k">return</span> <span class="n">handled</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>一个比较完整的 NSURL 可以包含以下部分：
+<br />
+scheme://user:password@host:port/path?query#fragment。但对于 deep linking 来说大部分时候只需要
+ scheme://host/path?query。有时候会省去 path 部分，把 host 直接作为 command，如上文提到的点评的 link；也有些 app
+  会省去 query 部分，用 path 传参，更接近 RESTful API 的风格。这取决于具体业务逻辑复杂程度以及 handler 的实现方式。
+<br />
+有一点需要注意的是，规范的 URL 是 percentage encoded 的，所以取出来的参数需要用 stringByReplacingPercentEscapesUsingEncoding:
+ 或 stringByRemovingPercentEncoding（iOS 7+）方法 decode。反之，拼 URL 的时候应该使用 stringByAddingPercentEscapesUsingEncoding:
+  或 stringByAddingPercentEncodingWithAllowedCharacters:（iOS 7+）方法 encode。</p>
+
+<h3 id="universal-links-1">Universal Links</h3>
+
+<p>Apple 在 iOS 9 上引入了 universal links，相较 custom URL scheme，universal links 有以下好处：</p>
+
+<ul>
+  <li>Custom URL scheme 因为是自定义的协议，所以在没有安装 app 的情况下是无法直接打开的，而 universal links 本身是一个 HTTP/HTTPS 链接，所以有更好的兼容性。</li>
+  <li>不同的 app 是可以定义相同的 custom URL scheme 的，所以会存在抢占或冲突的问题，而 universal links 是从 server 查询由哪个 app 打开的，所以不存在上述问题。</li>
+  <li>Universal links 支持从其他 app 的 MKWebView 或 UIWebView 中跳转到目标 app。</li>
+  <li>Universal links 本身可以被搜索引擎索引。</li>
+</ul>
+
+<p><br />
+Universal links 的具体实现可以参考官方文档：Support Universal Links。简单来说你需要：</p>
+
+<ul>
+  <li>添加一个 apple-app-site-association 文件到你的网站来描述 URL 和 app 的关联。</li>
+  <li>添加 com.apple.developer.associated-domains entitlement 来指定要从哪些域名查询 universal links support。</li>
+  <li>在 app delegate 的 application:continueUserActivity:restorationHandler: 方法中 handle userActivity.webpageURL。</li>
+</ul>
+
+<h2 id="处理-url-本身的方法跟前面处理-custom-url-类似不再赘述">处理 URL 本身的方法跟前面处理 custom URL 类似，不再赘述。</h2>
+<h4 id="r文件">R文件</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kd">func</span> <span class="nf">displayStringValue</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+     <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+     <span class="k">case</span> <span class="o">.</span><span class="nv">left</span><span class="p">:</span>
+         <span class="k">return</span> <span class="kt">R</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">localizable</span><span class="o">.</span><span class="nf">leftHandDrive</span><span class="p">()</span>
+     <span class="k">case</span> <span class="o">.</span><span class="nv">right</span><span class="p">:</span>
+         <span class="k">return</span> <span class="kt">R</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">localizable</span><span class="o">.</span><span class="nf">rightHandDrive</span><span class="p">()</span>
+     <span class="p">}</span>
+ <span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+<p>Debugging App When Launched by Push Notification</p>
+
+<p><strong>需求:</strong></p>
+
+<p>调试由推送通知唤起的应用。</p>
+
+<hr />
+
+<p>1. <em>Target</em> -&gt; <em>Edit Scheme</em></p>
+
+<p><img src="/images/debug_notification/debug_notification_1.jpg" alt="debug_notification" /></p>
+
+<p>2. <em>Run</em> -&gt; <em>Info</em> -&gt; <em>Wait for executable to be launched</em></p>
+
+<p><img src="/images/debug_notification/debug_notification_2.jpg" alt="debug_notification" /></p>
+
+<p>3. Run the project and launch the app from your phone by click the notification.</p>
+
+<p>3. 在项目中运行程序并在手机上点击推送通知打开应用。</p>
+
+<hr />
+<h4 id="label-color-bug">6.1 The bug of setting UILabel text color using asset color</h4>
+
+<p><strong>Bug Description :</strong></p>
+
+<p><code class="highlighter-rouge">UILabel</code> text color is not changing programmatically, if I set the text color in nib and define that color in assets.</p>
+
+<p><strong>Solution :</strong></p>
+
+<p>Set the text color in nib using the default color instead of the customized asset color, then change color programmatically will work fine.</p>
+
+<p><strong>Xcode Version :</strong></p>
+
+<p>10.2</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="shortcut">2.4 Shortcuts</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// MARK: - Shortcuts</span>
+    <span class="kd">func</span> <span class="nf">application</span><span class="p">(</span><span class="n">_</span> <span class="nv">application</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span> <span class="n">performActionFor</span> <span class="nv">shortcutItem</span><span class="p">:</span> <span class="kt">UIApplicationShortcutItem</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">(</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">completionHandler</span><span class="p">(</span><span class="kt">Deeplinker</span><span class="o">.</span><span class="nf">handleShortcut</span><span class="p">(</span><span class="nv">item</span><span class="p">:</span> <span class="n">shortcutItem</span><span class="p">))</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  ShortcutParser.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">import</span> <span class="kt">Foundation</span>
+
+<span class="kd">enum</span> <span class="kt">ProfileType</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">guest</span> <span class="o">=</span> <span class="s">"Guest"</span> <span class="c1">// default</span>
+    <span class="k">case</span> <span class="n">host</span> <span class="o">=</span> <span class="s">"Host"</span>
+<span class="p">}</span>
+
+<span class="c1">//TODO:2 Create a dictionary inside info plist configuration to replace these macro checks</span>
+<span class="cp">#if STAGING</span>
+<span class="kd">enum</span> <span class="kt">ActivityType</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">newListing</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexstaging.create"</span>
+    <span class="k">case</span> <span class="n">market</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexstaging.market"</span>
+    <span class="k">case</span> <span class="n">messages</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexstaging.messages"</span>
+    <span class="k">case</span> <span class="n">viewRequests</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexstaging.requests"</span>
+<span class="p">}</span>
+<span class="cp">#elseif DEMO</span>
+<span class="kd">enum</span> <span class="kt">ActivityType</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">newListing</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexdemo.create"</span>
+    <span class="k">case</span> <span class="n">market</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexdemo.market"</span>
+    <span class="k">case</span> <span class="n">messages</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexdemo.messages"</span>
+    <span class="k">case</span> <span class="n">viewRequests</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexdemo.requests"</span>
+<span class="p">}</span>
+<span class="cp">#elseif PRERELEASE</span>
+<span class="kd">enum</span> <span class="kt">ActivityType</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">newListing</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexprerelease.create"</span>
+    <span class="k">case</span> <span class="n">market</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexprerelease.market"</span>
+    <span class="k">case</span> <span class="n">messages</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexprerelease.messages"</span>
+    <span class="k">case</span> <span class="n">viewRequests</span> <span class="o">=</span> <span class="s">"com.tradexport.tradexprerelease.requests"</span>
+<span class="p">}</span>
+<span class="cp">#else</span>
+<span class="kd">enum</span> <span class="kt">ActivityType</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">newListing</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex.create"</span>
+    <span class="k">case</span> <span class="n">market</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex.market"</span>
+    <span class="k">case</span> <span class="n">messages</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex.messages"</span>
+    <span class="k">case</span> <span class="n">viewRequests</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex.requests"</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+
+<span class="kd">class</span> <span class="kt">ShortcutParser</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">ShortcutParser</span><span class="p">()</span>
+    <span class="kd">private</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">registerShortcuts</span><span class="p">(</span><span class="k">for</span> <span class="nv">profileType</span><span class="p">:</span> <span class="kt">ProfileType</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="n">profileType</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">host</span><span class="p">:</span>
+            <span class="k">let</span> <span class="nv">activityIcon</span> <span class="o">=</span> <span class="kt">UIApplicationShortcutIcon</span><span class="p">(</span><span class="nv">templateImageName</span><span class="p">:</span> <span class="s">"Cart full"</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">activityShortcutItem</span> <span class="o">=</span> <span class="kt">UIApplicationShortcutItem</span><span class="p">(</span><span class="nv">type</span><span class="p">:</span> <span class="kt">ActivityType</span><span class="o">.</span><span class="n">market</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span> <span class="nv">localizedTitle</span><span class="p">:</span> <span class="s">"Market"</span><span class="p">,</span> <span class="nv">localizedSubtitle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">icon</span><span class="p">:</span> <span class="n">activityIcon</span><span class="p">,</span> <span class="nv">userInfo</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+            
+            <span class="k">let</span> <span class="nv">messageIcon</span> <span class="o">=</span> <span class="kt">UIApplicationShortcutIcon</span><span class="p">(</span><span class="nv">templateImageName</span><span class="p">:</span> <span class="s">"Inbox"</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">messageShortcutItem</span> <span class="o">=</span> <span class="kt">UIApplicationShortcutItem</span><span class="p">(</span><span class="nv">type</span><span class="p">:</span> <span class="kt">ActivityType</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span> <span class="nv">localizedTitle</span><span class="p">:</span> <span class="s">"Messages"</span><span class="p">,</span> <span class="nv">localizedSubtitle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">icon</span><span class="p">:</span> <span class="n">messageIcon</span><span class="p">,</span> <span class="nv">userInfo</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+            
+            <span class="k">let</span> <span class="nv">newListingIcon</span> <span class="o">=</span> <span class="kt">UIApplicationShortcutIcon</span><span class="p">(</span><span class="nv">templateImageName</span><span class="p">:</span> <span class="s">"Cart"</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">newListingShortcutItem</span> <span class="o">=</span> <span class="kt">UIApplicationShortcutItem</span><span class="p">(</span><span class="nv">type</span><span class="p">:</span> <span class="kt">ActivityType</span><span class="o">.</span><span class="n">newListing</span><span class="o">.</span><span class="n">rawValue</span><span class="p">,</span> <span class="nv">localizedTitle</span><span class="p">:</span> <span class="s">"New Listing"</span><span class="p">,</span> <span class="nv">localizedSubtitle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">icon</span><span class="p">:</span> <span class="n">newListingIcon</span><span class="p">,</span> <span class="nv">userInfo</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+            <span class="kt">UIApplication</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">shortcutItems</span> <span class="o">=</span> <span class="p">[</span><span class="n">activityShortcutItem</span><span class="p">,</span> <span class="n">messageShortcutItem</span><span class="p">,</span> <span class="n">newListingShortcutItem</span><span class="p">]</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">guest</span><span class="p">:</span>
+            <span class="kt">UIApplication</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="n">shortcutItems</span><span class="p">?</span><span class="o">.</span><span class="nf">removeAll</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">handleShortcut</span><span class="p">(</span><span class="n">_</span> <span class="nv">shortcut</span><span class="p">:</span> <span class="kt">UIApplicationShortcutItem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DeeplinkType</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="n">shortcut</span><span class="o">.</span><span class="n">type</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="kt">ActivityType</span><span class="o">.</span><span class="n">market</span><span class="o">.</span><span class="nv">rawValue</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">.</span><span class="n">activity</span>
+        <span class="k">case</span> <span class="kt">ActivityType</span><span class="o">.</span><span class="n">messages</span><span class="o">.</span><span class="nv">rawValue</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">.</span><span class="nf">messages</span><span class="p">(</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+        <span class="k">case</span> <span class="kt">ActivityType</span><span class="o">.</span><span class="n">newListing</span><span class="o">.</span><span class="nv">rawValue</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">.</span><span class="n">newListing</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="spotlight">2.5 Spotlight Search</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  SpotlightIndex.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">import</span> <span class="kt">CoreSpotlight</span>
+<span class="kd">import</span> <span class="kt">MobileCoreServices</span>
+
+<span class="kd">func</span> <span class="nf">indexSearchableItem</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">contentDescription</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">imageURLString</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
+    
+    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">(</span><span class="nv">qos</span><span class="p">:</span> <span class="o">.</span><span class="n">background</span><span class="p">)</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">searchableItems</span> <span class="o">=</span> <span class="p">[</span><span class="kt">CSSearchableItem</span><span class="p">]()</span>
+        <span class="k">let</span> <span class="nv">searchItemAttributeSet</span> <span class="o">=</span> <span class="kt">CSSearchableItemAttributeSet</span><span class="p">(</span><span class="nv">itemContentType</span><span class="p">:</span> <span class="n">kUTTypeText</span> <span class="k">as</span> <span class="kt">String</span><span class="p">)</span>
+        <span class="n">searchItemAttributeSet</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="n">searchItemAttributeSet</span><span class="o">.</span><span class="n">contentDescription</span> <span class="o">=</span> <span class="n">contentDescription</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">urlString</span> <span class="o">=</span> <span class="n">imageURLString</span><span class="p">,</span>
+            <span class="k">let</span> <span class="nv">imageURL</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="n">urlString</span> <span class="o">+</span> <span class="kt">WIDTH200SUFFIX</span><span class="p">),</span>
+            <span class="k">let</span> <span class="nv">imageData</span>  <span class="o">=</span> <span class="k">try</span><span class="p">?</span> <span class="kt">Data</span><span class="p">(</span><span class="nv">contentsOf</span><span class="p">:</span> <span class="n">imageURL</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">searchItemAttributeSet</span><span class="o">.</span><span class="n">thumbnailData</span> <span class="o">=</span> <span class="n">imageData</span>
+        <span class="p">}</span>
+        <span class="k">let</span> <span class="nv">searchableItem</span> <span class="o">=</span> <span class="kt">CSSearchableItem</span><span class="p">(</span><span class="nv">uniqueIdentifier</span><span class="p">:</span> <span class="n">id</span><span class="p">,</span> <span class="nv">domainIdentifier</span><span class="p">:</span> <span class="kt">ADSDOMAIN</span><span class="p">,</span> <span class="nv">attributeSet</span><span class="p">:</span> <span class="n">searchItemAttributeSet</span><span class="p">)</span>
+        <span class="n">searchableItems</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">searchableItem</span><span class="p">)</span>
+        
+        <span class="kt">CSSearchableIndex</span><span class="o">.</span><span class="nf">default</span><span class="p">()</span><span class="o">.</span><span class="nf">indexSearchableItems</span><span class="p">(</span><span class="n">searchableItems</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="k">in</span>
+            <span class="k">if</span> <span class="n">error</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="p">?</span><span class="o">.</span><span class="n">localizedDescription</span> <span class="p">??</span> <span class="s">"Error"</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">deleteSearchableItems</span><span class="p">(</span><span class="nv">ids</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">])</span> <span class="p">{</span>
+    <span class="kt">CSSearchableIndex</span><span class="o">.</span><span class="nf">default</span><span class="p">()</span><span class="o">.</span><span class="nf">deleteSearchableItems</span><span class="p">(</span><span class="nv">withIdentifiers</span><span class="p">:</span> <span class="n">ids</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">{</span> <span class="n">error</span> <span class="k">in</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"Error deleting searchable items: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">deleteSearchableItems</span><span class="p">(</span><span class="nv">domains</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">])</span> <span class="p">{</span>
+    <span class="kt">CSSearchableIndex</span><span class="o">.</span><span class="nf">default</span><span class="p">()</span><span class="o">.</span><span class="nf">deleteSearchableItems</span><span class="p">(</span><span class="nv">withDomainIdentifiers</span><span class="p">:</span> <span class="n">domains</span><span class="p">,</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">{</span> <span class="n">error</span> <span class="k">in</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"Error deleting searchable items: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  SpotLightParser.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">import</span> <span class="kt">CoreSpotlight</span>
+
+<span class="cp">#if STAGING</span>
+<span class="kd">enum</span> <span class="kt">SiriUserActivityType</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">create</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex-staging.create"</span>
+    <span class="k">case</span> <span class="n">messages</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex-staging.messages"</span>
+    <span class="k">case</span> <span class="n">requests</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex-staging.requests"</span>
+<span class="p">}</span>
+<span class="cp">#else</span>
+<span class="kd">enum</span> <span class="kt">SiriUserActivityType</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">create</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex.create"</span>
+    <span class="k">case</span> <span class="n">messages</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex.messages"</span>
+    <span class="k">case</span> <span class="n">requests</span> <span class="o">=</span> <span class="s">"com.tradexport.tradex.requests"</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+
+
+<span class="kd">class</span> <span class="kt">SpotLightParser</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">SpotLightParser</span><span class="p">()</span>
+    <span class="kd">private</span> <span class="nf">init</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">handleSpotLightActivity</span><span class="p">(</span><span class="n">_</span> <span class="nv">activity</span><span class="p">:</span> <span class="kt">NSUserActivity</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">DeeplinkType</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">activityType</span> <span class="o">==</span> <span class="kt">CSSearchableItemActionType</span><span class="p">,</span>
+            <span class="k">let</span> <span class="nv">info</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">userInfo</span><span class="p">,</span>
+            <span class="k">let</span> <span class="nv">selectedIdentifier</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="kt">CSSearchableItemActivityIdentifier</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">String</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"User selected ad from spotlight with ID: </span><span class="se">\(</span><span class="n">selectedIdentifier</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">ads</span><span class="p">(</span><span class="o">.</span><span class="nf">details</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">selectedIdentifier</span><span class="p">))</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">activity</span><span class="o">.</span><span class="n">activityType</span> <span class="o">==</span> <span class="kt">CSQueryContinuationActionType</span><span class="p">,</span>
+            <span class="k">let</span> <span class="nv">searchText</span> <span class="o">=</span> <span class="n">activity</span><span class="o">.</span><span class="n">userInfo</span><span class="p">?[</span><span class="kt">CSSearchQueryString</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">String</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"User searched via spotlight for: </span><span class="se">\(</span><span class="n">searchText</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">search</span><span class="p">(</span><span class="nv">query</span><span class="p">:</span> <span class="n">searchText</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">siriActivity</span> <span class="o">=</span> <span class="kt">SiriUserActivityType</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="n">activity</span><span class="o">.</span><span class="n">activityType</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">switch</span> <span class="n">siriActivity</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">create</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="n">newListing</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">messages</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">messages</span><span class="p">(</span><span class="kt">DeeplinkType</span><span class="o">.</span><span class="kt">Messages</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">requests</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kt">DeeplinkType</span><span class="o">.</span><span class="nf">rfqs</span><span class="p">(</span><span class="kt">DeeplinkType</span><span class="o">.</span><span class="kt">RFQs</span><span class="o">.</span><span class="n">root</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">nil</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Trade X
+		
+	</title>
+	<meta name="description" content="Trade X">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/projects/2018-08-01/tradex">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Trade X</h2>
+					<!-- <p>2018.08 - 2019.09</p> -->
+					<span>2018.08</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/projects/2018-08-01/tradex" class="enabled">中文 </a>|<a href="/en/projects/2018-08-01/tradex"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="trade-x"><a href="https://apps.apple.com/cn/app/trade-x-global/id1449450298">Trade X</a></h2>
+
+<hr />
+
+<p><img src="/images/apps/tradex.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="目录">目录</h3>
+
+<hr />
+
+<h4 id="1-概述">1. <a href="#p1">概述</a></h4>
+
+<p>1.1 <a href="#p11">基本信息</a></p>
+
+<p>1.2 <a href="#p12">结构解读</a></p>
+
+<p>1.3 <a href="#p13">第三方框架的使用</a></p>
+
+<hr />
+
+<h4 id="2-开发随笔">2. <a href="#p2">开发随笔</a></h4>
+
+<p>2.1 <a href="#mapkit">在应用内打开其他地图</a></p>
+
+<p>2.2 <a href="#passkit">Pass Kit 的使用</a></p>
+
+<p>2.3 <a href="#configuration">配置不同开发环境 - XCode Configuration</a></p>
+
+<p>2.4 <a href="#debug-notification">调试由推送通知唤起的应用</a></p>
+
+<p>2.5 <a href="#label-color-bug">UILabel颜色用asset color设置的问题</a></p>
+
+<hr />
+
+<h4 id="3-参考链接">3. <a href="#p3">参考链接</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p1">1. 概述</h3>
+
+<hr />
+
+<p>Trade X 是一款用来买卖与销售汽车的 App, 是为 B 端企业客户提供的一个平台。</p>
+
+<p>这是一款国际化的应用, 买卖双方通常来自于不同的国家。</p>
+
+<p>同样因为其中很多业务逻辑也与投资人本身所经营的业务相关(投资人来自与加拿大和美国), 相比于国内面向 C 端用户出售汽车的 App 来说, 很多功能例如 出价/询价, 签单, 发货, 验收等流程, 还有用户体验, UI设计都有所区别。</p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p11">1.1 基本信息</h4>
+</blockquote>
+
+<p>使用语言: <strong>Swift 4</strong></p>
+
+<p>系统要求: <strong>iOS</strong></p>
+
+<p>参与时间: <strong>2018.08 - 2019.09</strong></p>
+
+<p>负责部分:</p>
+
+<ul>
+  <li>聊天模块</li>
+  <li>订单模块</li>
+  <li>出售中车辆列表、搜索</li>
+  <li>车辆详情页</li>
+</ul>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p12">1.2 结构解读</h4>
+</blockquote>
+
+<h4 id="VIPER">VIPER 在独立业务模块中的使用</h4>
+
+<p><strong>首先, 什么是VIPER?</strong></p>
+
+<p>VIPER就像MVC, MVVM一样,也是一种iOS应用程序的构架方法。</p>
+
+<ul>
+  <li>V (View) – 显示Presenter告知的内容，并将用户输入中继回Presenter。</li>
+  <li>I (Interactor) – 包含用例指定的业务逻辑。</li>
+  <li>P (Presenter) – 包含用于准备显示内容（如从Interactor接收的）和用于对用户输入做出反应（通过从Interactor请求新数据）的视图逻辑。</li>
+  <li>E (Entity) – 包含Interactor使用的基本模型对象。</li>
+  <li>R (Routing) – 包含用于描述按哪个顺序显示哪些屏幕的导航逻辑。</li>
+</ul>
+
+<p><br /></p>
+
+<p>在项目里局部特定的业务场景模块中, 以实践新架构的心态, 试验性的使用了 <strong>VIPER</strong> 架构。</p>
+
+<p><strong>展示车辆详情的业务模块结构:</strong></p>
+
+<p><img src="/images/tradex/p12.jpg" alt="img" /></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  CarDetailsInteractor.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">protocol</span> <span class="kt">CarDetailsInteractorOutput</span><span class="p">:</span> <span class="kd">class</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">fetchedAdDetails</span><span class="p">(</span><span class="nv">adDetails</span><span class="p">:</span> <span class="kt">Ad</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">CarDetailsInteractor</span><span class="p">:</span> <span class="kt">NSObject</span> <span class="p">{</span>
+    <span class="k">weak</span> <span class="k">var</span> <span class="nv">output</span><span class="p">:</span> <span class="kt">CarDetailsInteractorOutput</span><span class="p">?</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">CarDetailsInteractor</span><span class="p">:</span> <span class="kt">Requestable</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">requestAdCarDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">mappedObjectHandle</span><span class="p">:</span> <span class="p">{[</span><span class="k">weak</span> <span class="k">self</span><span class="p">](</span><span class="n">adDetailResponse</span><span class="p">)</span> <span class="k">in</span>
+        <span class="k">self</span><span class="p">?</span><span class="o">.</span><span class="n">output</span><span class="p">?</span><span class="o">.</span><span class="nf">fetchedAdDetails</span><span class="p">(</span><span class="nv">adDetails</span><span class="p">:</span> <span class="n">adDetailResponse</span><span class="p">)</span>
+    <span class="p">},</span> <span class="nv">moreInfo</span><span class="p">:</span> <span class="p">{(</span><span class="n">message</span><span class="p">)</span> <span class="k">in</span>
+        <span class="c1">// handle error message</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">CarDetailsInteractor</span><span class="p">:</span> <span class="kt">CarDetailsInteractorInput</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">provideCarDetails</span><span class="p">(</span><span class="n">withId</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">carType</span><span class="p">:</span> <span class="kt">CarDetailsType</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="n">carType</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">garageCarDetails</span><span class="p">:</span>
+            <span class="nf">requestAdCarDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">id</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">rfqCarDetails</span><span class="p">:</span>
+            <span class="nf">requestRFQDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">id</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">rfqResponseCarDetails</span><span class="p">:</span>
+            <span class="nf">requestRFQResponseDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">id</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">garageTemplateCarDetails</span><span class="p">:</span>
+            <span class="nf">requestTemplateAdCarDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">id</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">rfqTemplateCarDetails</span><span class="p">:</span>
+            <span class="nf">requestRFQTemplateDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  CarDetailsPresenter.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">protocol</span> <span class="kt">CarDetailsViewInterface</span><span class="p">:</span> <span class="kd">class</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">updateAdDetails</span><span class="p">(</span><span class="nv">adDetails</span><span class="p">:</span> <span class="kt">Ad</span><span class="p">,</span> <span class="nv">viewType</span><span class="p">:</span> <span class="kt">AdDetailsType</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">protocol</span> <span class="kt">CarDetailsInteractorInput</span><span class="p">:</span> <span class="kd">class</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">provideCarDetails</span><span class="p">(</span><span class="n">withId</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">CarDetailsPresenter</span> <span class="p">{</span>
+    <span class="k">weak</span> <span class="k">var</span> <span class="nv">carDetailsView</span><span class="p">:</span> <span class="kt">CarDetailsViewInterface</span><span class="p">?</span>
+    <span class="k">var</span> <span class="nv">interactor</span><span class="p">:</span> <span class="kt">CarDetailsInteractorInput</span><span class="p">?</span>
+    <span class="kd">func</span> <span class="nf">displayCarDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">carType</span><span class="p">:</span> <span class="kt">CarDetailsType</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">interactor</span><span class="p">?</span><span class="o">.</span><span class="nf">provideCarDetails</span><span class="p">(</span><span class="nv">withId</span><span class="p">:</span> <span class="n">id</span><span class="p">,</span> <span class="nv">carType</span><span class="p">:</span> <span class="n">carType</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">displayCarDetailsWithContent</span><span class="p">(</span><span class="nv">adDetails</span><span class="p">:</span> <span class="kt">Ad</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">carDetailsView</span><span class="p">?</span><span class="o">.</span><span class="nf">updateAdDetails</span><span class="p">(</span><span class="nv">adDetails</span><span class="p">:</span> <span class="n">adDetails</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">CarDetailsPresenter</span><span class="p">:</span> <span class="kt">CarDetailsInteractorOutput</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">fetchedAdDetails</span><span class="p">(</span><span class="nv">adDetails</span><span class="p">:</span> <span class="kt">Ad</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">carDetailsView</span><span class="p">?</span><span class="o">.</span><span class="nf">updateAdDetails</span><span class="p">(</span><span class="nv">adDetails</span><span class="p">:</span> <span class="n">adDetails</span><span class="p">,</span> <span class="nv">viewType</span><span class="p">:</span> <span class="k">self</span><span class="o">.</span><span class="n">carDetailsViewType</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">CarDetailsPresenter</span><span class="p">:</span> <span class="kt">CarDetailsViewEventHandler</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">startChat</span><span class="p">(</span><span class="n">withId</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">interactor</span><span class="p">?</span><span class="o">.</span><span class="nf">startChat</span><span class="p">(</span><span class="nv">withId</span><span class="p">:</span> <span class="n">id</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  CarDetailsViewController.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">protocol</span> <span class="kt">CarDetailsViewEventHandler</span><span class="p">:</span> <span class="kd">class</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">startChat</span><span class="p">(</span><span class="n">withId</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">CarDetailsViewController</span><span class="p">:</span> <span class="kt">TXBaseUIViewController</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">eventHandler</span><span class="p">:</span> <span class="kt">CarDetailsViewEventHandler</span><span class="p">?</span>
+    <span class="c1">//  handle button click event</span>
+    <span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">chatButtonTapped</span><span class="p">(</span><span class="n">_</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">eventHandler</span><span class="p">?</span><span class="o">.</span><span class="nf">startChat</span><span class="p">(</span><span class="nv">withId</span><span class="p">:</span> <span class="n">adDetails</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">CarDetailsViewController</span><span class="p">:</span> <span class="kt">CarDetailsViewInterface</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">updateAdDetails</span><span class="p">(</span><span class="nv">adDetails</span><span class="p">:</span> <span class="kt">Ad</span><span class="p">,</span> <span class="nv">viewType</span><span class="p">:</span> <span class="kt">AdDetailsType</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//  update UI</span>
+    <span class="p">}</span>  
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  CarDetailsModuleConfigurator.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">enum</span> <span class="kt">CarDetailsType</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">garageCarDetails</span>
+    <span class="k">case</span> <span class="n">garageTemplateCarDetails</span>
+    <span class="k">case</span> <span class="n">rfqCarDetails</span>
+    <span class="k">case</span> <span class="n">rfqTemplateCarDetails</span>
+    <span class="k">case</span> <span class="n">rfqResponseCarDetails</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">CarDetailsModuleConfigurator</span> <span class="p">{</span>
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">orderCarDetailsViewController</span><span class="p">(</span><span class="nv">adId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CarDetailsViewController</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">viewController</span> <span class="o">=</span> <span class="kt">CarDetailsViewController</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="kt">R</span><span class="o">.</span><span class="n">nib</span><span class="o">.</span><span class="n">carDetailsViewController</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">presenter</span> <span class="o">=</span> <span class="nf">configureViewInput</span><span class="p">(</span><span class="n">viewController</span><span class="p">)</span>
+        <span class="n">presenter</span><span class="o">.</span><span class="nf">displayCarDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">adId</span><span class="p">,</span> <span class="nv">carType</span><span class="p">:</span> <span class="o">.</span><span class="n">garageCarDetails</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">viewController</span>
+    <span class="p">}</span>
+
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">marketCarDetailsViewController</span><span class="p">(</span><span class="nv">adId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CarDetailsViewController</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">viewController</span> <span class="o">=</span> <span class="kt">CarDetailsViewController</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="kt">R</span><span class="o">.</span><span class="n">nib</span><span class="o">.</span><span class="n">marketCarDetailsViewController</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">presenter</span> <span class="o">=</span> <span class="nf">configureViewInput</span><span class="p">(</span><span class="n">viewController</span><span class="p">)</span>
+        <span class="n">presenter</span><span class="o">.</span><span class="nf">displayCarDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">adId</span><span class="p">,</span> <span class="nv">carType</span><span class="p">:</span> <span class="o">.</span><span class="n">garageCarDetails</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">viewController</span>
+    <span class="p">}</span>
+
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">garageCarDetailsViewController</span><span class="p">(</span><span class="nv">adId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CarDetailsViewController</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">viewController</span> <span class="o">=</span> <span class="kt">CarDetailsViewController</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="kt">R</span><span class="o">.</span><span class="n">nib</span><span class="o">.</span><span class="n">garageCarDetailsViewController</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">presenter</span> <span class="o">=</span> <span class="nf">configureViewInput</span><span class="p">(</span><span class="n">viewController</span><span class="p">)</span>
+        <span class="n">presenter</span><span class="o">.</span><span class="nf">displayCarDetails</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">adId</span><span class="p">,</span> <span class="nv">carType</span><span class="p">:</span> <span class="o">.</span><span class="n">garageCarDetails</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">viewController</span>
+    <span class="p">}</span>
+    
+    <span class="kd">class</span> <span class="kd">private</span> <span class="kd">func</span> <span class="nf">configureViewInput</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewInput</span><span class="p">:</span> <span class="kt">CarDetailsViewController</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CarDetailsPresenter</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">presenter</span> <span class="o">=</span> <span class="kt">CarDetailsPresenter</span><span class="p">()</span>
+        <span class="k">let</span> <span class="nv">interactor</span> <span class="o">=</span> <span class="kt">CarDetailsInteractor</span><span class="p">()</span>
+        <span class="n">presenter</span><span class="o">.</span><span class="n">carDetailsView</span> <span class="o">=</span> <span class="n">viewInput</span>
+        <span class="n">presenter</span><span class="o">.</span><span class="n">interactor</span> <span class="o">=</span> <span class="n">interactor</span>
+        <span class="n">interactor</span><span class="o">.</span><span class="n">output</span> <span class="o">=</span> <span class="n">presenter</span>
+        <span class="n">viewInput</span><span class="o">.</span><span class="n">eventHandler</span> <span class="o">=</span> <span class="n">presenter</span>
+        <span class="k">return</span> <span class="n">presenter</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="网络层结构">网络层结构</h4>
+
+<p>在网络层中, 使用 Swift 语言中枚举类型携带关联值的特性来定义接口。</p>
+
+<p><strong>1).</strong> 定义API请求返回消息的枚举类型</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">CSMessage</span> <span class="p">{</span>
+  <span class="k">case</span> <span class="nf">success</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span>
+  <span class="k">case</span> <span class="nf">fail</span><span class="p">(</span><span class="kt">String</span><span class="p">,</span> <span class="kt">NetworkResponseErrorCode</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>2).</strong> 定义API及其扩展协议</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">NetworkAPI</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="nf">clientUpdate</span><span class="p">(</span><span class="nv">params</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]?)</span>
+    <span class="k">case</span> <span class="nf">signin</span><span class="p">(</span><span class="nv">phone</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">code</span><span class="p">:</span><span class="kt">String</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>3).</strong> 对API枚举类型做扩展</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">NetworkAPI</span> <span class="p">{</span>
+    
+    <span class="k">var</span> <span class="nv">urlPath</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">BASEURL</span> <span class="o">+</span> <span class="n">customUrlPath</span>
+    <span class="p">}</span>
+    
+    <span class="k">var</span> <span class="nv">customUrlPath</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">clientUpdate</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"settings/client_update/"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">signin</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"users/signup-signin/"</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">method</span><span class="p">:</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">HTTPMethod</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">clientUpdate</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">.</span><span class="k">get</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">.</span><span class="n">post</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]?</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">paramDic</span> <span class="o">=</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">AnyObject</span><span class="p">]()</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nf">clientUpdate</span><span class="p">(</span><span class="k">let</span> <span class="nv">params</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">params</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nf">signin</span><span class="p">(</span><span class="k">let</span> <span class="nv">phone</span><span class="p">,</span> <span class="k">let</span> <span class="nv">code</span><span class="p">):</span>
+            <span class="n">paramDic</span><span class="p">[</span><span class="s">"phone"</span><span class="p">]</span> <span class="o">=</span> <span class="n">phone</span> <span class="k">as</span> <span class="kt">AnyObject</span>
+            <span class="n">paramDic</span><span class="p">[</span><span class="s">"code"</span><span class="p">]</span> <span class="o">=</span> <span class="n">code</span> <span class="k">as</span> <span class="kt">AnyObject</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">nil</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">paramDic</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">headers</span><span class="p">:</span> <span class="kt">HTTPHeaders</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">var</span> <span class="nv">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s">"Content-Type"</span><span class="p">:</span><span class="s">"application/json"</span><span class="p">,</span> <span class="s">"Accept-Language"</span><span class="p">:</span> <span class="kt">Locale</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">languageCode</span> <span class="p">??</span> <span class="s">""</span><span class="p">]</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">signin</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">headers</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="n">headers</span><span class="p">[</span><span class="s">"Authorization"</span><span class="p">]</span> <span class="o">=</span> <span class="s">"Token </span><span class="se">\(</span><span class="kt">UserDefaults</span><span class="o">.</span><span class="n">standard</span><span class="o">.</span><span class="nf">string</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="kt">TOKEN</span><span class="p">)</span> <span class="p">??</span> <span class="s">""</span><span class="se">)</span><span class="s">"</span>
+            <span class="k">return</span> <span class="n">headers</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">var</span> <span class="nv">encoding</span><span class="p">:</span> <span class="kt">ParameterEncoding</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">clientUpdate</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kt">URLEncoding</span><span class="o">.</span><span class="k">default</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kt">JSONEncoding</span><span class="o">.</span><span class="k">default</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>4).</strong> 定义网络请求协议及其实现</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Requestable</span><span class="p">:</span> <span class="kd">class</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="n">setupNetworkComponentWith</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">Mappable</span><span class="o">&gt;</span><span class="p">(</span>
+	    <span class="nv">netapi</span><span class="p">:</span> <span class="kt">NetworkAPI</span><span class="p">,</span> 
+	    <span class="nv">mapType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> 
+	    <span class="nv">mappedObjectHandle</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?,</span> 
+	    <span class="nv">moreInfo</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">CSMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">Requestable</span> <span class="k">where</span> <span class="k">Self</span><span class="p">:</span> <span class="kt">NSObject</span> <span class="p">{</span>
+    <span class="c1">//  network component init</span>
+    <span class="kd">func</span> <span class="n">setupNetworkComponentWith</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">Mappable</span><span class="o">&gt;</span><span class="p">(</span>
+        <span class="nv">netapi</span><span class="p">:</span> <span class="kt">NetworkAPI</span><span class="p">,</span> 
+        <span class="nv">mapType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> 
+        <span class="nv">mappedObjectHandle</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">object</span><span class="p">:</span> <span class="kt">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">)?,</span> 
+        <span class="nv">moreInfo</span><span class="p">:</span> <span class="p">((</span><span class="n">_</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">CSMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span> <span class="p">)?</span>
+    <span class="p">)</span> <span class="p">{</span>
+        
+        <span class="c1">//  start request address</span>
+        <span class="k">let</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">SessionManager</span><span class="o">.</span><span class="k">default</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span>
+        	<span class="n">netapi</span><span class="o">.</span><span class="n">urlPath</span><span class="p">,</span> 
+        	<span class="nv">method</span><span class="p">:</span> <span class="n">netapi</span><span class="o">.</span><span class="n">method</span><span class="p">,</span> 
+        	<span class="nv">parameters</span><span class="p">:</span> <span class="n">netapi</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span> 
+        	<span class="nv">encoding</span><span class="p">:</span> <span class="n">netapi</span><span class="o">.</span><span class="n">encoding</span><span class="p">,</span> 
+        	<span class="nv">headers</span><span class="p">:</span><span class="n">netapi</span><span class="o">.</span><span class="n">headers</span>
+    	<span class="p">)</span><span class="o">.</span><span class="n">responseJSON</span> <span class="p">{</span> <span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="k">in</span>
+
+            <span class="k">switch</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">value</span><span class="p">):</span>
+                <span class="k">guard</span> <span class="k">let</span> <span class="nv">responseJSON</span> <span class="o">=</span> <span class="n">value</span> <span class="k">as?</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="c1">//  response should be able to read as JSON</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="kt">CSMessage</span><span class="o">.</span><span class="nf">fail</span><span class="p">(</span><span class="kt">DEFAULTERROR</span><span class="p">,</span> <span class="kt">NetworkResponseErrorCode</span><span class="o">.</span><span class="n">unknown</span><span class="p">))</span>
+                    <span class="k">return</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="k">let</span> <span class="nv">code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">response</span><span class="p">?</span><span class="o">.</span><span class="n">statusCode</span><span class="p">,</span> 
+                   <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">getStatusCodeError</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="n">error</span><span class="p">)</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="k">let</span> <span class="nv">mapObject</span> <span class="o">=</span> <span class="kt">Mapper</span><span class="o">&lt;</span><span class="kt">T</span><span class="o">&gt;</span><span class="p">()</span><span class="o">.</span><span class="nf">map</span><span class="p">(</span><span class="kt">JSON</span><span class="p">:</span> <span class="n">responseJSON</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nf">mappedObjectHandle</span><span class="p">?(</span><span class="n">mapObject</span><span class="p">)</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="kt">CSMessage</span><span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="kt">MAPSUCCESS</span><span class="p">))</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="kt">CSMessage</span><span class="o">.</span><span class="nf">fail</span><span class="p">(</span><span class="kt">MAPFAILED</span><span class="p">,</span> <span class="kt">NetworkResponseErrorCode</span><span class="o">.</span><span class="n">unknown</span><span class="p">))</span>
+                <span class="p">}</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                <span class="k">if</span> <span class="k">let</span> <span class="nv">code</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">response</span><span class="p">?</span><span class="o">.</span><span class="n">statusCode</span><span class="p">,</span> 
+                   <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">getStatusCodeError</span><span class="p">(</span><span class="n">code</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="n">error</span><span class="p">)</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nf">moreInfo</span><span class="p">?(</span><span class="kt">CSMessage</span><span class="o">.</span><span class="nf">fail</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">,</span> <span class="kt">NetworkResponseErrorCode</span><span class="o">.</span><span class="n">unknown</span><span class="p">))</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">getStatusCodeError</span><span class="p">(</span><span class="n">_</span> <span class="nv">code</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CSMessage</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">httpStatusCode</span> <span class="o">=</span> <span class="kt">HTTPStatusCode</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="n">code</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="k">return</span> <span class="kc">nil</span><span class="p">}</span>
+        <span class="k">var</span> <span class="nv">errorString</span> <span class="o">=</span> <span class="s">""</span>
+        <span class="k">switch</span> <span class="n">httpStatusCode</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">internalServerError</span><span class="p">:</span>
+            <span class="n">errorString</span> <span class="o">=</span> <span class="s">"Internal Server Error"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">forbidden</span><span class="p">:</span>
+            <span class="n">errorString</span> <span class="o">=</span> <span class="s">"Access Issue, please contact the admin"</span>
+        <span class="k">default</span><span class="p">:</span>
+            <span class="n">errorString</span> <span class="o">=</span> <span class="kt">DEFAULTERROR</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kt">CSMessage</span><span class="o">.</span><span class="nf">fail</span><span class="p">(</span><span class="n">errorString</span><span class="p">,</span> <span class="n">code</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>5).</strong> 在其他类中调用方法请求网络接口</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  call client update API</span>
+<span class="k">let</span> <span class="nv">params</span> <span class="o">=</span> <span class="p">[</span><span class="s">"client"</span><span class="p">:</span> <span class="s">"iOS"</span><span class="p">]</span> <span class="k">as</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]</span>
+<span class="nf">setupNetworkComponentWith</span><span class="p">(</span>
+	<span class="nv">netapi</span><span class="p">:</span> <span class="kt">NetworkAPI</span><span class="o">.</span><span class="nf">clientUpdate</span><span class="p">(</span><span class="nv">params</span><span class="p">:</span> <span class="n">params</span><span class="p">),</span> 
+	<span class="nv">mapType</span><span class="p">:</span> <span class="kt">Update</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> 
+	<span class="nv">mappedObjectHandle</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">clientUpdate</span><span class="p">)</span> <span class="k">in</span>
+	<span class="c1">//  client data update</span>
+<span class="p">},</span> <span class="nv">moreInfo</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="k">in</span>
+	<span class="c1">//  handle error message</span>
+<span class="p">})</span>
+
+<span class="c1">// call sign in API</span>
+<span class="nf">setupNetworkComponentWith</span><span class="p">(</span>
+    <span class="nv">netapi</span><span class="p">:</span> <span class="kt">NetworkAPI</span><span class="o">.</span><span class="nf">signin</span><span class="p">(</span><span class="nv">phone</span><span class="p">:</span> <span class="n">phoneNumber</span><span class="p">,</span> <span class="nv">code</span><span class="p">:</span> <span class="n">verificationCode</span><span class="p">),</span> 
+    <span class="nv">mapType</span><span class="p">:</span> <span class="kt">User</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> 
+    <span class="nv">mappedObjectHandle</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">userResponse</span><span class="p">)</span> <span class="k">in</span>
+    <span class="c1">//  sign in finished</span>
+<span class="p">},</span> <span class="nv">moreInfo</span><span class="p">:{</span> <span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="k">in</span>
+	<span class="c1">//  handle message</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p13">1.3 第三方框架的使用</h4>
+</blockquote>
+
+<ul>
+  <li>Chatto - 轻量级的IM聊天组件</li>
+  <li>Starscream - WebSocket 通讯</li>
+  <li><a href="#rfile">R.swift - 优雅的引用资源文件</a></li>
+  <li><a href="#collectionkit">CollectinoKit - Collection View 居左自动布局</a></li>
+  <li><a href="#skeletonview">SkeletonView - 加载占位图</a></li>
+  <li><a href="#mbprogress">PKHUD - 创建prompt</a></li>
+  <li><a href="">MJRefresh - 列表上拉刷新，下拉加载</a></li>
+  <li><a href="#emptydata">DZNEmptyDataSet - 列表空数据时的效果处理</a></li>
+  <li><a href="#snapkit">SnapKit - Swift 中的自动布局框架</a></li>
+  <li><a href="/tech/2019-10-30/eureka">Eureka - 创建动态表单的框架</a></li>
+  <li><a href="/tech/2018-11-09/alamofire">Alamofire - 网络层</a></li>
+  <li><a href="#objectmapper">ObjectMapper - 轻量级的模型与字典、数组等数据结构的转换</a></li>
+  <li><a href="#sdwebimage">SDWebImage - 网络加载图片</a></li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="rfile">R.swift</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">displayStringValue</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+    <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nv">left</span><span class="p">:</span>
+     <span class="k">return</span> <span class="kt">R</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">localizable</span><span class="o">.</span><span class="nf">leftHandDrive</span><span class="p">()</span>
+    <span class="k">case</span> <span class="o">.</span><span class="nv">right</span><span class="p">:</span>
+     <span class="k">return</span> <span class="kt">R</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">localizable</span><span class="o">.</span><span class="nf">rightHandDrive</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="objectmapper">ObjectMapper</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  CommonResponse.swift</span>
+
+<span class="kd">import</span> <span class="kt">ObjectMapper</span>
+
+<span class="kd">class</span> <span class="kt">CommonResponse</span><span class="p">:</span> <span class="kt">Mappable</span> <span class="p">{</span>
+    <span class="kd">@objc</span> <span class="kd">dynamic</span> <span class="k">var</span> <span class="nv">detail</span> <span class="o">=</span> <span class="s">""</span>
+    
+    <span class="kd">required</span> <span class="kd">convenience</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">map</span><span class="p">:</span> <span class="kt">Map</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">mapping</span><span class="p">(</span><span class="nv">map</span><span class="p">:</span> <span class="kt">Map</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">detail</span> <span class="o">&lt;-</span> <span class="n">map</span><span class="p">[</span><span class="s">"detail"</span><span class="p">]</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="snapkit">SnapKit</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">iconImageView</span><span class="o">.</span><span class="n">snp</span><span class="o">.</span><span class="n">remakeConstraints</span> <span class="p">{</span> <span class="p">(</span><span class="n">make</span><span class="p">)</span> <span class="k">in</span>
+    <span class="n">make</span><span class="o">.</span><span class="n">width</span><span class="o">.</span><span class="nf">equalTo</span><span class="p">(</span><span class="n">iconWidth</span><span class="p">)</span>
+    <span class="n">make</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="nf">equalToSuperview</span><span class="p">()</span><span class="o">.</span><span class="nf">offset</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">make</span><span class="o">.</span><span class="n">centerY</span><span class="o">.</span><span class="nf">equalToSuperview</span><span class="p">()</span>
+    <span class="n">make</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="nf">equalTo</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="n">textLabel</span><span class="o">.</span><span class="n">snp</span><span class="o">.</span><span class="n">makeConstraints</span> <span class="p">{</span> <span class="p">(</span><span class="n">make</span><span class="p">)</span> <span class="k">in</span>
+    <span class="n">make</span><span class="o">.</span><span class="n">centerY</span><span class="o">.</span><span class="nf">equalToSuperview</span><span class="p">()</span>
+    <span class="n">make</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="nf">equalTo</span><span class="p">(</span><span class="n">iconImageView</span><span class="o">.</span><span class="n">snp</span><span class="o">.</span><span class="n">right</span><span class="p">)</span><span class="o">.</span><span class="nf">offset</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="skeletonview">SkeletonView</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">SkeletonView</span>
+
+<span class="kd">extension</span> <span class="kt">MyViewController</span><span class="p">:</span> <span class="kt">SkeletonTableViewDataSource</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">collectionSkeletonView</span><span class="p">(</span><span class="n">_</span> <span class="nv">skeletonView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">3</span>
+    <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">collectionSkeletonView</span><span class="p">(</span><span class="n">_</span> <span class="nv">skeletonView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellIdentifierForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ReusableCellIdentifier</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">R</span><span class="o">.</span><span class="n">nib</span><span class="o">.</span><span class="n">homeSkeletonTableViewCell</span><span class="o">.</span><span class="n">identifier</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="collectionkit">CollectinonKit</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">CollectionKit</span>
+
+<span class="kd">class</span> <span class="kt">MyView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span>
+
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">configCollectionView</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">dataSource</span> <span class="o">=</span> <span class="kt">ArrayDataSource</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">filteredSearchValues</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">viewSource</span> <span class="o">=</span> <span class="kt">ClosureViewSource</span><span class="p">(</span><span class="nv">viewUpdater</span><span class="p">:</span> <span class="p">{[</span><span class="k">unowned</span> <span class="k">self</span><span class="p">]</span> <span class="p">(</span><span class="nv">view</span><span class="p">:</span> <span class="kt">AdSelectedFilterViewCell</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="p">(</span><span class="kt">AdFilterType</span><span class="p">,</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">AnyObject</span><span class="p">?,</span> <span class="kt">Bool</span><span class="p">),</span> <span class="nv">index</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="k">in</span>
+            <span class="k">self</span><span class="o">.</span><span class="nf">configFilterUI</span><span class="p">(</span><span class="nv">cell</span><span class="p">:</span> <span class="n">view</span><span class="p">,</span> <span class="nv">filterData</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+        <span class="p">})</span>
+        <span class="k">let</span> <span class="nv">sizeSource</span> <span class="o">=</span> <span class="p">{[</span><span class="k">unowned</span> <span class="k">self</span><span class="p">]</span> <span class="p">(</span><span class="nv">index</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="p">(</span><span class="kt">AdFilterType</span><span class="p">,</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">String</span><span class="p">,</span> <span class="kt">AnyObject</span><span class="p">?,</span> <span class="kt">Bool</span><span class="p">),</span> <span class="nv">collectionSize</span><span class="p">:</span> <span class="kt">CGSize</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">CGSize</span> <span class="k">in</span>
+            <span class="k">let</span> <span class="nv">width</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">getFilterCellWidth</span><span class="p">(</span><span class="nv">filterData</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kt">CGSize</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">32</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="k">let</span> <span class="nv">provider</span> <span class="o">=</span> <span class="kt">BasicProvider</span><span class="p">(</span>
+            <span class="nv">dataSource</span><span class="p">:</span> <span class="n">dataSource</span><span class="p">,</span>
+            <span class="nv">viewSource</span><span class="p">:</span> <span class="n">viewSource</span><span class="p">,</span>
+            <span class="nv">sizeSource</span><span class="p">:</span> <span class="n">sizeSource</span><span class="p">,</span>
+            <span class="nv">layout</span><span class="p">:</span> <span class="kt">FlowLayout</span><span class="p">(</span><span class="nv">lineSpacing</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="nv">interitemSpacing</span><span class="p">:</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="nf">inset</span><span class="p">(</span><span class="nv">by</span><span class="p">:</span> <span class="kt">UIEdgeInsets</span><span class="p">(</span><span class="nv">top</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="nv">left</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="nv">bottom</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="nv">right</span><span class="p">:</span> <span class="mi">16</span><span class="p">)),</span>
+            <span class="nv">tapHandler</span><span class="p">:</span> <span class="p">{[</span><span class="k">unowned</span> <span class="k">self</span><span class="p">]</span> <span class="p">(</span><span class="n">context</span><span class="p">)</span> <span class="k">in</span>
+                <span class="k">switch</span> <span class="n">context</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="mi">0</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nv">reset</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">index</span> <span class="k">in</span> <span class="mi">0</span><span class="o">..&lt;</span><span class="n">dataSource</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">count</span> <span class="p">{</span>
+                        <span class="n">dataSource</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="mi">4</span> <span class="o">=</span> <span class="kc">false</span>
+                        <span class="k">self</span><span class="o">.</span><span class="n">filteredSearchValues</span><span class="p">[</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="mi">4</span> <span class="o">=</span> <span class="kc">false</span>
+                    <span class="p">}</span>
+                    <span class="k">self</span><span class="o">.</span><span class="nf">filterClickedEventHandler</span><span class="p">?(</span><span class="k">self</span><span class="o">.</span><span class="n">filteredSearchValues</span><span class="p">)</span>
+                    <span class="k">self</span><span class="o">.</span><span class="nf">resetClickedEventHandler</span><span class="p">?()</span>
+                <span class="k">default</span><span class="p">:</span>
+                    <span class="k">let</span> <span class="nv">isSelected</span> <span class="o">=</span> <span class="o">!</span><span class="n">context</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="mi">4</span>
+                    <span class="c1">//Update UI</span>
+                    <span class="n">dataSource</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">context</span><span class="o">.</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="mi">4</span> <span class="o">=</span> <span class="n">isSelected</span>
+                    <span class="c1">//Update data</span>
+                    <span class="k">self</span><span class="o">.</span><span class="n">filteredSearchValues</span><span class="p">[</span><span class="n">context</span><span class="o">.</span><span class="n">index</span><span class="p">]</span><span class="o">.</span><span class="mi">4</span> <span class="o">=</span> <span class="n">isSelected</span>
+                    <span class="k">self</span><span class="o">.</span><span class="nf">filterClickedEventHandler</span><span class="p">?(</span><span class="k">self</span><span class="o">.</span><span class="n">filteredSearchValues</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        
+        <span class="n">collectionView</span><span class="o">.</span><span class="n">provider</span> <span class="o">=</span> <span class="n">provider</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p2">2. 开发随笔</h3>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="mapkit">2.1 在应用内打开其他地图</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  MapKitHelper.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">class</span> <span class="kt">MapKitHelper</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">shared</span> <span class="o">=</span> <span class="kt">MapKitHelper</span><span class="p">()</span>
+    <span class="kd">private</span> <span class="nf">init</span><span class="p">(){}</span> <span class="c1">//  change initializer access level</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="nf">openCoordinatesInMaps</span><span class="p">(</span><span class="n">_</span> <span class="nv">coordinates2d</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">?,</span> <span class="nv">mapItemName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">addressDictionary</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">Any</span><span class="p">]?)</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">coordinates</span> <span class="o">=</span> <span class="n">coordinates2d</span> <span class="k">else</span> <span class="p">{</span><span class="k">return</span><span class="p">}</span>
+        <span class="kt">NavigationApp</span><span class="o">.</span><span class="nf">showDirectionsAlertController</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="n">coordinates</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="n">mapItemName</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"Open in Maps"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">addressDictionary</span><span class="p">:</span> <span class="n">addressDictionary</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// enum to hold possible navigation apps on user's device</span>
+<span class="kd">public</span> <span class="kd">enum</span> <span class="kt">NavigationApp</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="kt">AppleMaps</span>
+    <span class="k">case</span> <span class="kt">GoogleMaps</span>
+    <span class="k">case</span> <span class="kt">Navigon</span>
+    <span class="k">case</span> <span class="kt">TomTom</span>
+    <span class="k">case</span> <span class="kt">Waze</span>
+    <span class="k">case</span> <span class="kt">Baidu</span>
+    <span class="k">case</span> <span class="kt">Gaode</span>
+    <span class="k">case</span> <span class="kt">Uber</span>
+    
+    <span class="c1">// shortcut to access every value of possible navigation app</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">AllValues</span><span class="p">:</span> <span class="p">[</span><span class="kt">NavigationApp</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="kt">AppleMaps</span><span class="p">,</span> <span class="o">.</span><span class="kt">GoogleMaps</span><span class="p">,</span> <span class="o">.</span><span class="kt">Navigon</span><span class="p">,</span> <span class="o">.</span><span class="kt">TomTom</span><span class="p">,</span> <span class="o">.</span><span class="kt">Waze</span><span class="p">,</span> <span class="o">.</span><span class="kt">Baidu</span><span class="p">,</span> <span class="o">.</span><span class="kt">Gaode</span><span class="p">,</span> <span class="o">.</span><span class="kt">Uber</span><span class="p">]</span>
+    
+    <span class="c1">// property that returns only navigation apps that the user has installed</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">AvailableServices</span><span class="p">:</span> <span class="p">[</span><span class="kt">NavigationApp</span><span class="p">]</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">self</span><span class="o">.</span><span class="kt">AllValues</span><span class="o">.</span><span class="n">filter</span> <span class="p">{</span> <span class="n">app</span> <span class="k">in</span> <span class="n">app</span><span class="o">.</span><span class="n">available</span> <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// name of each app as it will appear on the Alert's options</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">AppleMaps</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Apple Maps"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">GoogleMaps</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Google Maps"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Navigon</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Navigon"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">TomTom</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"TomTom"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Waze</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Waze"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Baidu</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Baidu"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Gaode</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Gaode"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Uber</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Uber"</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// base of URL used to open the navigation app</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">AppleMaps</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"http://maps.apple.com"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">GoogleMaps</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"comgooglemaps://"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Navigon</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"navigon://"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">TomTom</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"tomtomhome://"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Waze</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"waze://"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Baidu</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"baidumap://"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Gaode</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"iosamap://"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Uber</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"uber://"</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// auxiliary property to transform a string into an URL</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="k">self</span><span class="o">.</span><span class="n">urlString</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// property that checks if a given app is installed</span>
+    <span class="kd">public</span> <span class="k">var</span> <span class="nv">available</span><span class="p">:</span> <span class="kt">Bool</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">url</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kt">UIApplication</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">canOpenURL</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="cm">/* func to get the full URL (in string version)
+     necessary to open the navigation app on the desired coordinates */</span>
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">directionsUrlString</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"Destination"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+
+        <span class="k">var</span> <span class="nv">urlString</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">urlString</span>
+
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">AppleMaps</span><span class="p">:</span>
+            <span class="n">urlString</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"?q=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">latitude</span><span class="se">)</span><span class="s">,</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">longitude</span><span class="se">)</span><span class="s">=d&amp;t=h"</span><span class="p">)</span>   
+        <span class="k">case</span> <span class="o">.</span><span class="kt">GoogleMaps</span><span class="p">:</span>
+            <span class="n">urlString</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"?saddr=&amp;daddr=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">latitude</span><span class="se">)</span><span class="s">,</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">longitude</span><span class="se">)</span><span class="s">&amp;directionsmode=driving"</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Navigon</span><span class="p">:</span>
+            <span class="n">urlString</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"coordinate/</span><span class="se">\(</span><span class="n">name</span><span class="se">)</span><span class="s">/</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">longitude</span><span class="se">)</span><span class="s">/</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">latitude</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">TomTom</span><span class="p">:</span>
+            <span class="n">urlString</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"geo:action=navigateto&amp;lat=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">latitude</span><span class="se">)</span><span class="s">&amp;long=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">longitude</span><span class="se">)</span><span class="s">&amp;name=</span><span class="se">\(</span><span class="n">name</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Waze</span><span class="p">:</span>
+            <span class="n">urlString</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"?ll=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">latitude</span><span class="se">)</span><span class="s">,</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">longitude</span><span class="se">)</span><span class="s">&amp;navigate=yes"</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Baidu</span><span class="p">:</span>
+            <span class="n">urlString</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"map/marker?location=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">latitude</span><span class="se">)</span><span class="s">,</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">longitude</span><span class="se">)</span><span class="s">&amp;title=</span><span class="se">\(</span><span class="n">name</span><span class="se">)</span><span class="s">&amp;content=</span><span class="se">\(</span><span class="n">name</span><span class="se">)</span><span class="s">&amp;src=</span><span class="se">\(</span><span class="kt">Bundle</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">bundleIdentifier</span> <span class="p">??</span> <span class="s">""</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Gaode</span><span class="p">:</span>
+            <span class="n">urlString</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"path?sourceApplication=</span><span class="se">\(</span><span class="kt">Bundle</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">bundleIdentifier</span> <span class="p">??</span> <span class="s">""</span><span class="se">)</span><span class="s">&amp;sid=TRADEX1&amp;did=TRADEX2&amp;dlat=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">latitude</span><span class="se">)</span><span class="s">&amp;dlon=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">longitude</span><span class="se">)</span><span class="s">&amp;dname=</span><span class="se">\(</span><span class="n">name</span><span class="se">)</span><span class="s">&amp;t=0"</span><span class="p">)</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Uber</span><span class="p">:</span>
+            <span class="n">urlString</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="s">"client_id=98A6hKfDr8iCXTGrLUmhXCFjiq97FKOv&amp;action=setPickup&amp;pickup=my_location&amp;pickup[nickname]=TRADEX&amp;dropoff[latitude]=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">latitude</span><span class="se">)</span><span class="s">&amp;dropoff[longitude]=</span><span class="se">\(</span><span class="n">coordinate</span><span class="o">.</span><span class="n">longitude</span><span class="se">)</span><span class="s">&amp;dropoff[nickname]=</span><span class="se">\(</span><span class="n">name</span><span class="se">)</span><span class="s">&amp;link_text=</span><span class="se">\(</span><span class="kt">DEEPLINKURI</span><span class="se">)</span><span class="s">&amp;partner_deeplink=</span><span class="se">\(</span><span class="kt">DEEPLINKMESSAGES</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="k">let</span> <span class="nv">urlwithPercentEscapes</span> <span class="o">=</span>
+            <span class="n">urlString</span><span class="o">.</span><span class="nf">addingPercentEncoding</span><span class="p">(</span><span class="nv">withAllowedCharacters</span><span class="p">:</span> <span class="o">.</span><span class="n">urlQueryAllowed</span><span class="p">)</span> <span class="p">??</span> <span class="n">urlString</span>
+        <span class="k">return</span> <span class="n">urlwithPercentEscapes</span>
+
+    <span class="p">}</span>
+    
+    <span class="c1">// wrapper func to turn a string into an URL object</span>
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">directionsUrl</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"Destination"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">URL</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">urlString</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">directionsUrlString</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="n">coordinate</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="n">urlString</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="cm">/* func that tries to open a navigation app on a specific set of coordinates
+     and informs its callback if it was successful */</span>
+    <span class="kd">public</span> <span class="kd">func</span> <span class="nf">openInMaps</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">,</span>
+                                   <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"Destination"</span><span class="p">,</span>
+                                   <span class="nv">addressDictionary</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]?,</span>
+                                   <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Swift</span><span class="o">.</span><span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="c1">// Apple Maps can be opened differently than other navigation apps</span>
+        <span class="k">if</span> <span class="k">self</span> <span class="o">==</span> <span class="o">.</span><span class="kt">AppleMaps</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">regionDistance</span><span class="p">:</span><span class="kt">CLLocationDistance</span> <span class="o">=</span> <span class="mi">10000</span>
+            <span class="k">let</span> <span class="nv">regionSpan</span> <span class="o">=</span> <span class="kt">MKCoordinateRegion</span><span class="p">(</span>
+                <span class="nv">center</span><span class="p">:</span> <span class="n">coordinate</span><span class="p">,</span> 
+                <span class="nv">latitudinalMeters</span><span class="p">:</span> <span class="n">regionDistance</span><span class="p">,</span> 
+                <span class="nv">longitudinalMeters</span><span class="p">:</span> <span class="n">regionDistance</span>
+            <span class="p">)</span>
+            <span class="k">let</span> <span class="nv">options</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="kt">MKLaunchOptionsMapCenterKey</span><span class="p">:</span> <span class="kt">NSValue</span><span class="p">(</span><span class="nv">mkCoordinate</span><span class="p">:</span> <span class="n">regionSpan</span><span class="o">.</span><span class="n">center</span><span class="p">),</span>
+                <span class="kt">MKLaunchOptionsMapSpanKey</span><span class="p">:</span> <span class="kt">NSValue</span><span class="p">(</span><span class="nv">mkCoordinateSpan</span><span class="p">:</span> <span class="n">regionSpan</span><span class="o">.</span><span class="n">span</span><span class="p">)</span>
+            <span class="p">]</span>
+            
+            <span class="k">let</span> <span class="nv">placemark</span> <span class="o">=</span> <span class="kt">MKPlacemark</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="n">coordinate</span><span class="p">,</span> <span class="nv">addressDictionary</span><span class="p">:</span> <span class="n">addressDictionary</span><span class="p">)</span>
+            <span class="k">let</span> <span class="nv">mapItem</span> <span class="o">=</span> <span class="kt">MKMapItem</span><span class="p">(</span><span class="nv">placemark</span><span class="p">:</span> <span class="n">placemark</span><span class="p">)</span>
+            <span class="n">mapItem</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+            <span class="n">mapItem</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"https://tradexport.com"</span><span class="p">)</span>
+            
+            <span class="k">let</span> <span class="nv">success</span> <span class="o">=</span> <span class="n">mapItem</span><span class="o">.</span><span class="nf">openInMaps</span><span class="p">(</span><span class="nv">launchOptions</span><span class="p">:</span> <span class="n">options</span><span class="p">)</span>
+            <span class="nf">completion</span><span class="p">?(</span><span class="n">success</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="nf">directionsUrl</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="n">coordinate</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="n">name</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nf">completion</span><span class="p">?(</span><span class="kc">false</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// open the app with appropriate method for your target iOS version</span>
+        <span class="k">if</span> <span class="kd">#available(iOS 10.0, *)</span> <span class="p">{</span>
+            <span class="kt">UIApplication</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">open</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[:],</span> <span class="nv">completionHandler</span><span class="p">:</span> <span class="p">{</span>
+                <span class="p">(</span><span class="n">success</span><span class="p">)</span> <span class="k">in</span>
+                <span class="nf">completion</span><span class="p">?(</span><span class="n">success</span><span class="p">)</span>
+            <span class="p">})</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">success</span> <span class="o">=</span> <span class="kt">UIApplication</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">openURL</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="nf">completion</span><span class="p">?(</span><span class="n">success</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="cm">/* func to show an Alert where the options
+     are the available navigation apps on the user's device.
+     The callback informs if the operation was successful */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">func</span> <span class="nf">showDirectionsAlertController</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"Destination"</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">"Open In Map"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">addressDictionary</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]?,</span> <span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">())?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="k">var</span> <span class="nv">actions</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UIAlertAction</span><span class="p">]()</span>
+        <span class="k">for</span> <span class="n">navigationApp</span> <span class="k">in</span> <span class="kt">NavigationApp</span><span class="o">.</span><span class="kt">AvailableServices</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">action</span> <span class="o">=</span> <span class="kt">UIAlertAction</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="n">navigationApp</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nv">style</span><span class="p">:</span> <span class="kt">UIAlertAction</span><span class="o">.</span><span class="kt">Style</span><span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="p">{</span> <span class="n">action</span> <span class="k">in</span>
+                <span class="n">navigationApp</span><span class="o">.</span><span class="nf">openInMaps</span><span class="p">(</span><span class="nv">coordinate</span><span class="p">:</span> <span class="n">coordinate</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="nv">addressDictionary</span><span class="p">:</span> <span class="n">addressDictionary</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="n">completion</span><span class="p">)</span>
+            <span class="p">})</span>
+            <span class="n">actions</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="p">}</span>
+            
+        <span class="k">let</span> <span class="nv">cancelAction</span> <span class="o">=</span> <span class="kt">UIAlertAction</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"Dismiss"</span><span class="p">,</span> <span class="nv">style</span><span class="p">:</span> <span class="kt">UIAlertAction</span><span class="o">.</span><span class="kt">Style</span><span class="o">.</span><span class="n">cancel</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="p">{</span> <span class="n">action</span> <span class="k">in</span> 
+            <span class="nf">completion</span><span class="p">?(</span><span class="kc">false</span><span class="p">)</span> 
+        <span class="p">})</span>
+        <span class="n">actions</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">cancelAction</span><span class="p">)</span>
+            
+        <span class="kt">UIAlertHelper</span><span class="o">.</span><span class="nf">showAlertWithTitle</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="n">message</span><span class="p">,</span> <span class="nv">actions</span><span class="p">:</span> <span class="n">actions</span><span class="p">,</span> <span class="nv">completionBlock</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">onController</span><span class="p">:</span> <span class="kc">nil</span><span class="p">,</span> <span class="nv">preferredStyle</span><span class="p">:</span> <span class="o">.</span><span class="n">actionSheet</span><span class="p">)</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="passkit">2.2 Pass Kit 的使用</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">import</span> <span class="kt">PassKit</span>
+
+<span class="kd">func</span> <span class="nf">showGatePass</span><span class="p">(</span><span class="n">_</span> <span class="nv">urlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">htmlString</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">//Check if user's device is capable of adding wallet passes</span>
+    <span class="k">if</span> <span class="kt">PKPassLibrary</span><span class="o">.</span><span class="nf">isPassLibraryAvailable</span><span class="p">(),</span> <span class="kt">PKAddPassesViewController</span><span class="o">.</span><span class="nf">canAddPasses</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">passUrl</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="n">urlString</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">do</span> <span class="p">{</span>
+                <span class="k">let</span> <span class="nv">passData</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">Data</span><span class="p">(</span><span class="nv">contentsOf</span><span class="p">:</span> <span class="n">passUrl</span><span class="p">)</span>
+                <span class="k">let</span> <span class="nv">pass</span> <span class="o">=</span> <span class="k">try</span> <span class="kt">PKPass</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">passData</span><span class="p">)</span>
+                <span class="k">guard</span> <span class="k">let</span> <span class="nv">passPreviewController</span> <span class="o">=</span> <span class="kt">TXAddPassesViewController</span><span class="p">(</span><span class="nv">pass</span><span class="p">:</span> <span class="n">pass</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span><span class="k">return</span><span class="p">}</span>
+                <span class="n">passPreviewController</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+                <span class="n">passPreviewController</span><span class="o">.</span><span class="n">passSerialNumber</span> <span class="o">=</span> <span class="n">pass</span><span class="o">.</span><span class="n">serialNumber</span>
+                <span class="k">self</span><span class="o">.</span><span class="nf">present</span><span class="p">(</span><span class="n">passPreviewController</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+            <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+                <span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">//TODO: Show pass using HTML string argument in a webview</span>
+        <span class="kt">UIAlertHelper</span><span class="o">.</span><span class="nf">showAlertWithTitle</span><span class="p">(</span><span class="kt">R</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">localizable</span><span class="o">.</span><span class="nf">unableToAddPass</span><span class="p">())</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="configuration">2.3 配置不同开发环境 - XCode Configuration</h4>
+</blockquote>
+
+<p>一般来说, 你可以在 Xcode 项目的 info页面看到， 默认有两种配置（Configuration）: Debug 和 Release. 但是可以根据需求自定义更多的配置如： Beta, Staging 等（可以直接复制release 或者 debug的配置并编辑）。</p>
+
+<p>我们还可以通过增加 complier flag 以便在项目代码中检查当前配置。</p>
+
+<p>增加complier flag方法： <strong>Project (not target) → Build settings → Swift Compiler → Custom flags → Other swift flags</strong> , 编辑不同的configuration flag， 添加flag使用 <code class="highlighter-rouge">-D &lt;flag_name&gt;</code> 。</p>
+
+<p><img src="/images/xcode_configuration/configuration_flag.jpg" alt="img" /></p>
+
+<p>还可以在 <strong>info.plist</strong> 中配置不同的 configuration build 环境下使用不同的 <strong>key</strong></p>
+
+<p><img src="/images/xcode_configuration/configuration_key.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="debug-notification">2.4 调试由推送通知唤起的应用</h4>
+</blockquote>
+
+<p><strong>1).</strong> <strong>Target -&gt; Edit Scheme</strong></p>
+
+<p><img src="/images/debug_notification/debug_notification_1.jpg" alt="debug_notification" /></p>
+
+<p><br /></p>
+
+<p><strong>2).</strong> <strong>Run -&gt; Info -&gt; Wait for executable to be launched</strong></p>
+
+<p><img src="/images/debug_notification/debug_notification_2.jpg" alt="debug_notification" /></p>
+
+<p><br /></p>
+
+<p><strong>3).</strong> 在项目中运行程序并在手机上点击推送通知打开应用</p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="label-color-bug">2.5 UILabel 颜色用 asset color 设置的 Bug</h4>
+</blockquote>
+
+<p><strong>Bug描述:</strong></p>
+
+<p>如果在项目中使用了color asset，并且在nib文件中 UILabel 文字的颜色使用的是选择asset设置的颜色，则用代码改变颜色无法生效。</p>
+
+<p><strong>XCode版本:</strong></p>
+
+<p>10.2</p>
+
+<p><strong>解决方法 :</strong></p>
+
+<p>在nib文件中设置文字颜色使用默认的系统自带颜色，之后则可以正常使用代码改变设置的文字颜色。</p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p3">3. 参考链接</h3>
+
+<hr />
+
+<ul>
+  <li><a href="https://www.objc.io/issues/13-architecture/viper/">Architecting iOS Apps with VIPER</a></li>
+  <li><a href="https://tech.glowing.com/cn/deferred-deep-linking-and-branch-sdk-in-ios/">Deferred Deep Linking in iOS</a></li>
+</ul>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

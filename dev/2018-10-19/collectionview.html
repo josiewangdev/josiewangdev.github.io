@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			集合视图
+		
+	</title>
+	<meta name="description" content="集合视图">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2018-10-19/collectionview">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>集合视图</h2>
+					<!-- <p></p> -->
+					<span>2018.10</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2018-10-19/collectionview" class="enabled">中文 </a>|<a href="/en/dev/2018-10-19/collectionview"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="集合视图">集合视图</h2>
+
+<hr />
+
+<h4 id="1-集合视图的粘性表头表尾">1. <a href="#p1">集合视图的粘性表头表尾</a></h4>
+<h4 id="2-自定义集合视图的布局">2. <a href="#p2">自定义集合视图的布局</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p1">1. 集合视图的粘性表头表尾</h4>
+</blockquote>
+
+<p>iOS 9.0 之后，为 <code class="highlighter-rouge">UICollectionView</code> 添加了<strong>粘性表头表尾</strong>（类似于table view header）的效果，但是这并不是默认设置，实现粘性效果需要以下几步</p>
+
+<p><strong>1).</strong> 设置集合视图布局的 <code class="highlighter-rouge">collectionViewLayout</code> 属性继承于 <code class="highlighter-rouge">UICollectionViewFlowLayout</code></p>
+
+<p><strong>2).</strong> 实现表头粘性效果, 需要设置布局属性 <code class="highlighter-rouge">sectionHeadersPinToVisibleBounds</code> 的值为 <code class="highlighter-rouge">true</code></p>
+
+<p><strong>3).</strong> 实现表尾呈现粘性效果, 则设置属性 <code class="highlighter-rouge">sectionFootersPinToVisibleBounds</code> 的值为 <code class="highlighter-rouge">true</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="k">let</span> <span class="nv">layout</span> <span class="o">=</span> <span class="n">collectionView</span><span class="o">.</span><span class="n">collectionViewLayout</span> <span class="k">as?</span> <span class="kt">UICollectionViewFlowLayout</span> <span class="p">{</span>
+    <span class="n">layout</span><span class="o">.</span><span class="n">sectionHeadersPinToVisibleBounds</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="n">layout</span><span class="o">.</span><span class="n">sectionFootersPinToVisibleBounds</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p2">2. 自定义集合视图的布局</h4>
+</blockquote>
+
+<p>众所周知系统自定义的 <code class="highlighter-rouge">UICollectionViewFlowLayout</code> 布局的排列方式是居中对齐的。 如果有这样一个开发需求 – 实现一个左对齐排列的集合视图时, 系统定义的视图布局已经不能满足我们的开发需求了, 我们就需要自定义一个集合视图的布局。</p>
+
+<p>自定义一个 Collection View Layout 需要以下几步:</p>
+
+<p><strong>1).</strong> 创建 <code class="highlighter-rouge">LeftAlignedCollectionViewFlowLayout</code> 类继承于 <code class="highlighter-rouge">UICollectionViewFlowLayout</code>。</p>
+
+<p><strong>2).</strong> 获取对应 <strong>indexPath</strong> 的 <strong>UICollectionViewLayoutAttributes</strong> ，修改或自定义这些attributes到二维数组中。<code class="highlighter-rouge">UICollectionViewLayoutAttributes</code> 这个类其实专门用来存储视图的内容，例如 frame、size、apha、
+hidden 等等属性，存储的视图属性除了 <strong>Cell</strong> 的以外, 也包括 <strong>Supplementary View</strong> 和 <strong>Decoration View</strong>。</p>
+
+<p><strong>3).</strong> 使用 <code class="highlighter-rouge">layoutAttributesForElementsInRect</code> 方法返回自定义的attributes二维数组。 layout最后会使用attributes中设置的frame等值赋给对应的视图。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">LeftAlignedCollectionViewFlowLayout</span><span class="p">:</span> <span class="kt">UICollectionViewFlowLayout</span> <span class="p">{</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="k">in</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">UICollectionViewLayoutAttributes</span><span class="p">]?</span> <span class="p">{</span>
+        <span class="c1">//  获取attributes</span>
+        <span class="k">let</span> <span class="nv">attributes</span> <span class="o">=</span> <span class="k">super</span><span class="o">.</span><span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="n">rect</span><span class="p">)</span>
+        <span class="k">var</span> <span class="nv">leftMargin</span> <span class="o">=</span> <span class="n">sectionInset</span><span class="o">.</span><span class="n">left</span>
+        <span class="k">var</span> <span class="nv">maxY</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+
+        <span class="n">attributes</span><span class="p">?</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">layoutAttribute</span> <span class="k">in</span>
+
+            <span class="k">guard</span> <span class="n">layoutAttribute</span><span class="o">.</span><span class="n">representedElementCategory</span> <span class="o">==</span> <span class="o">.</span><span class="n">cell</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="c1">//  如果想要修改 supplementary views 等其他视图的属性, 可以在这里实现</span>
+                <span class="k">return</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="n">layoutAttribute</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="n">maxY</span> <span class="p">{</span>
+                <span class="n">leftMargin</span> <span class="o">=</span> <span class="n">sectionInset</span><span class="o">.</span><span class="n">left</span>
+            <span class="p">}</span>
+
+            <span class="c1">//  修改 cell 视图 attributes的值</span>
+            <span class="n">layoutAttribute</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">leftMargin</span>
+            <span class="n">leftMargin</span> <span class="o">+=</span> <span class="n">layoutAttribute</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">minimumInteritemSpacing</span>
+            <span class="n">maxY</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">layoutAttribute</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">maxY</span> <span class="p">,</span> <span class="n">maxY</span><span class="p">)</span>
+            
+        <span class="p">}</span>
+
+        <span class="c1">//  返回自定义 attributes 数组</span>
+        <span class="k">return</span> <span class="n">attributes</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<h4 id="参考链接">参考链接</h4>
+
+<ul>
+  <li><a href="https://stackoverflow.com/questions/13017257/how-do-you-determine-spacing-between-cells-in-uicollectionview-flowlayout">StackOverflow - How do you determine spacing between cells in UICollectionView flowLayout</a></li>
+  <li><a href="https://github.com/fanpyi/UICollectionViewLeftAlignedLayout-Swift">Github - UICollectionViewLeftAlignedLayout-Swift</a></li>
+  <li><a href="http://www.liuchungui.com/blog/2015/11/06/uicollectionviewzhi-zi-ding-yi-layout/">UICollectionView之自定义Layout</a></li>
+  <li><a href="https://stackoverflow.com/questions/22539979/left-align-cells-in-uicollectionview">StackOverflow - Left Align Cells in UICollectionView</a></li>
+  <li><a href="https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout/1617699-sectionheaderspintovisiblebounds">Apple Doc</a></li>
+</ul>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

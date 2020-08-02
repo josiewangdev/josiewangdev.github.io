@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Objective-C 随笔
+		
+	</title>
+	<meta name="description" content="Objective-C 随笔">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2018-08-11/objc-notes">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Objective-C 随笔</h2>
+					<!-- <p></p> -->
+					<span>2018.08</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2018-08-11/objc-notes" class="enabled">中文 </a>|<a href="/en/dev/2018-08-11/objc-notes"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="objective-c-随笔">Objective-C 随笔</h2>
+
+<hr />
+
+<h4 id="1-单例">1. <a href="#singleton">单例</a></h4>
+<h4 id="2-__block关键字修饰变量">2. <a href="#block">__block关键字修饰变量</a></h4>
+<h4 id="3-predicate-查询语句">3. <a href="#predicate">Predicate 查询语句</a></h4>
+<h4 id="4-数字转换为人民币格式">4. <a href="#p4">数字转换为人民币格式</a></h4>
+<h4 id="5-十进制数字的四舍五入">5. <a href="#p5">十进制数字的四舍五入</a></h4>
+<h4 id="6-md5加密字符串">6. <a href="#p6">md5加密字符串</a></h4>
+<h4 id="7-16进制色值转颜色">7. <a href="#p7">16进制色值转颜色</a></h4>
+<h4 id="8-颜色变暗">8. <a href="#p8">颜色变暗</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="singleton">1. 单例</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">sharedInstance</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="n">ClassName</span> <span class="o">*</span><span class="n">sharedInstance</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+        <span class="n">sharedInstance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ClassName</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="n">sharedInstance</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="block">2. __block关键字修饰变量</h4>
+</blockquote>
+
+<p>通常情况下，在block中的变量默认是将外部变量复制到其数据结构中来访问实现的，在block中对变量的任何修改不会影响到外部变量。</p>
+
+<p><img src="/images/block/block2.png" alt="block" /></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">char</span> <span class="n">localCharacter</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">aBlock</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">localCharacter</span><span class="p">;</span> <span class="c1">// use localCharacter value but cannot change it</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>当使用 <code class="highlighter-rouge">__block</code> 关键字来修饰的外部变量时，在block中对变量的改变则会同样影响到外部变量，是因为在block中将不再是访问该外部变量复制的值，而是直接访问了该外部变量。</p>
+
+<p><img src="/images/block/block1.png" alt="block" /></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__block</span> <span class="kt">char</span> <span class="n">localCharacter</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">aBlock</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">localCharacter</span> <span class="o">=</span> <span class="sc">'a'</span><span class="p">;</span> <span class="c1">// could change localCharacter value in enclosing scope</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="predicate">3. Predicate 查询语句</h4>
+</blockquote>
+
+<p>OC中使用 <code class="highlighter-rouge">NSPredicate</code> 的方法</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">NSPredicate</span> <span class="o">*</span><span class="n">predicate</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSPredicate</span> <span class="nf">predicateWithFormat</span><span class="p">:</span><span class="s">@"name contains[c] %@"</span><span class="p">,</span> <span class="n">searchText</span><span class="p">];</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p4">4. 数字转换为人民币格式</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">NSNumberFormatter</span> <span class="p">(</span><span class="nl">Helper</span><span class="p">)</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSNumberFormatter</span> <span class="o">*</span><span class="p">)</span><span class="n">RMBFormatter</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">NSNumberFormatter</span> <span class="p">(</span><span class="nl">Helper</span><span class="p">)</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSNumberFormatter</span> <span class="o">*</span><span class="p">)</span><span class="n">RMBFormatter</span> <span class="p">{</span>
+    <span class="n">NSNumberFormatter</span> <span class="o">*</span><span class="n">formatter</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSNumberFormatter</span> <span class="nf">new</span><span class="p">];</span>
+    <span class="n">formatter</span><span class="p">.</span><span class="n">locale</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSLocale</span> <span class="nf">localeWithLocaleIdentifier</span><span class="p">:</span><span class="s">@"zh_CN"</span><span class="p">];</span>
+    <span class="n">formatter</span><span class="p">.</span><span class="n">numberStyle</span> <span class="o">=</span> <span class="n">NSNumberFormatterCurrencyStyle</span><span class="p">;</span>
+    <span class="n">formatter</span><span class="p">.</span><span class="n">negativePrefix</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"-%@"</span><span class="p">,</span> <span class="n">formatter</span><span class="p">.</span><span class="n">currencySymbol</span><span class="p">];</span>
+    <span class="n">formatter</span><span class="p">.</span><span class="n">negativeSuffix</span> <span class="o">=</span> <span class="s">@""</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">formatter</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p5">5. 十进制数字的四舍五入</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">NSDecimalNumber</span> <span class="p">(</span><span class="nl">Helper</span><span class="p">)</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">stringOfCeilingDecimalNumber</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">number</span> <span class="nf">WithScale</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">scale</span><span class="p">;</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">currencyStringOfCeilingDecimalNumber</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">number</span> <span class="nf">WithScale</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">scale</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">NSDecimalNumber</span> <span class="p">(</span><span class="nl">Helper</span><span class="p">)</span>
+<span class="k">+</span> <span class="p">(</span><span class="n">NSDecimalNumber</span> <span class="o">*</span><span class="p">)</span><span class="nf">ceilingDecimalNumber</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">number</span> <span class="nf">WithScale</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">scale</span><span class="p">{</span>
+    <span class="n">NSDecimalNumberHandler</span><span class="o">*</span> <span class="n">roundingBehavior</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDecimalNumberHandler</span> <span class="nf">decimalNumberHandlerWithRoundingMode</span><span class="p">:</span><span class="n">NSRoundUp</span> <span class="nf">scale</span><span class="p">:</span><span class="n">scale</span> <span class="n">raiseOnExactness</span><span class="o">:</span><span class="nb">NO</span> <span class="n">raiseOnOverflow</span><span class="o">:</span><span class="nb">NO</span> <span class="n">raiseOnUnderflow</span><span class="o">:</span><span class="nb">NO</span> <span class="n">raiseOnDivideByZero</span><span class="o">:</span><span class="nb">NO</span><span class="p">];</span>
+    <span class="n">NSDecimalNumber</span> <span class="o">*</span><span class="n">decimalNumber</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">NSDecimalNumber</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithString</span><span class="p">:[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"%.6f"</span><span class="p">,</span> <span class="n">number</span><span class="p">]]</span> <span class="nf">decimalNumberByRoundingAccordingToBehavior</span><span class="p">:</span><span class="n">roundingBehavior</span><span class="p">];</span>
+    <span class="k">return</span> <span class="n">decimalNumber</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">stringOfCeilingDecimalNumber</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">number</span> <span class="nf">WithScale</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">scale</span><span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span><span class="s">@"%.2f"</span><span class="p">,</span> <span class="p">[</span><span class="n">self</span> <span class="nf">ceilingDecimalNumber</span><span class="p">:</span><span class="n">number</span> <span class="nf">WithScale</span><span class="p">:</span><span class="n">scale</span><span class="p">].</span><span class="n">doubleValue</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">currencyStringOfCeilingDecimalNumber</span><span class="p">:(</span><span class="kt">double</span><span class="p">)</span><span class="nv">number</span> <span class="nf">WithScale</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">scale</span><span class="p">{</span>
+    <span class="k">return</span> <span class="p">[[</span><span class="n">NSNumberFormatter</span> <span class="nf">RMBFormatter</span><span class="p">]</span> <span class="nf">stringFromNumber</span><span class="p">:[</span><span class="n">self</span> <span class="nf">ceilingDecimalNumber</span><span class="p">:</span><span class="n">number</span> <span class="nf">WithScale</span><span class="p">:</span><span class="n">scale</span><span class="p">]];</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p6">6. md5加密字符串</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">encodeStringUsingMd5</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">string</span><span class="p">{</span>
+    <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">cStr</span> <span class="o">=</span> <span class="p">[</span><span class="n">string</span> <span class="nf">UTF8String</span><span class="p">];</span>
+    <span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">result</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+    <span class="n">CC_MD5</span><span class="p">(</span><span class="n">cStr</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">strlen</span><span class="p">(</span><span class="n">cStr</span><span class="p">),</span> <span class="n">result</span><span class="p">);</span> <span class="c1">// This is the md5 call</span>
+    
+    <span class="k">return</span> <span class="p">[</span><span class="n">NSString</span> <span class="nf">stringWithFormat</span><span class="p">:</span>
+            <span class="s">@"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x"</span><span class="p">,</span>
+            <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span>
+            <span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span>            
+            <span class="n">result</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">11</span><span class="p">],</span>
+            <span class="n">result</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">13</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">15</span><span class="p">]</span>
+            <span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p7">7. 16进制色值转颜色</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nf">colorWithHexString</span><span class="p">:</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">stringToConvert</span> <span class="p">{</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">cString</span> <span class="o">=</span> <span class="p">[[</span><span class="n">stringToConvert</span> <span class="nf">stringByTrimmingCharactersInSet</span><span class="p">:[</span><span class="n">NSCharacterSet</span> <span class="nf">whitespaceAndNewlineCharacterSet</span><span class="p">]]</span> <span class="nf">uppercaseString</span><span class="p">];</span>
+    
+    <span class="c1">//  string should be 6 or 8 characters</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">cString</span> <span class="nf">length</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="k">return</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+    
+    <span class="c1">//  strip 0X if it appears</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">cString</span> <span class="nf">hasPrefix</span><span class="p">:</span><span class="s">@"0X"</span><span class="p">])</span> <span class="n">cString</span> <span class="o">=</span> <span class="p">[</span><span class="n">cString</span> <span class="nf">substringFromIndex</span><span class="p">:</span><span class="mi">2</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">cString</span> <span class="nf">hasPrefix</span><span class="p">:</span><span class="s">@"#"</span><span class="p">])</span> <span class="n">cString</span> <span class="o">=</span> <span class="p">[</span><span class="n">cString</span> <span class="nf">substringFromIndex</span><span class="p">:</span><span class="mi">1</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">cString</span> <span class="nf">length</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">6</span><span class="p">)</span> <span class="k">return</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+
+    <span class="c1">//  separate into r, g, b substrings</span>
+    <span class="n">NSRange</span> <span class="n">range</span><span class="p">;</span>
+    <span class="n">range</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">range</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">rString</span> <span class="o">=</span> <span class="p">[</span><span class="n">cString</span> <span class="nf">substringWithRange</span><span class="p">:</span><span class="n">range</span><span class="p">];</span>
+    
+    <span class="n">range</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">gString</span> <span class="o">=</span> <span class="p">[</span><span class="n">cString</span> <span class="nf">substringWithRange</span><span class="p">:</span><span class="n">range</span><span class="p">];</span>
+    
+    <span class="n">range</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">bString</span> <span class="o">=</span> <span class="p">[</span><span class="n">cString</span> <span class="nf">substringWithRange</span><span class="p">:</span><span class="n">range</span><span class="p">];</span>
+    
+    <span class="c1">//  scan values</span>
+    <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+    <span class="p">[[</span><span class="n">NSScanner</span> <span class="nf">scannerWithString</span><span class="p">:</span><span class="n">rString</span><span class="p">]</span> <span class="nf">scanHexInt</span><span class="p">:</span><span class="o">&amp;</span><span class="n">r</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">NSScanner</span> <span class="nf">scannerWithString</span><span class="p">:</span><span class="n">gString</span><span class="p">]</span> <span class="nf">scanHexInt</span><span class="p">:</span><span class="o">&amp;</span><span class="n">g</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">NSScanner</span> <span class="nf">scannerWithString</span><span class="p">:</span><span class="n">bString</span><span class="p">]</span> <span class="nf">scanHexInt</span><span class="p">:</span><span class="o">&amp;</span><span class="n">b</span><span class="p">];</span>
+    
+    <span class="k">return</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">colorWithRed</span><span class="p">:((</span><span class="kt">float</span><span class="p">)</span> <span class="n">r</span> <span class="o">/</span> <span class="mi">255</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">)</span>
+                           <span class="nl">green:</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span> <span class="n">g</span> <span class="o">/</span> <span class="mi">255</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">)</span>
+                            <span class="nl">blue:</span><span class="p">((</span><span class="kt">float</span><span class="p">)</span> <span class="n">b</span> <span class="o">/</span> <span class="mi">255</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">)</span>
+                           <span class="nl">alpha:</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p8">8. 颜色变暗</h4>
+</blockquote>
+
+<p>对 <strong>UIColor</strong> 类进行扩展</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">UIColor</span> <span class="p">(</span><span class="nl">DimmedColor</span><span class="p">)</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nf">dimmedColor</span><span class="p">:</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">dimmedDegree</span><span class="p">{</span>
+    <span class="n">CGFloat</span> <span class="n">red</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">green</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">blue</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">alpha</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">getRed</span><span class="p">:</span><span class="o">&amp;</span><span class="n">red</span> <span class="nf">green</span><span class="p">:</span><span class="o">&amp;</span><span class="n">green</span> <span class="n">blue</span><span class="o">:&amp;</span><span class="n">blue</span> <span class="n">alpha</span><span class="o">:&amp;</span><span class="n">alpha</span><span class="p">];</span>
+    <span class="n">red</span> <span class="o">=</span> <span class="n">MAX</span><span class="p">(</span><span class="n">red</span> <span class="o">-</span> <span class="n">dimmedDegree</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">green</span> <span class="o">=</span> <span class="n">MAX</span><span class="p">(</span><span class="n">green</span> <span class="o">-</span> <span class="n">dimmedDegree</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">blue</span> <span class="o">=</span> <span class="n">MAX</span><span class="p">(</span><span class="n">blue</span> <span class="o">-</span> <span class="n">dimmedDegree</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">colorWithRed</span><span class="p">:</span><span class="n">red</span> <span class="nf">green</span><span class="p">:</span><span class="n">green</span> <span class="n">blue</span><span class="o">:</span><span class="n">blue</span> <span class="n">alpha</span><span class="o">:</span><span class="n">alpha</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+</code></pre></div></div>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

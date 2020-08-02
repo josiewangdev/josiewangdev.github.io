@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			J Plan
+		
+	</title>
+	<meta name="description" content="J Plan">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/projects/2020-02-12/jplan">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>J Plan</h2>
+					<!-- <p>一个微信小程序项目的探索开发</p> -->
+					<span>2020.02</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/projects/2020-02-12/jplan" class="enabled">中文 </a>|<a href="/en/projects/2020-02-12/jplan"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="j-plan"><a href="https://testflight.apple.com/join/wezq1OC4">J Plan</a></h2>
+
+<hr />
+
+<p><img src="/images/apps/jplan.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="目录">目录</h3>
+
+<hr />
+
+<h4 id="1-概述">1. <a href="#p1">概述</a></h4>
+
+<p>1.1 <a href="#p11">基本信息</a></p>
+
+<p>1.2 <a href="#p12">结构解读</a></p>
+
+<hr />
+
+<h4 id="2-开发随笔">2. <a href="#p2">开发随笔</a></h4>
+
+<p>2.1 <a href="#p21">云函数的实现与调用</a></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p1">1. 概述</h3>
+
+<hr />
+
+<p>自从在 Udacity 里拿到了微信小程序开发课程毕业的 <strong><a href="https://confirm.udacity.com/UJHD9KP9">证书</a></strong> 之后, 一直念念不忘的想要实践开发一款小程序, 但却苦于没有时间。 在近期终于闲暇下来, 构思了一个小程序的雏形得以真正去实现。</p>
+
+<p>J Plan 源于之前开发过的一款代购 App (环球买手) 的启发, 同时日常中也总是有这样的情景, 当你出行旅游时, 朋友同事总会让你帮忙带一些东西回来, 类似于美妆, 食品, 衣物等等, 在这个时候, 就会发现如果有一个能够预先统计你需要帮带多少东西的小工具是多么的方便。 基于这个场景, 我决定开发一个我能使用的, 让我的朋友可以提前向我预定, 之后我能拿到统一数据的出行带货的小程序。功能无需复杂, 只需要实现基本的数据与图像的存取就行。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p11">1.1 基本信息</h4>
+</blockquote>
+
+<p>使用语言: <strong>WeiXin Mark Language</strong></p>
+
+<p>系统要求: <strong>WeChat</strong></p>
+
+<p>项目性质: <strong>个人开发项目</strong></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p12">1.2 结构解读</h4>
+</blockquote>
+
+<p>微信小程序提供了云开发的后端支持, 可以结合云开发, 使用腾讯云的云存储与数据库等功能, 摒弃传统前后端开发模式, 
+只需要前端开发和简单的接口开发就可以实现完整的应用。</p>
+
+<p><img src="/images/jplan/p12.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p2">2. 开发随笔</h3>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p21">2.1 云函数的实现与调用</h4>
+</blockquote>
+
+<p>例如实现一个获取展示列表的云函数(API), 需要以下几步:</p>
+
+<p><br /></p>
+
+<p><strong>1).</strong> 新建 Node.js 云函数 <strong>galleryList</strong></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  index.js</span>
+
+<span class="c1">//  云函数入口文件</span>
+<span class="kd">const</span> <span class="nx">cloud</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">wx-server-sdk</span><span class="dl">'</span><span class="p">)</span>
+<span class="nx">cloud</span><span class="p">.</span><span class="nx">init</span><span class="p">()</span>
+
+<span class="c1">//  云数据库</span>
+<span class="kd">const</span> <span class="nx">db</span> <span class="o">=</span> <span class="nx">cloud</span><span class="p">.</span><span class="nx">database</span><span class="p">()</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">main</span> <span class="o">=</span> <span class="k">async</span> <span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="k">try</span> <span class="p">{</span>
+
+    <span class="kd">let</span> <span class="nx">skipCount</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">offset</span> <span class="o">||</span> <span class="mi">0</span>
+    <span class="kd">let</span> <span class="nx">queryLimit</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">count</span> <span class="o">||</span> <span class="mi">10</span>
+
+    <span class="kd">let</span> <span class="nx">queryResult</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="dl">'</span><span class="s1">galleries</span><span class="dl">'</span><span class="p">)</span>
+      <span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="nx">skipCount</span><span class="p">)</span> <span class="c1">// 跳过结果集中的前 10 条，从第 11 条开始返回</span>
+      <span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="nx">queryLimit</span><span class="p">)</span> <span class="c1">// 限制返回数量为 10 条</span>
+      <span class="p">.</span><span class="kd">get</span><span class="p">()</span>
+    
+    <span class="kd">let</span> <span class="nx">galleries</span> <span class="o">=</span> <span class="nx">queryResult</span><span class="p">.</span><span class="nx">data</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nx">galleries</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span><span class="p">(</span><span class="kd">let</span> <span class="nx">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">index</span> <span class="o">&lt;</span> <span class="nx">galleries</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">index</span> <span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">gallery</span> <span class="o">=</span> <span class="nx">galleries</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nx">openId</span> <span class="o">=</span> <span class="nx">gallery</span><span class="p">.</span><span class="nx">_openid</span>
+        <span class="kd">let</span> <span class="nx">users</span> <span class="o">=</span> <span class="k">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="dl">'</span><span class="s1">users</span><span class="dl">'</span><span class="p">).</span><span class="nx">where</span><span class="p">({</span>
+          <span class="na">user_openid</span><span class="p">:</span> <span class="nx">openId</span>
+        <span class="p">}).</span><span class="kd">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">users</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+          <span class="kd">let</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">users</span><span class="p">.</span><span class="nx">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+          <span class="nx">gallery</span><span class="p">.</span><span class="nx">user</span> <span class="o">=</span> <span class="nx">user</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="k">return</span> <span class="nx">galleries</span>
+    <span class="p">}</span>
+
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>2).</strong> 在展示页面的 <strong>js</strong> 里调用 <strong>galleryList API</strong></p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">fetchGalleries</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">wx</span><span class="p">.</span><span class="nx">cloud</span><span class="p">.</span><span class="nx">callFunction</span><span class="p">({</span>
+      <span class="na">name</span><span class="p">:</span> <span class="dl">'</span><span class="s1">galleryList</span><span class="dl">'</span><span class="p">,</span>
+      <span class="na">data</span><span class="p">:</span> <span class="p">{},</span>
+      <span class="na">success</span><span class="p">:</span> <span class="nx">res</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setData</span><span class="p">({</span>
+          <span class="na">galleries</span><span class="p">:</span> <span class="nx">res</span><span class="p">.</span><span class="nx">result</span>
+        <span class="p">})</span>
+      <span class="p">},</span>
+      <span class="na">fail</span><span class="p">:</span> <span class="nx">err</span> <span class="o">=&gt;</span> <span class="p">{</span>
+        <span class="nx">wx</span><span class="p">.</span><span class="nx">showToast</span><span class="p">({</span>
+          <span class="na">icon</span><span class="p">:</span> <span class="dl">'</span><span class="s1">none</span><span class="dl">'</span><span class="p">,</span>
+          <span class="na">title</span><span class="p">:</span> <span class="dl">'</span><span class="s1">获取商品数据失败</span><span class="dl">'</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">[云函数]获取 gallery 失败，请检查是否有部署云函数，错误信息：</span><span class="dl">'</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+      <span class="p">}</span>
+    <span class="p">})</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

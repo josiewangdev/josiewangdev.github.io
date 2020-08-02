@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Global Buyer
+		
+	</title>
+	<meta name="description" content="Global Buyer">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/projects/2017-04-01/global-buyer">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Global Buyer</h2>
+					<!-- <p></p> -->
+					<span>2017.04</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/projects/2017-04-01/global-buyer">中文 </a>|<a href="/en/projects/2017-04-01/global-buyer" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="global-buyer"><a href="https://itunes.apple.com/cn/app/%E7%8E%AF%E7%90%83%E4%B9%B0%E6%89%8B-%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%B4%8B%E8%B4%A7%E6%9D%A5%E8%87%AA%E6%B5%B7%E5%A4%96/id1164383001?mt=8">Global Buyer</a></h2>
+
+<hr />
+
+<p>参与时间: <strong>2017.04 - 2018.07</strong></p>
+
+<p>使用语言: <strong>Swift 3</strong></p>
+
+<p>系统要求: <strong>iOS 9.0 或更高版本</strong></p>
+
+<p>兼容设备: <strong>iPhone</strong></p>
+
+<p><img src="/images/apps/globalbuyer.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="category">Category</h3>
+
+<hr />
+
+<h4 id="1-主要架构">1. <a href="#main-structure">主要架构</a></h4>
+
+<p>1.1 <a href="#basic-structure">基本架构</a></p>
+
+<p>1.2 <a href="#network">网络层结构</a></p>
+
+<hr />
+
+<h4 id="2-其他模块">2. <a href="#other-module">其他模块</a></h4>
+
+<p>2.1</p>
+
+<p>2.2</p>
+
+<p>2.3</p>
+
+<p>2.4</p>
+
+<p>2.5</p>
+
+<p>2.6</p>
+
+<hr />
+
+<h4 id="3-3rd-frameworks">3. <a href="#third-party-helpers">3rd Frameworks</a></h4>
+
+<p>3.1 <a href="#mbprogress">MBProgressHUD</a></p>
+
+<p>3.2 <a href="#mjrefresh">MJRefresh</a></p>
+
+<p>3.3 <a href="#emptydata">DZNEmptyDataSet</a></p>
+
+<p>3.4 <a href="#snapkit">SnapKit</a></p>
+
+<p>3.5 <a href="/tech/2019-10-30/eureka">Eureka</a></p>
+
+<p>3.6 <a href="/tech/2018-11-09/alamofire">Alamofire</a></p>
+
+<p>3.7 <a href="#objectmapper">ObjectMapper</a></p>
+
+<p>3.8 <a href="#sdwebimage">SDWebImage</a></p>
+
+<hr />
+
+<h4 id="4-ide-相关">4. <a href="#IDE">IDE 相关</a></h4>
+
+<p>4.1 <a href="#configuration">配置不同开发环境</a></p>
+
+<p>4.2 <a href="#debug-notification">推送调试</a></p>
+
+<hr />
+
+<h4 id="5-遇到的bug">5. <a href="#bugs">遇到的Bug</a></h4>
+
+<p>5.1 <a href="#emptydata-mjrefresh-bug">Conflict of DZNEmptyDataSet and MJRefresh</a></p>
+
+<p>5.2 <a href="#update-tableview">Update a TableView without animation</a></p>
+
+<p>5.3 <a href="#navbar-flash">Navigation bar flash to black</a></p>
+
+<p>5.4 <a href="#estimated-item-size">The issue when set the estimated item size in collection view</a></p>
+
+<p>5.5 <a href="#update-cell">Set cell selected status when table view update</a></p>
+
+<hr />
+
+<h4 id="6-参考链接">6. <a href="#ref-links">参考链接</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="main-structure">1. 主要架构</h3>
+
+<hr />
+
+<blockquote>
+  <h4 id="basic-structure">1.1  基本架构</h4>
+</blockquote>
+
+<p>在这个项目中, 整体还是使用了传统的 <strong>MVC</strong> 的项目结构。</p>
+
+<ul>
+  <li>M – Models
+    <ul>
+      <li>Enums</li>
+      <li>Custom models</li>
+    </ul>
+  </li>
+  <li>V – Views
+    <ul>
+      <li>Toast View</li>
+      <li>Alert View</li>
+      <li>Table View Cells</li>
+      <li>Custom Views</li>
+    </ul>
+  </li>
+  <li>C – Controllers
+    <ul>
+      <li>Common Controllers</li>
+      <li>Custom Controllers</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="network">1.2  网络层结构</h4>
+</blockquote>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="21-使用mapbox实现自定义地图">2.1 使用Mapbox实现自定义地图</h4>
+</blockquote>
+
+<p><strong>iOS Swift MapKit Custom Annotation</strong></p>
+
+<p>Outline</p>
+
+<p>We will create a point annotation object and assigning a custom image name with the CustomPointAnnotation class.</p>
+
+<p>We will subclass the MKPointAnnotation to set image and assign it on the delegate protocol method viewForAnnotation.</p>
+
+<p>We will add an annotation view to the map after setting the coordinate of the point annotation with a title and a subtitle.</p>
+
+<p>We will implement the viewForAnnotation method which is an MKMapViewDelegate protocol method which gets called for pins to display on the map. viewForAnnotation protocol method is the best place to customise the pin view and assign a custom image to it.</p>
+
+<p>We will dequeue and return a reusable annotation for the given identifier and cast the annotation to our custom CustomPointAnnotation class in order to access the image name of the pin.</p>
+
+<p>We will create a new image set in Assets.xcassets and place image@3x.png and image@2x.png accordingly.</p>
+
+<p><br /></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">CustomPointAnnotation</span><span class="o">.</span><span class="n">swift</span>
+
+<span class="kd">import</span> <span class="kt">UIKit</span>
+<span class="kd">import</span> <span class="kt">MapKit</span>
+
+<span class="kd">class</span> <span class="kt">CustomPointAnnotation</span><span class="p">:</span> <span class="kt">MKPointAnnotation</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">pinCustomImageName</span><span class="p">:</span><span class="kt">String</span><span class="o">!</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  ViewController.swift</span>
+
+<span class="kd">import</span> <span class="kt">MapKit</span>
+
+<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">MKMapViewDelegate</span><span class="p">,</span>  <span class="kt">CLLocationManagerDelegate</span> <span class="p">{</span>
+
+
+    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">pokemonMap</span><span class="p">:</span> <span class="kt">MKMapView</span><span class="o">!</span>
+    <span class="k">let</span> <span class="nv">locationManager</span> <span class="o">=</span> <span class="kt">CLLocationManager</span><span class="p">()</span>
+    <span class="k">var</span> <span class="nv">pointAnnotation</span><span class="p">:</span><span class="kt">CustomPointAnnotation</span><span class="o">!</span>
+    <span class="k">var</span> <span class="nv">pinAnnotationView</span><span class="p">:</span><span class="kt">MKPinAnnotationView</span><span class="o">!</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+
+        <span class="c1">//Mark: - Authorization</span>
+        <span class="n">locationManager</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+        <span class="n">locationManager</span><span class="o">.</span><span class="n">desiredAccuracy</span> <span class="o">=</span> <span class="n">kCLLocationAccuracyBest</span>
+        <span class="n">locationManager</span><span class="o">.</span><span class="nf">requestAlwaysAuthorization</span><span class="p">()</span>
+        <span class="n">locationManager</span><span class="o">.</span><span class="nf">startUpdatingLocation</span><span class="p">()</span>
+
+        <span class="n">pokemonMap</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+        <span class="n">pokemonMap</span><span class="o">.</span><span class="n">mapType</span> <span class="o">=</span> <span class="kt">MKMapType</span><span class="o">.</span><span class="kt">Standard</span>
+        <span class="n">pokemonMap</span><span class="o">.</span><span class="n">showsUserLocation</span> <span class="o">=</span> <span class="kc">true</span>
+
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">locationManager</span><span class="p">(</span><span class="nv">manager</span><span class="p">:</span> <span class="kt">CLLocationManager</span><span class="p">,</span> <span class="n">didUpdateLocations</span> <span class="nv">locations</span><span class="p">:</span> <span class="p">[</span><span class="kt">CLLocation</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">location</span> <span class="o">=</span> <span class="kt">CLLocationCoordinate2D</span><span class="p">(</span><span class="nv">latitude</span><span class="p">:</span> <span class="mf">35.689949</span><span class="p">,</span> <span class="nv">longitude</span><span class="p">:</span> <span class="mf">139.697576</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">center</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="k">let</span> <span class="nv">region</span> <span class="o">=</span> <span class="kt">MKCoordinateRegionMake</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="kt">MKCoordinateSpan</span><span class="p">(</span><span class="nv">latitudeDelta</span><span class="p">:</span> <span class="mf">0.025</span><span class="p">,</span> <span class="nv">longitudeDelta</span><span class="p">:</span> <span class="mf">0.025</span><span class="p">))</span>
+        <span class="n">pokemonMap</span><span class="o">.</span><span class="nf">setRegion</span><span class="p">(</span><span class="n">region</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+
+        <span class="n">pointAnnotation</span> <span class="o">=</span> <span class="kt">CustomPointAnnotation</span><span class="p">()</span>
+        <span class="n">pointAnnotation</span><span class="o">.</span><span class="n">pinCustomImageName</span> <span class="o">=</span> <span class="s">"Pokemon Pin"</span>
+        <span class="n">pointAnnotation</span><span class="o">.</span><span class="n">coordinate</span> <span class="o">=</span> <span class="n">location</span>
+        <span class="n">pointAnnotation</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">"POKéSTOP"</span>
+        <span class="n">pointAnnotation</span><span class="o">.</span><span class="n">subtitle</span> <span class="o">=</span> <span class="s">"Pick up some Poké Balls"</span>
+
+        <span class="n">pinAnnotationView</span> <span class="o">=</span> <span class="kt">MKPinAnnotationView</span><span class="p">(</span><span class="nv">annotation</span><span class="p">:</span> <span class="n">pointAnnotation</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="s">"pin"</span><span class="p">)</span>
+        <span class="n">pokemonMap</span><span class="o">.</span><span class="nf">addAnnotation</span><span class="p">(</span><span class="n">pinAnnotationView</span><span class="o">.</span><span class="n">annotation</span><span class="o">!</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">locationManager</span><span class="p">(</span><span class="nv">manager</span><span class="p">:</span> <span class="kt">CLLocationManager</span><span class="p">,</span> <span class="n">didFailWithError</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">NSError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">//MARK: - Custom Annotation</span>
+    <span class="kd">func</span> <span class="nf">mapView</span><span class="p">(</span><span class="nv">mapView</span><span class="p">:</span> <span class="kt">MKMapView</span><span class="p">,</span> <span class="n">viewForAnnotation</span> <span class="nv">annotation</span><span class="p">:</span> <span class="kt">MKAnnotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MKAnnotationView</span><span class="p">?</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">reuseIdentifier</span> <span class="o">=</span> <span class="s">"pin"</span>
+        <span class="k">var</span> <span class="nv">annotationView</span> <span class="o">=</span> <span class="n">mapView</span><span class="o">.</span><span class="nf">dequeueReusableAnnotationViewWithIdentifier</span><span class="p">(</span><span class="n">reuseIdentifier</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">annotationView</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="n">annotationView</span> <span class="o">=</span> <span class="kt">MKAnnotationView</span><span class="p">(</span><span class="nv">annotation</span><span class="p">:</span> <span class="n">annotation</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="n">reuseIdentifier</span><span class="p">)</span>
+            <span class="n">annotationView</span><span class="p">?</span><span class="o">.</span><span class="n">canShowCallout</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">annotationView</span><span class="p">?</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="n">annotation</span>
+        <span class="p">}</span>
+
+        <span class="k">let</span> <span class="nv">customPointAnnotation</span> <span class="o">=</span> <span class="n">annotation</span> <span class="k">as!</span> <span class="kt">CustomPointAnnotation</span>
+        <span class="n">annotationView</span><span class="p">?</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="n">customPointAnnotation</span><span class="o">.</span><span class="n">pinCustomImageName</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">annotationView</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br /></p>
+
+<h3 id="bugs">5. 遇到的Bug</h3>
+
+<hr />
+
+<blockquote>
+  <h4 id="emptydata-mjrefresh-bug">5.1 Conflict of DZNEmptyDataSet and MJRefresh</h4>
+</blockquote>
+
+<p><strong>Problem Description:</strong></p>
+
+<p>If a collection view use both <code class="highlighter-rouge">DZNEmptyDataSet</code> and <code class="highlighter-rouge">MJRefresh</code>, The empty data set view will offset the distance of a header.</p>
+
+<p><strong>Solution:</strong></p>
+
+<p>Set the content offset to zero in delegate <code class="highlighter-rouge">emptyDataSetWillAppear</code>.</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">emptyDataSetWillAppear</span><span class="p">:(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="nv">scrollView</span> <span class="p">{</span>
+    <span class="n">scrollView</span><span class="p">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="n">CGPointZero</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="update-tableview">5.2 Update a TableView without animation</h4>
+</blockquote>
+
+<p><strong>Problem Description:</strong></p>
+
+<p>When update a table view cell and you’re not scrolled at the top (or bottom if you’re inverted) of your table view, but you notice one of the follow behaviors:</p>
+
+<ul>
+  <li>The UITableView scrolls to the top or bottom</li>
+  <li>The UITableView looks hung over and flashses back and forth</li>
+  <li>The UITableView jiggles just a bit but enough to notice</li>
+</ul>
+
+<p><strong>Solution:</strong></p>
+
+<p>1). Do the best you can establishing estimated heights for all of your table cell types. Even if heights are somewhat dynamic this helps the UITableView.</p>
+
+<p>2). Save your scroll position and after updating your TableView and making a call to <code class="highlighter-rouge">endUpdates()</code> reset the content offset.</p>
+
+<p>Here is the code required to maintain the scroll view’s content offset and prevent unnecessary animations from starting</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">lastScrollOffset</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">contentOffset</span>
+<span class="n">tableView</span><span class="o">.</span><span class="nf">beginUpdates</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="n">tableView</span><span class="o">.</span><span class="nf">endUpdates</span><span class="p">()</span>
+<span class="n">tableView</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="nf">removeAllAnimations</span><span class="p">()</span>
+<span class="n">tableView</span><span class="o">.</span><span class="nf">setContentOffset</span><span class="p">(</span><span class="n">lastScrollOffset</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">false</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="navbar-flash">5.3 Navigation bar flash to black</h4>
+</blockquote>
+
+<p><strong>Problem Description:</strong></p>
+
+<p>After setting the navigation bar is hidden, the navigation bar color will flash to black when push it.</p>
+
+<p><strong>Solution:</strong></p>
+
+<p>When set navigation bar hidden, set <code class="highlighter-rouge">animated</code> as <code class="highlighter-rouge">true</code>.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">navigationController</span><span class="o">.</span><span class="nf">setNavigationBarHidden</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="estimated-item-size">5.4 The issue when set the estimated item size in collection view</h4>
+</blockquote>
+
+<p><strong>Problem Description:</strong></p>
+
+<p><img src="/images/collectionview_flowlayout/shopping_subtypes.jpg" alt="collectionview" /></p>
+
+<p>Usually when we implement a view like this, we need to use <code class="highlighter-rouge">UICollectionView</code>, and all the items in collection view should be left-aligned.</p>
+
+<p>You want to use the dynamic width and height of items and align them automatically, so you set the <code class="highlighter-rouge">estimatedItemSize</code> of the items in collection view. But after that, you will find the crash happens in the customized layout class <code class="highlighter-rouge">UICollectionViewLeftAlignedLayout</code>.</p>
+
+<p><strong>System Version:</strong></p>
+
+<p>Crash happens when the system is lower than <code class="highlighter-rouge">iOS 10.0</code>.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  LeftAlignedLayout.class</span>
+<span class="c1">//  LeftAlignedLayout inherits from UICollectionViewFlowLayout</span>
+
+<span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="k">in</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">UICollectionViewLayoutAttributes</span><span class="p">]?</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">attrsCopy</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UICollectionViewLayoutAttributes</span><span class="p">]()</span>
+    <span class="c1">//crash here</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">attrs</span> <span class="o">=</span> <span class="k">super</span><span class="o">.</span><span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="n">rect</span><span class="p">)</span> <span class="p">{</span> 
+        <span class="n">attrs</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span>
+            <span class="n">attrsCopy</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="nv">$0</span><span class="o">.</span><span class="nf">copy</span><span class="p">()</span> <span class="k">as!</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">attribute</span> <span class="k">in</span> <span class="n">attrsCopy</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">attribute</span><span class="o">.</span><span class="n">representedElementKind</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">attr</span> <span class="o">=</span> <span class="nf">layoutAttributesForItem</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="n">attribute</span><span class="o">.</span><span class="n">indexPath</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">attribute</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">frame</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">attrCopy</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Solution:</strong></p>
+
+<p>Use <code class="highlighter-rouge">itemSize</code> to set the fixed width and height for items rather than use <code class="highlighter-rouge">estimatedItemSize</code> to set the dynamic ones.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">operatingSystemVersion</span> <span class="o">=</span> <span class="kt">OperatingSystemVersion</span><span class="p">(</span><span class="nv">majorVersion</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nv">minorVersion</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">patchVersion</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+<span class="k">if</span> <span class="kt">ProcessInfo</span><span class="p">()</span><span class="o">.</span><span class="nf">isOperatingSystemAtLeast</span><span class="p">(</span><span class="n">operatingSystemVersion</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">flowLayout</span><span class="o">.</span><span class="n">estimatedItemSize</span> <span class="o">=</span> <span class="kt">CGSize</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+    <span class="c1">//system version is lower than 10.0.0</span>
+    <span class="n">flowLayout</span><span class="o">.</span><span class="n">itemSize</span> <span class="o">=</span> <span class="kt">CGSize</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="update-cell">5.5 Set cell selected status when table view update</h4>
+</blockquote>
+
+<p>If you want to set table view cell selected status in function <code class="highlighter-rouge">cellForRowAtIndexPath</code>, do not use <code class="highlighter-rouge">setSelected</code>, but use <code class="highlighter-rouge">selectRowAtIndexPath</code> instead. Because <code class="highlighter-rouge">setSelected</code> will be called twice.</p>
+
+<p><img src="/images/20170901/cell_selected.png" alt="Illustration" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="ref-links">6. 参考链接</h3>
+
+<hr />
+
+<ul>
+  <li><a href="https://github.com/dzenbot/DZNEmptyDataSet">DZNEmptyDataSet-Github</a></li>
+  <li><a href="https://github.com/CoderMJLee/MJRefresh">MJRefresh-Github</a></li>
+  <li><a href="https://stackoverflow.com/questions/26407149/uicollectionview-section-header-crashing-ios-8">UICollectionView section header crashing iOS 8</a></li>
+  <li><a href="https://github.com/CSStickyHeaderFlowLayout/CSStickyHeaderFlowLayout/issues/48">Crash on iOS 8 with auto sizing cells enabled</a></li>
+  <li><a href="https://stackoverflow.com/questions/24065014/infinite-loop-of-layoutattributesforelementsinrect">Infinite Loop of layoutAttributesForElementsInRect</a></li>
+</ul>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

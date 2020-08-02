@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			环球买手
+		
+	</title>
+	<meta name="description" content="环球买手">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/projects/2017-04-01/global-buyer">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>环球买手</h2>
+					<!-- <p>2017.04 - 2018.07</p> -->
+					<span>2017.04</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/projects/2017-04-01/global-buyer" class="enabled">中文 </a>|<a href="/en/projects/2017-04-01/global-buyer"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="环球买手"><a href="https://itunes.apple.com/cn/app/%E7%8E%AF%E7%90%83%E4%B9%B0%E6%89%8B-%E7%9C%9F%E6%AD%A3%E7%9A%84%E6%B4%8B%E8%B4%A7%E6%9D%A5%E8%87%AA%E6%B5%B7%E5%A4%96/id1164383001?mt=8">环球买手</a></h2>
+
+<hr />
+
+<p><img src="/images/apps/globalbuyer.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="目录">目录</h3>
+
+<hr />
+
+<h4 id="1-概述">1. <a href="#p1">概述</a></h4>
+
+<p>1.1 <a href="#p11">基本信息</a></p>
+
+<p>1.2 <a href="#p12">结构解读</a></p>
+
+<p>1.3 <a href="#p13">第三方框架的使用</a></p>
+
+<hr />
+
+<h4 id="2-开发随笔">2. <a href="#p2">开发随笔</a></h4>
+
+<p>2.1 <a href="#mapbox">使用Mapbox实现自定义地图</a></p>
+
+<p>2.2 <a href="#multi_scrollview">UIScrollView多层嵌套中的联动效果实现</a></p>
+
+<p>2.3 <a href="#emptydata-mjrefresh-bug">DZNEmptyDataSet与MJRefresh的冲突</a></p>
+
+<p>2.4 <a href="#update-tableview">无动画效果更新TableView内容</a></p>
+
+<p>2.5 <a href="#navbar-flash">导航栏闪变黑色</a></p>
+
+<p>2.6 <a href="#estimated-item-size">集合视图设置预估尺寸的问题</a></p>
+
+<p>2.7 <a href="#update-cell">在列表内刷新cell的选中状态</a></p>
+
+<p>2.8 <a href="#i18n">项目本地化</a></p>
+
+<hr />
+
+<h4 id="3-参考链接">3. <a href="#ref-links">参考链接</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p1">1. 概述</h3>
+
+<hr />
+
+<p>环球买手是我在墨尔本工作旅行时加入一个华人老板公司时做的产品。 切合了很多海外华人的需求, 即做代购, 当买手, 为国内的消费者代购澳洲产品, 例如奶粉, 保健品, 常用药品之类。</p>
+
+<p>整个 App 功能包括展示海外买手位置, 买卖代购商品, 整个订单由下单到退换货等完整流程。</p>
+
+<p>这个产品应该是我在产品设计与需求确定相关方面投入精力最多的一款 App。 一方面是本身对产品UI设计有极大兴趣, 另一方面是公司人员不多, 每个人由主观能动性能够发挥的余地也很多, 有时我也会亲自上阵参与设计, 修改UI, 自发增加一些动画效果之类的开发等等。</p>
+
+<p>在这个项目推进的过程中, 真正体会到了初创 start up 一类公司的初期项目的发展过程, 从仅有的一个想法到一个成熟产品的上线, 虽没有取得光辉的成果, 但过程仍旧值得记录与纪念。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p11">1.1 基本信息</h4>
+</blockquote>
+
+<p>使用语言: <strong>Swift 3</strong></p>
+
+<p>系统要求: <strong>iOS</strong></p>
+
+<p>参与时间: <strong>2017.04 - 2018.07</strong></p>
+
+<p>负责部分: <strong>个人独立开发所有模块</strong></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p12">1.2 结构解读</h4>
+</blockquote>
+
+<h4 id="主要框架">主要框架</h4>
+
+<ul>
+  <li>M – Models
+    <ul>
+      <li>Common Models</li>
+    </ul>
+  </li>
+  <li>V – Views
+    <ul>
+      <li>Common Views (toast View, alert View, cells, etc.)</li>
+    </ul>
+  </li>
+  <li>Modules
+    <ul>
+      <li>Module 1
+        <ul>
+          <li>Module 1’s models</li>
+          <li>Module 1’s views</li>
+          <li>Module 1’s controllers</li>
+        </ul>
+      </li>
+      <li>Module 2
+        <ul>
+          <li>Module 2’s models</li>
+          <li>Module 2’s views</li>
+          <li>Module 2’s controllers</li>
+        </ul>
+      </li>
+      <li>Module 3
+        <ul>
+          <li>Module 3’s models</li>
+          <li>Module 3’s views</li>
+          <li>Module 3’s controllers</li>
+        </ul>
+
+        <p>… …</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="网络层结构">网络层结构</h4>
+
+<p><img src="/images/global_buyer/p12.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<p>以 <strong>ShippingCompany</strong> 业务模块举例</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  NetworkBaseUtility.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">import</span> <span class="kt">Alamofire</span>
+
+<span class="kd">typealias</span> <span class="kt">SuccessCalllback</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">result</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]?)</span><span class="o">-&gt;</span><span class="kt">Void</span>
+<span class="kd">typealias</span> <span class="kt">FailureCallback</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">msg</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span><span class="o">-&gt;</span><span class="kt">Void</span>
+<span class="kd">typealias</span> <span class="kt">SuccessWithCodeCalllback</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">code</span><span class="p">:</span><span class="kt">Int</span><span class="p">,</span><span class="n">_</span> <span class="nv">result</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">AnyObject</span><span class="p">]?,</span><span class="n">_</span> <span class="nv">msg</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span><span class="o">-&gt;</span><span class="kt">Void</span>
+<span class="kd">typealias</span> <span class="kt">FailureWithCodeCallback</span> <span class="o">=</span> <span class="p">(</span><span class="n">_</span> <span class="nv">code</span><span class="p">:</span><span class="kt">Int</span><span class="p">,</span> <span class="n">_</span> <span class="nv">msg</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span><span class="o">-&gt;</span><span class="kt">Void</span>
+<span class="kd">typealias</span> <span class="kt">VoidCallback</span> <span class="o">=</span> <span class="p">()</span><span class="o">-&gt;</span><span class="kt">Void</span>
+
+<span class="kd">class</span> <span class="kt">NetworkBaseUtility</span> <span class="p">{</span>
+
+    <span class="kd">static</span> <span class="kd">fileprivate</span> <span class="k">var</span> <span class="nv">headers</span> <span class="p">:</span> <span class="kt">HTTPHeaders</span> <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="kt">UserUtility</span><span class="o">.</span><span class="nf">getAccessToken</span><span class="p">()</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="p">[</span>
+                    <span class="s">"Authorization"</span><span class="p">:</span><span class="s">"Bearer </span><span class="se">\(</span><span class="kt">UserUtility</span><span class="o">.</span><span class="nf">getAccessToken</span><span class="p">()</span><span class="o">!</span><span class="se">)</span><span class="s">"</span><span class="p">,</span>
+                    <span class="s">"Content-Type"</span><span class="p">:</span> <span class="s">"application/json"</span>
+                <span class="p">]</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="p">[</span><span class="s">"Content-Type"</span><span class="p">:</span> <span class="s">"application/json"</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">afManager</span> <span class="o">=</span> <span class="kt">NetworkBaseUtility</span><span class="o">.</span><span class="nf">defaultAlamofireSessionManager</span><span class="p">()</span>
+    
+    <span class="kd">fileprivate</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">alamofireSessionManager</span><span class="p">(</span><span class="n">withTimeout</span> <span class="nv">isLongTimeOut</span><span class="p">:</span><span class="kt">Bool</span><span class="p">,</span> <span class="nv">hasAuthorizationHeader</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">SessionManager</span><span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nv">configuration</span> <span class="o">=</span> <span class="kt">URLSessionConfiguration</span><span class="o">.</span><span class="k">default</span>
+        
+        <span class="k">if</span> <span class="o">!</span><span class="n">isLongTimeOut</span> <span class="p">{</span>
+            <span class="n">configuration</span><span class="o">.</span><span class="n">timeoutIntervalForRequest</span> <span class="o">=</span> <span class="mi">5</span> <span class="c1">// seconds</span>
+            <span class="n">configuration</span><span class="o">.</span><span class="n">timeoutIntervalForResource</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="p">}</span>
+        
+        <span class="k">let</span> <span class="nv">manager</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">SessionManager</span><span class="p">(</span><span class="nv">configuration</span><span class="p">:</span> <span class="n">configuration</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">manager</span>
+        
+    <span class="p">}</span>
+    
+    <span class="kd">private</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">defaultAlamofireSessionManager</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">SessionManager</span><span class="p">{</span>
+        <span class="k">return</span> <span class="nf">alamofireSessionManager</span><span class="p">(</span><span class="nv">withTimeout</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">hasAuthorizationHeader</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="kd">fileprivate</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">handleResponseResult</span><span class="p">(</span><span class="n">withResult</span> <span class="nv">result</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">AnyObject</span><span class="p">]?,</span> <span class="nv">success</span><span class="p">:</span> <span class="kt">SuccessCalllback</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="kt">FailureCallback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"code"</span><span class="p">]</span> <span class="k">as!</span> <span class="kt">Int</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
+                <span class="nf">success</span><span class="p">(</span><span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"data"</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">Dictionary</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="k">else</span><span class="p">{</span>
+                <span class="nf">failure</span><span class="p">(</span><span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"message"</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">String</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">fileprivate</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">handleResponseResultWithCode</span><span class="p">(</span><span class="n">withResult</span> <span class="nv">result</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">AnyObject</span><span class="p">]?,</span> <span class="nv">success</span><span class="p">:</span> <span class="kt">SuccessWithCodeCalllback</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="kt">FailureWithCodeCallback</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">result</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"code"</span><span class="p">]</span> <span class="k">as!</span> <span class="kt">Int</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"code"</span><span class="p">]</span> <span class="k">as!</span> <span class="kt">Int</span> <span class="o">==</span> <span class="mi">10</span> <span class="p">{</span>
+                <span class="nf">success</span><span class="p">(</span><span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"code"</span><span class="p">]</span> <span class="k">as!</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"data"</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">Dictionary</span><span class="p">,</span> <span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"message"</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">String</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="k">else</span><span class="p">{</span>
+                <span class="nf">failure</span><span class="p">(</span><span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"code"</span><span class="p">]</span> <span class="k">as!</span> <span class="kt">Int</span><span class="p">,</span> <span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"message"</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">String</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">fileprivate</span> <span class="kd">class</span> <span class="kd">func</span> <span class="nf">getVersioningURL</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="nf">return</span> <span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="kt">URL_VERSION_SUFFIX</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">networkGetRequest</span><span class="p">(</span><span class="n">withURL</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">Any</span><span class="p">]?,</span> <span class="nv">success</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">SuccessCalllback</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">FailureCallback</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nv">paraSend</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameters</span><span class="p">?</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="nv">nil</span> <span class="p">:</span> <span class="n">parameters</span><span class="p">)</span>
+        
+        <span class="n">afManager</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="nf">getVersioningURL</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">),</span> <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="k">get</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="n">paraSend</span><span class="p">,</span> <span class="nv">encoding</span><span class="p">:</span> <span class="kt">JSONEncoding</span><span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">headers</span><span class="p">:</span> <span class="n">headers</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">validate</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">responseJSON</span><span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+                <span class="k">switch</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">value</span><span class="p">):</span>
+                    <span class="nf">handleResponseResult</span><span class="p">(</span><span class="nv">withResult</span><span class="p">:</span> <span class="n">value</span> <span class="k">as?</span> <span class="kt">Dictionary</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="n">failure</span><span class="p">)</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                    <span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">networkPostRequest</span><span class="p">(</span><span class="n">withURL</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]?,</span> <span class="nv">success</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">SuccessCalllback</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">FailureCallback</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nv">paraSend</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameters</span><span class="p">?</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="nv">nil</span> <span class="p">:</span> <span class="n">parameters</span><span class="p">)</span>
+        
+        <span class="n">afManager</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="nf">getVersioningURL</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">),</span> <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="n">post</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="n">paraSend</span><span class="p">,</span> <span class="nv">encoding</span><span class="p">:</span> <span class="kt">JSONEncoding</span><span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">headers</span><span class="p">:</span> <span class="n">headers</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">validate</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">responseJSON</span><span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+                <span class="k">switch</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">value</span><span class="p">):</span>
+                    <span class="nf">handleResponseResult</span><span class="p">(</span><span class="nv">withResult</span><span class="p">:</span> <span class="n">value</span> <span class="k">as?</span> <span class="kt">Dictionary</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="n">failure</span><span class="p">)</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                    <span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">networkDeleteRequest</span><span class="p">(</span><span class="n">withURL</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">Any</span><span class="p">]?,</span> <span class="nv">success</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">SuccessCalllback</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">FailureCallback</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nv">paraSend</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameters</span><span class="p">?</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="nv">nil</span> <span class="p">:</span> <span class="n">parameters</span><span class="p">)</span>
+        
+        <span class="n">afManager</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="nf">getVersioningURL</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">),</span> <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="n">delete</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="n">paraSend</span><span class="p">,</span> <span class="nv">encoding</span><span class="p">:</span> <span class="kt">JSONEncoding</span><span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">headers</span><span class="p">:</span> <span class="n">headers</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">validate</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">responseJSON</span><span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+                <span class="k">switch</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">success</span><span class="p">(</span><span class="k">let</span> <span class="nv">value</span><span class="p">):</span>
+                    <span class="nf">handleResponseResult</span><span class="p">(</span><span class="nv">withResult</span><span class="p">:</span> <span class="n">value</span> <span class="k">as?</span> <span class="kt">Dictionary</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="n">failure</span><span class="p">)</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                    <span class="nf">failure</span><span class="p">(</span><span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">networkGetRequestWithCode</span><span class="p">(</span><span class="n">withURL</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">AnyObject</span><span class="p">]?,</span> <span class="nv">success</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">SuccessWithCodeCalllback</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">FailureWithCodeCallback</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nv">paraSend</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameters</span><span class="p">?</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="nv">nil</span> <span class="p">:</span> <span class="n">parameters</span><span class="p">)</span>
+
+        <span class="n">afManager</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="nf">getVersioningURL</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">),</span> <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="k">get</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="n">paraSend</span><span class="p">,</span> <span class="nv">encoding</span><span class="p">:</span> <span class="kt">JSONEncoding</span><span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">headers</span><span class="p">:</span> <span class="n">headers</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">validate</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">responseJSON</span><span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+            <span class="k">switch</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">success</span><span class="p">:</span>
+                <span class="k">let</span> <span class="nv">valueDic</span> <span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">value</span> <span class="k">as!</span> <span class="kt">Dictionary</span>
+                <span class="nf">handleResponseResultWithCode</span><span class="p">(</span><span class="nv">withResult</span><span class="p">:</span> <span class="n">valueDic</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="n">failure</span><span class="p">)</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                <span class="nf">failure</span><span class="p">(</span><span class="kt">NETWORK_FAILURE_CODE</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">networkPostRequestWithCode</span><span class="p">(</span><span class="n">withURL</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">Any</span><span class="p">]?,</span> <span class="nv">success</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">SuccessWithCodeCalllback</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">FailureWithCodeCallback</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nv">paraSend</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameters</span><span class="p">?</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="nv">nil</span> <span class="p">:</span> <span class="n">parameters</span><span class="p">)</span>
+
+        <span class="n">afManager</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="nf">getVersioningURL</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">),</span> <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="n">post</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="n">paraSend</span><span class="p">,</span> <span class="nv">encoding</span><span class="p">:</span> <span class="kt">JSONEncoding</span><span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">headers</span><span class="p">:</span> <span class="n">headers</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">validate</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">responseJSON</span><span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+            <span class="k">switch</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">success</span><span class="p">:</span>
+                <span class="k">let</span> <span class="nv">valueDic</span> <span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">value</span> <span class="k">as!</span> <span class="kt">Dictionary</span>
+                <span class="nf">handleResponseResultWithCode</span><span class="p">(</span><span class="nv">withResult</span><span class="p">:</span> <span class="n">valueDic</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="n">failure</span><span class="p">)</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                <span class="nf">failure</span><span class="p">(</span><span class="kt">NETWORK_FAILURE_CODE</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">networkDeleteRequestWithCode</span><span class="p">(</span><span class="n">withURL</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span><span class="kt">AnyObject</span><span class="p">]?,</span> <span class="nv">success</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">SuccessWithCodeCalllback</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">FailureWithCodeCallback</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="k">let</span> <span class="nv">paraSend</span> <span class="o">=</span> <span class="p">(</span><span class="n">parameters</span><span class="p">?</span><span class="o">.</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">?</span> <span class="nv">nil</span> <span class="p">:</span> <span class="n">parameters</span><span class="p">)</span>
+        
+        <span class="n">afManager</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="nf">getVersioningURL</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="n">url</span><span class="p">),</span> <span class="nv">method</span><span class="p">:</span> <span class="o">.</span><span class="n">delete</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="n">paraSend</span><span class="p">,</span> <span class="nv">encoding</span><span class="p">:</span> <span class="kt">JSONEncoding</span><span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">headers</span><span class="p">:</span> <span class="n">headers</span><span class="p">)</span>
+            <span class="o">.</span><span class="nf">validate</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">responseJSON</span><span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+                <span class="k">switch</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nv">success</span><span class="p">:</span>
+                    <span class="k">let</span> <span class="nv">valueDic</span> <span class="p">:</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">AnyObject</span><span class="p">]</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">value</span> <span class="k">as!</span> <span class="kt">Dictionary</span>
+                    <span class="nf">handleResponseResultWithCode</span><span class="p">(</span><span class="nv">withResult</span><span class="p">:</span> <span class="n">valueDic</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="n">success</span><span class="p">,</span> <span class="nv">failure</span><span class="p">:</span> <span class="n">failure</span><span class="p">)</span>
+                <span class="k">case</span> <span class="o">.</span><span class="nf">failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                    <span class="nf">failure</span><span class="p">(</span><span class="kt">NETWORK_FAILURE_CODE</span><span class="p">,</span> <span class="n">error</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+                <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//</span>
+<span class="c1">//  ShippingCompanyUtility.swift</span>
+<span class="c1">//</span>
+
+<span class="kd">import</span> <span class="kt">ObjectMapper</span>
+
+<span class="kd">class</span> <span class="kt">ShippingCompanyUtility</span> <span class="p">{</span>
+    <span class="kd">class</span> <span class="kd">func</span> <span class="nf">listShippingCompanies</span><span class="p">(</span><span class="n">_</span> <span class="nv">inAreaIds</span><span class="p">:</span><span class="kt">String</span><span class="p">,</span><span class="nv">callback</span><span class="p">:</span><span class="kd">@escaping</span> <span class="p">(</span><span class="kt">NSError</span><span class="p">?,[</span><span class="kt">ShippingCompany</span><span class="p">]?)</span><span class="o">-&gt;</span><span class="kt">Void</span><span class="p">){</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="s">"</span><span class="se">\(</span><span class="kt">PublicUtility</span><span class="o">.</span><span class="n">baseApiUrl</span><span class="se">)</span><span class="s">/shippingCompany/list"</span>
+        <span class="k">let</span> <span class="nv">parameters</span><span class="p">:</span> <span class="kt">Dictionary</span><span class="o">&lt;</span><span class="kt">String</span><span class="p">,</span><span class="kt">AnyObject</span><span class="o">&gt;</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s">"in_area_ids"</span><span class="p">:</span><span class="n">inAreaIds</span> <span class="k">as</span> <span class="kt">AnyObject</span>
+        <span class="p">]</span>
+        
+        <span class="kt">NetworkBaseUtility</span><span class="o">.</span><span class="nf">networkPostRequestWithCode</span><span class="p">(</span><span class="nv">withURL</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="n">parameters</span><span class="p">,</span> <span class="nv">success</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span> <span class="k">in</span>            
+            <span class="k">let</span> <span class="nv">viewModel</span> <span class="o">=</span> <span class="kt">Mapper</span><span class="o">&lt;</span><span class="kt">ShippingCompany</span><span class="o">&gt;</span><span class="p">()</span><span class="o">.</span><span class="nf">mapArray</span><span class="p">(</span><span class="kt">JSONArray</span><span class="p">:</span> <span class="n">result</span><span class="o">!</span><span class="p">[</span><span class="s">"shipping_companies"</span><span class="p">]</span> <span class="k">as!</span> <span class="p">[[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]])</span>
+            <span class="nf">callback</span><span class="p">(</span><span class="kc">nil</span><span class="p">,</span><span class="n">viewModel</span><span class="p">)</span>
+        <span class="p">})</span> <span class="p">{</span> <span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span> <span class="k">in</span>
+            <span class="nf">callback</span><span class="p">(</span><span class="kt">NSError</span><span class="o">.</span><span class="nf">errorFromResponse</span><span class="p">(</span><span class="nv">code</span><span class="p">:</span> <span class="n">code</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="n">message</span><span class="o">!</span><span class="p">),</span><span class="kc">nil</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">ShippingCompanyUtility</span><span class="o">.</span><span class="nf">listShippingCompanies</span><span class="p">(</span><span class="s">"014806553810941941"</span><span class="p">,</span> <span class="nv">callback</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">shippingCompanies</span><span class="p">)</span> <span class="k">in</span>
+    <span class="k">if</span> <span class="n">weakSelf</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="kt">PublicUtility</span><span class="o">.</span><span class="nf">hideDefaultHUDViewInView</span><span class="p">(</span><span class="nv">view</span><span class="p">:</span> <span class="n">weakSelf</span><span class="o">!.</span><span class="n">view</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="n">error</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">vc</span> <span class="o">=</span> <span class="kt">ShippingCompanySelectionTableViewController</span><span class="p">()</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">shippingCompanies</span> <span class="o">=</span> <span class="n">shippingCompanies</span><span class="o">!</span>
+        <span class="n">vc</span><span class="o">.</span><span class="n">shippingCompanySelectionDelegate</span> <span class="o">=</span> <span class="k">self</span>
+        <span class="n">weakSelf</span><span class="p">?</span><span class="o">.</span><span class="n">navigationController</span><span class="p">?</span><span class="o">.</span><span class="nf">pushViewController</span><span class="p">(</span><span class="n">vc</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="kt">AlertViewUtility</span><span class="o">.</span><span class="nf">showWarningView</span><span class="p">(</span><span class="n">error</span><span class="o">!.</span><span class="n">localizedDescription</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">})</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p13">1.3 第三方框架的使用</h4>
+</blockquote>
+
+<ul>
+  <li><a href="">ChatKit - LeanCloud 轻量级 IM 聊天组件</a></li>
+  <li><a href="">Mapbox-iOS-SDK - 自定义地图</a></li>
+  <li><a href="">BarrageRenderer - 弹幕渲染器</a></li>
+  <li><a href="">DZNEmptyDataSet - 列表空数据时的效果处理</a></li>
+  <li><a href="">DZNPhotoPickerController - 相册图片选择、剪裁编辑器</a></li>
+  <li><a href="">MBProgressHUD - 创建prompt</a></li>
+  <li><a href="">MJRefresh - 列表上拉刷新，下拉加载</a></li>
+  <li><a href="">SnapKit - 使用纯代码方案解决屏幕大小自适应问题</a></li>
+  <li><a href="">Eureka - 创建动态表单的框架</a></li>
+  <li><a href="">Alamofire - 网络层</a></li>
+  <li><a href="">SDWebImage - 网络加载图片</a></li>
+  <li><a href="">ObjectMapper - 轻量级的模型与字典、数组等数据结构的转换</a></li>
+  <li><a href="">Bugly - 崩溃监测统计</a></li>
+</ul>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p2">2. 开发随笔</h3>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="mapbox">2.1 使用Mapbox实现自定义地图</h4>
+</blockquote>
+
+<p><br /></p>
+
+<h4 id="基于mapbox的fbannotationclustering库使用实现聚合效果的方法">基于Mapbox的FBAnnotationClustering库使用实现聚合效果的方法</h4>
+
+<p><br /></p>
+
+<p>Mapbox可以只需要在Mapbox的Studio后台中编辑修改你的地图样式，无需更新前端线上已有app，App内的地图的UI就能动态更新。</p>
+
+<p>但因Mapbox使用的js语言与源生应用语言不同，以及它实现我们需要的聚合效果并不能满足我们的项目需求。</p>
+
+<p>在该项目中，有如下图所示设计需求: 地图上需要有多个Pin坐标，并且这些坐标是可以有聚合（Cluster）效果的，并且聚合时点击显示的数据展示页面与散开时点击的数据展示页面是不同的UI效果。</p>
+
+<p><br /></p>
+
+<p><img src="/images/mapbox/mapbox.gif" /></p>
+
+<p><br /></p>
+
+<p>首先, 能够直接使用的就是Mapbox原生API实现聚合效果的方法。</p>
+
+<p>这样的实现方法没有问题，但是在获取Cluter聚合的具体数据时，便不能满足我们的需求了。因为它的API并没有能够让我们去解析每个聚合点内的具体数据到底是什么, 从而我没有办法展示下一页面的列表信息。</p>
+
+<p>为解决这个问题，我使用了FBAnnotationClustering这个第三方开源库，该库实现了在苹果自带系统地图基础上的Cluster聚合数据效果。</p>
+
+<p>当然，这个库支持的数据类型是iOS源生Mapkit所持有的数据类型，当在使用这个库的时候，还需将它改写成适用于Mapbox所持有的数据类型。通过这个库的支持，用如下代码实现了最后我们UI所需要达到的效果。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">setupMapViewUI</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">var</span> <span class="nv">annotations</span> <span class="p">:</span> <span class="p">[</span><span class="kt">MGLPointFeature</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">buyer</span> <span class="k">in</span> <span class="n">buyers</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">annotation</span> <span class="o">=</span> <span class="kt">MGLPointFeature</span><span class="p">()</span>
+        <span class="n">annotation</span><span class="o">.</span><span class="n">coordinate</span> <span class="o">=</span> <span class="kt">CLLocationCoordinate2DMake</span><span class="p">(</span><span class="n">buyer</span><span class="o">.</span><span class="n">lastLatitude</span><span class="p">,</span> <span class="n">buyer</span><span class="o">.</span><span class="n">lastLongitude</span><span class="p">)</span>
+        <span class="n">annotation</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">buyer</span><span class="o">.</span><span class="n">displayName</span>
+        <span class="n">annotations</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="n">annotation</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">let</span> <span class="nv">source</span> <span class="o">=</span> <span class="kt">MGLShapeSource</span><span class="p">(</span><span class="nv">identifier</span><span class="p">:</span> <span class="n">sourceReuseId</span><span class="p">,</span> <span class="nv">features</span><span class="p">:</span> <span class="n">annotations</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="o">.</span><span class="nv">clustered</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="o">.</span><span class="nv">clusterRadius</span><span class="p">:</span> <span class="mi">30</span><span class="p">])</span>
+    <span class="n">mapView</span><span class="o">.</span><span class="n">style</span><span class="p">?</span><span class="o">.</span><span class="nf">addSource</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+
+    <span class="k">let</span> <span class="nv">iconImage</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"pinblue"</span><span class="p">)</span>
+    <span class="n">mapView</span><span class="o">.</span><span class="n">style</span><span class="p">?</span><span class="o">.</span><span class="nf">setImage</span><span class="p">(</span><span class="n">iconImage</span><span class="o">!.</span><span class="nf">withRenderingMode</span><span class="p">(</span><span class="o">.</span><span class="n">alwaysOriginal</span><span class="p">),</span> <span class="nv">forName</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span>
+
+    <span class="k">let</span> <span class="nv">clusteredPinLayer</span> <span class="o">=</span> <span class="kt">MGLSymbolStyleLayer</span><span class="p">(</span><span class="nv">identifier</span><span class="p">:</span> <span class="n">clusteredLayerReuseId</span><span class="p">,</span> <span class="nv">source</span><span class="p">:</span> <span class="n">source</span><span class="p">)</span>
+    <span class="n">clusteredPinLayer</span><span class="o">.</span><span class="n">iconImageName</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span>
+    <span class="n">clusteredPinLayer</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">UIColor</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+    <span class="n">clusteredPinLayer</span><span class="o">.</span><span class="n">textFontSize</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">12</span><span class="p">))</span>
+    <span class="n">clusteredPinLayer</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="s">"{point_count}"</span><span class="p">)</span>
+    <span class="n">clusteredPinLayer</span><span class="o">.</span><span class="n">predicate</span> <span class="o">=</span> <span class="kt">NSPredicate</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span> <span class="s">"%K == YES"</span><span class="p">,</span> <span class="s">"cluster"</span><span class="p">)</span>
+    <span class="n">clusteredPinLayer</span><span class="o">.</span><span class="n">textOffset</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">NSValue</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">cgVector</span><span class="p">:</span> <span class="kt">CGVector</span><span class="p">(</span><span class="nv">dx</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">dy</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">)))</span>
+    <span class="n">mapView</span><span class="o">.</span><span class="n">style</span><span class="p">?</span><span class="o">.</span><span class="nf">addLayer</span><span class="p">(</span><span class="n">clusteredPinLayer</span><span class="p">)</span>
+
+    <span class="k">let</span> <span class="nv">unclusteredPinLayer</span> <span class="o">=</span> <span class="kt">MGLSymbolStyleLayer</span><span class="p">(</span><span class="nv">identifier</span><span class="p">:</span> <span class="n">unclusteredLayerReuseId</span><span class="p">,</span> <span class="nv">source</span><span class="p">:</span> <span class="n">source</span><span class="p">)</span>
+    <span class="n">unclusteredPinLayer</span><span class="o">.</span><span class="n">iconImageName</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span>
+    <span class="n">unclusteredPinLayer</span><span class="o">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">UIColor</span><span class="o">.</span><span class="n">white</span><span class="p">)</span>
+    <span class="n">unclusteredPinLayer</span><span class="o">.</span><span class="n">textFontSize</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">NSNumber</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="mi">12</span><span class="p">))</span>
+    <span class="n">unclusteredPinLayer</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="s">"1"</span><span class="p">)</span>
+    <span class="n">unclusteredPinLayer</span><span class="o">.</span><span class="n">predicate</span> <span class="o">=</span> <span class="kt">NSPredicate</span><span class="p">(</span><span class="nv">format</span><span class="p">:</span> <span class="s">"%K != YES"</span><span class="p">,</span> <span class="s">"cluster"</span><span class="p">)</span>
+    <span class="n">unclusteredPinLayer</span><span class="o">.</span><span class="n">textOffset</span> <span class="o">=</span> <span class="kt">MGLStyleValue</span><span class="p">(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt">NSValue</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">cgVector</span><span class="p">:</span> <span class="kt">CGVector</span><span class="p">(</span><span class="nv">dx</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">dy</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">)))</span>
+    <span class="n">mapView</span><span class="o">.</span><span class="n">style</span><span class="p">?</span><span class="o">.</span><span class="nf">addLayer</span><span class="p">(</span><span class="n">unclusteredPinLayer</span><span class="p">)</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//MARK: - MGLMapViewDelegate</span>
+
+<span class="kd">func</span> <span class="nf">mapView</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapView</span><span class="p">:</span> <span class="kt">MGLMapView</span><span class="p">,</span> <span class="n">viewFor</span> <span class="nv">annotation</span><span class="p">:</span> <span class="kt">MGLAnnotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">MGLAnnotationView</span><span class="p">?</span> <span class="p">{</span>
+
+    <span class="k">var</span> <span class="nv">reuseId</span> <span class="o">=</span> <span class="s">""</span>
+
+    <span class="k">if</span> <span class="o">!</span><span class="n">annotation</span><span class="o">.</span><span class="nf">isKind</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="kt">GBBuyerPointAnnotation</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>  <span class="p">{</span>
+
+        <span class="n">reuseId</span> <span class="o">=</span> <span class="s">"Cluster"</span>
+
+        <span class="k">var</span> <span class="nv">clusterView</span> <span class="o">=</span> <span class="n">mapView</span><span class="o">.</span><span class="nf">dequeueReusableAnnotationView</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="n">reuseId</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">clusterView</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="n">clusterView</span> <span class="o">=</span> <span class="kt">MGLAnnotationView</span><span class="p">(</span><span class="nv">annotation</span><span class="p">:</span> <span class="n">annotation</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="n">reuseId</span><span class="p">)</span>
+        <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+            <span class="n">clusterView</span><span class="p">?</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="n">annotation</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">subview</span> <span class="nf">in</span> <span class="p">(</span><span class="n">clusterView</span><span class="p">?</span><span class="o">.</span><span class="n">subviews</span><span class="p">)</span><span class="o">!</span> <span class="p">{</span>
+            <span class="n">subview</span><span class="o">.</span><span class="nf">removeFromSuperview</span><span class="p">()</span>
+        <span class="p">}</span>
+
+        <span class="k">let</span> <span class="nv">clusterAnnotations</span> <span class="o">=</span> <span class="n">annotation</span> <span class="k">as!</span> <span class="kt">FBAnnotationCluster</span>
+        <span class="k">let</span> <span class="nv">firstAnnotation</span> <span class="o">=</span> <span class="n">clusterAnnotations</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">first</span> <span class="k">as!</span> <span class="kt">GBBuyerPointAnnotation</span>
+        <span class="k">let</span> <span class="nv">clusterCountView</span> <span class="o">=</span> <span class="n">firstAnnotation</span><span class="o">.</span><span class="nf">getClusteringView</span><span class="p">(</span><span class="n">clusterAnnotations</span><span class="o">.</span><span class="n">annotations</span><span class="o">.</span><span class="n">count</span><span class="p">)</span>
+        <span class="n">clusterView</span><span class="p">?</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="kt">CGRect</span><span class="p">(</span><span class="nv">origin</span><span class="p">:</span> <span class="p">(</span><span class="n">clusterView</span><span class="p">?</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span><span class="o">!</span><span class="p">,</span> <span class="nv">size</span><span class="p">:</span> <span class="n">clusterCountView</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">clusterView</span><span class="p">?</span><span class="o">.</span><span class="n">centerOffset</span> <span class="o">=</span> <span class="kt">CGVector</span><span class="p">(</span><span class="nv">dx</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">dy</span><span class="p">:</span> <span class="o">-</span><span class="n">clusterCountView</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">clusterView</span><span class="p">?</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">clusterCountView</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">clusterView</span>
+
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+
+        <span class="n">reuseId</span> <span class="o">=</span> <span class="s">"Pin"</span>
+
+        <span class="k">var</span> <span class="nv">pinView</span> <span class="o">=</span> <span class="n">mapView</span><span class="o">.</span><span class="nf">dequeueReusableAnnotationView</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="n">reuseId</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">pinView</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="n">pinView</span> <span class="o">=</span> <span class="kt">MGLAnnotationView</span><span class="p">(</span><span class="nv">annotation</span><span class="p">:</span> <span class="n">annotation</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="n">reuseId</span><span class="p">)</span>
+        <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+            <span class="n">pinView</span><span class="p">?</span><span class="o">.</span><span class="n">annotation</span> <span class="o">=</span> <span class="n">annotation</span>
+        <span class="p">}</span>
+
+        <span class="k">let</span> <span class="nv">pinAnnotation</span> <span class="o">=</span> <span class="n">annotation</span> <span class="k">as!</span> <span class="kt">GBBuyerPointAnnotation</span>
+        <span class="k">let</span> <span class="nv">pinImageView</span> <span class="o">=</span> <span class="n">pinAnnotation</span><span class="o">.</span><span class="nf">getPinView</span><span class="p">()</span>
+
+        <span class="n">pinView</span><span class="p">?</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="kt">CGRect</span><span class="p">(</span><span class="nv">origin</span><span class="p">:</span> <span class="p">(</span><span class="n">pinView</span><span class="p">?</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span><span class="o">!</span><span class="p">,</span> <span class="nv">size</span><span class="p">:</span> <span class="n">pinImageView</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">pinView</span><span class="p">?</span><span class="o">.</span><span class="n">centerOffset</span> <span class="o">=</span> <span class="kt">CGVector</span><span class="p">(</span><span class="nv">dx</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">dy</span><span class="p">:</span> <span class="o">-</span><span class="n">pinImageView</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">pinView</span><span class="p">?</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">pinImageView</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pinView</span>
+
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">fileprivate</span> <span class="k">let</span> <span class="nv">clusteringManager</span> <span class="o">=</span> <span class="kt">FBClusteringManager</span><span class="p">()</span>
+
+<span class="kd">fileprivate</span> <span class="kd">func</span> <span class="nf">updateBuyerAnnotationsOnMapView</span><span class="p">(</span><span class="n">_</span> <span class="nv">mapView</span><span class="p">:</span> <span class="kt">MGLMapView</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">weak</span> <span class="k">var</span> <span class="nv">weakSelf</span> <span class="o">=</span> <span class="k">self</span>
+
+    <span class="kt">OperationQueue</span><span class="p">()</span><span class="o">.</span><span class="nf">addOperation</span> <span class="p">({</span>
+
+        <span class="k">let</span> <span class="nv">leftBottomPoint</span> <span class="o">=</span> <span class="kt">MKMapPointForCoordinate</span><span class="p">(</span><span class="n">mapView</span><span class="o">.</span><span class="n">visibleCoordinateBounds</span><span class="o">.</span><span class="n">sw</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">rightTopPoint</span> <span class="o">=</span> <span class="kt">MKMapPointForCoordinate</span><span class="p">(</span><span class="n">mapView</span><span class="o">.</span><span class="n">visibleCoordinateBounds</span><span class="o">.</span><span class="n">ne</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">visibleRectWidth</span> <span class="o">=</span> <span class="n">rightTopPoint</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">leftBottomPoint</span><span class="o">.</span><span class="n">x</span>
+        <span class="k">let</span> <span class="nv">scale</span> <span class="o">=</span> <span class="kt">Double</span><span class="p">(</span><span class="n">mapView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">)</span> <span class="o">/</span> <span class="n">visibleRectWidth</span>
+
+        <span class="k">let</span> <span class="nv">visibleMapRect</span> <span class="o">=</span> <span class="kt">MKMapRect</span><span class="p">(</span><span class="nv">origin</span><span class="p">:</span> <span class="kt">MKMapPoint</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="n">leftBottomPoint</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="n">rightTopPoint</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="nv">size</span><span class="p">:</span> <span class="kt">MKMapSize</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="n">visibleRectWidth</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="n">leftBottomPoint</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">rightTopPoint</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+
+        <span class="k">let</span> <span class="nv">annotations</span> <span class="o">=</span> <span class="n">weakSelf</span><span class="p">?</span><span class="o">.</span><span class="n">clusteringManager</span><span class="o">.</span><span class="nf">clusteredAnnotationsWithinMapRect</span><span class="p">(</span><span class="n">visibleMapRect</span><span class="p">,</span> <span class="nv">withZoomScale</span><span class="p">:</span> <span class="n">scale</span><span class="p">)</span>
+
+        <span class="n">weakSelf</span><span class="p">?</span><span class="o">.</span><span class="n">clusteringManager</span><span class="o">.</span><span class="nf">displayAnnotations</span><span class="p">(</span><span class="n">annotations</span><span class="o">!</span><span class="p">,</span> <span class="nv">onMapView</span><span class="p">:</span> <span class="n">mapView</span><span class="p">)</span>
+
+    <span class="p">})</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="22-uiscrollview多层嵌套中的联动效果实现">2.2 <a href="#multi_scrollview">UIScrollView多层嵌套中的联动效果实现</a></h4>
+</blockquote>
+
+<p>在项目中，经常会出现多层滚动视图嵌套的才能实现的UI需求。但是多层滚动视图的嵌套，通常会引发手势不连贯，用户操作滑动不顺畅等问题。因为通常情况下，只有最上层滚动视图能够响应手势动作。</p>
+
+<p>如果想让ScrollView的滑动效果能够平滑的由上层穿透到下层，无缝滚动连接，则需要将下层视图的手势穿透响应打开。在这里，我把TableView与CollectionView都算作ScrollView的一种。</p>
+
+<p>例如我现在所做的项目中，有如下UI设计需求，只能由多层的ScrollView嵌套去实现。</p>
+
+<p><br /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="/images/multi_scrollview/view_hierarchy.jpg" /></td>
+      <td><img src="/images/multi_scrollview/multi_scrollview.gif" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<p><strong>1).</strong> 先实现UIGestureRecognizerDelegate协议的方法，UIScrollView及其子类已经实现了该方法，只需将返回值返回为YES/true</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//ObjC</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">gestureRecognizer</span><span class="p">:(</span><span class="n">UIGestureRecognizer</span> <span class="o">*</span><span class="p">)</span><span class="nv">gestureRecognizer</span> <span class="nf">shouldRecognizeSimultaneouslyWithGestureRecognizer</span><span class="p">:(</span><span class="n">UIGestureRecognizer</span> <span class="o">*</span><span class="p">)</span><span class="nv">otherGestureRecognizer</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//Swift3</span>
+<span class="kd">func</span> <span class="nf">gestureRecognizer</span><span class="p">(</span><span class="n">_</span> <span class="nv">gestureRecognizer</span><span class="p">:</span> <span class="kt">UIGestureRecognizer</span><span class="p">,</span> <span class="n">shouldRecognizeSimultaneouslyWith</span> <span class="nv">otherGestureRecognizer</span><span class="p">:</span> <span class="kt">UIGestureRecognizer</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//Objective-C</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">gestureRecognizer</span><span class="p">:(</span><span class="n">UIPanGestureRecognizer</span> <span class="o">*</span><span class="p">)</span><span class="nv">gestureRecognizer</span> <span class="nf">shouldRecognizeSimultaneouslyWithGestureRecognizer</span><span class="p">:(</span><span class="n">UISwipeGestureRecognizer</span> <span class="o">*</span><span class="p">)</span><span class="nv">otherGestureRecognizer</span> 
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>2).</strong> 判断何时不让某个scrollview改变偏移量。通过设置子滚动视图与主滚动视图的代理协议方法，确定了他们之间滚动时偏移量的关系后，平滑的多ScrollView滚动效果就实现了。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//该项目是用Swift3实现的，在这里只贴一下Swift的实现代码</span>
+
+<span class="kd">fileprivate</span> <span class="kd">enum</span> <span class="kt">ScrollViewOffsetType</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">max</span>
+    <span class="k">case</span> <span class="n">min</span>
+    <span class="k">case</span> <span class="n">center</span>
+<span class="p">}</span>
+
+<span class="c1">//MainScrollView的UIScrollViewDelegate协议方法</span>
+
+<span class="kd">func</span> <span class="nf">scrollViewDidScroll</span><span class="p">(</span><span class="n">_</span> <span class="nv">scrollView</span><span class="p">:</span> <span class="kt">UIScrollView</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">if</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">height</span> <span class="o">&gt;=</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentSize</span><span class="o">.</span><span class="n">height</span> <span class="p">{</span>
+        <span class="n">mainScrollViewOffsetType</span> <span class="o">=</span> <span class="o">.</span><span class="n">max</span>
+    <span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
+        <span class="n">mainScrollViewOffsetType</span> <span class="o">=</span> <span class="o">.</span><span class="n">min</span>
+    <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+        <span class="n">mainScrollViewOffsetType</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span>
+    <span class="p">}</span>
+
+    <span class="c1">//SlideTabView即为上图所示的SubScrollView，是我写的一个嵌套子滑动视图的一个通用控件</span>
+    <span class="k">if</span> <span class="n">slideTabView</span><span class="o">.</span><span class="n">currentIndex</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">productCollectionViewOffsetType</span> <span class="o">==</span> <span class="o">.</span><span class="n">center</span> <span class="p">{</span>
+        <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="kt">CGPoint</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentSize</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">slideTabView</span><span class="o">.</span><span class="n">currentIndex</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">buyerCommentTableViewOffsetType</span> <span class="o">==</span> <span class="o">.</span><span class="n">center</span> <span class="p">{</span>
+        <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="kt">CGPoint</span><span class="p">(</span><span class="nv">x</span><span class="p">:</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="nv">y</span><span class="p">:</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentSize</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//以SubScrollView中的子滚动视图CollectionView为例，当其滚动到顶部，开启MainScrollView的滚动，在这里ProductCollectionView也是我写的一个通用组件，并且我将它的UIScrollViewDelegate代理协议方法通过block函数回调实现</span>
+
+<span class="k">weak</span> <span class="k">var</span> <span class="nv">weakSelf</span> <span class="o">=</span> <span class="k">self</span>
+<span class="n">productCollectionView</span><span class="o">.</span><span class="n">handleCollectionViewDidScroll</span> <span class="o">=</span> <span class="p">{</span> <span class="p">(</span><span class="n">scrollView</span><span class="p">)</span> <span class="k">in</span>
+
+    <span class="k">if</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">{</span>
+        <span class="n">weakSelf</span><span class="p">?</span><span class="o">.</span><span class="n">productCollectionViewOffsetType</span> <span class="o">=</span> <span class="o">.</span><span class="n">min</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">weakSelf</span><span class="p">?</span><span class="o">.</span><span class="n">productCollectionViewOffsetType</span> <span class="o">=</span> <span class="o">.</span><span class="n">center</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">weakSelf</span><span class="p">?</span><span class="o">.</span><span class="n">mainScrollViewOffsetType</span> <span class="o">==</span> <span class="o">.</span><span class="n">min</span> <span class="p">{</span>
+        <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="kt">CGPoint</span><span class="o">.</span><span class="n">zero</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">weakSelf</span><span class="p">?</span><span class="o">.</span><span class="n">mainScrollViewOffsetType</span> <span class="o">==</span> <span class="o">.</span><span class="n">center</span> <span class="p">{</span>
+        <span class="n">scrollView</span><span class="o">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="kt">CGPoint</span><span class="o">.</span><span class="n">zero</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="emptydata-mjrefresh-bug">2.3 DZNEmptyDataSet与MJRefresh的冲突</h4>
+</blockquote>
+
+<p><strong>Bug描述:</strong></p>
+
+<p>在collection view中同时使用 <code class="highlighter-rouge">DZNEmptyDataSet</code> 和 <code class="highlighter-rouge">MJRefresh</code>时，<code class="highlighter-rouge">MJRefresh</code>会造成空数据页面错位一个header的高度。</p>
+
+<p><strong>解决方法:</strong></p>
+
+<p>在 <code class="highlighter-rouge">emptyDataSetWillAppear</code> 代理方法中将滚动视图的偏移量归零。</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">emptyDataSetWillAppear</span><span class="p">:(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="nv">scrollView</span> <span class="p">{</span>
+    <span class="n">scrollView</span><span class="p">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="n">CGPointZero</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="update-tableview">2.4 无动画效果更新TableView内容</h4>
+</blockquote>
+
+<p><strong>问题描述:</strong></p>
+
+<p>当更新一个table view cell的内容并且没有滚动当前列表到最顶（或最底），会发现有以下几种情况出现：</p>
+
+<ul>
+  <li>UITableView 滚动到了最顶或最底部</li>
+  <li>UITableView 来回大幅闪动</li>
+  <li>UITableView 小幅度闪烁了一下但是能够看出</li>
+</ul>
+
+<p><strong>解决方法:</strong></p>
+
+<p>1). 尽最大可能的估计你使用的所有类型的 table cell的大约高度，即使有些地方的table cell的高度使用的是动态高度。</p>
+
+<p>2). 暂存列表的滚动位置，在完成TableView的更新之后，调用 <code class="highlighter-rouge">endUpdates()</code> 重置滚动视图的内容偏移值。</p>
+
+<p>以下是无动画重置滚动视图内容偏移量的代码</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">lastScrollOffset</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">contentOffset</span>
+<span class="n">tableView</span><span class="o">.</span><span class="nf">beginUpdates</span><span class="p">()</span>
+<span class="o">...</span>
+<span class="n">tableView</span><span class="o">.</span><span class="nf">endUpdates</span><span class="p">()</span>
+<span class="n">tableView</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="nf">removeAllAnimations</span><span class="p">()</span>
+<span class="n">tableView</span><span class="o">.</span><span class="nf">setContentOffset</span><span class="p">(</span><span class="n">lastScrollOffset</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">false</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="navbar-flash">2.5 导航栏闪变黑色</h4>
+</blockquote>
+
+<p><strong>问题描述:</strong></p>
+
+<p>设置Navigation Bar隐藏后，再push时发现导航栏会闪变黑色。</p>
+
+<p><strong>解决方法:</strong></p>
+
+<p>在设置导航栏隐藏时，将 <code class="highlighter-rouge">animated</code> 值设为 <code class="highlighter-rouge">true</code> .</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">navigationController</span><span class="o">.</span><span class="nf">setNavigationBarHidden</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="estimated-item-size">2.6 集合视图设置预估尺寸的问题</h4>
+</blockquote>
+
+<p><strong>问题描述:</strong></p>
+
+<p><img src="/images/collectionview_flowlayout/shopping_subtypes.jpg" alt="collectionview" /></p>
+
+<p>通常在写这样的一个页面中，会需要使用到 <code class="highlighter-rouge">UICollectionView</code> 并且需要其中的 items 都要左对齐。</p>
+
+<p>因为想要使其使用动态高度和宽度自动布局，将 collection view 里的 item 设置 <code class="highlighter-rouge">estimatedItemSize</code> 后，则会在自定义左对齐布局类 <code class="highlighter-rouge">UICollectionViewLeftAlignedLayout</code> 中，发生崩溃。</p>
+
+<p><strong>系统版本:</strong></p>
+
+<p>崩溃只有当系统版本低于 <code class="highlighter-rouge">iOS 10.0</code> 的时候才会发生。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  LeftAlignedLayout.class</span>
+<span class="c1">//  LeftAlignedLayout inherits from UICollectionViewFlowLayout</span>
+
+<span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="k">in</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">UICollectionViewLayoutAttributes</span><span class="p">]?</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">attrsCopy</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UICollectionViewLayoutAttributes</span><span class="p">]()</span>
+    <span class="c1">//crash here</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">attrs</span> <span class="o">=</span> <span class="k">super</span><span class="o">.</span><span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="n">rect</span><span class="p">)</span> <span class="p">{</span> 
+        <span class="n">attrs</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span>
+            <span class="n">attrsCopy</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="nv">$0</span><span class="o">.</span><span class="nf">copy</span><span class="p">()</span> <span class="k">as!</span> <span class="kt">UICollectionViewLayoutAttributes</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">attribute</span> <span class="k">in</span> <span class="n">attrsCopy</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="n">attribute</span><span class="o">.</span><span class="n">representedElementKind</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="k">let</span> <span class="nv">attr</span> <span class="o">=</span> <span class="nf">layoutAttributesForItem</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="n">attribute</span><span class="o">.</span><span class="n">indexPath</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">attribute</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">frame</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">attrCopy</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>解决方法:</strong></p>
+
+<p>不再使用动态布局的 <code class="highlighter-rouge">estimatedItemSize</code> 而是使用固定大小 <code class="highlighter-rouge">itemSize</code>。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">operatingSystemVersion</span> <span class="o">=</span> <span class="kt">OperatingSystemVersion</span><span class="p">(</span><span class="nv">majorVersion</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nv">minorVersion</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">patchVersion</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+<span class="k">if</span> <span class="kt">ProcessInfo</span><span class="p">()</span><span class="o">.</span><span class="nf">isOperatingSystemAtLeast</span><span class="p">(</span><span class="n">operatingSystemVersion</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">flowLayout</span><span class="o">.</span><span class="n">estimatedItemSize</span> <span class="o">=</span> <span class="kt">CGSize</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+    <span class="c1">//system version is lower than 10.0.0</span>
+    <span class="n">flowLayout</span><span class="o">.</span><span class="n">itemSize</span> <span class="o">=</span> <span class="kt">CGSize</span><span class="p">(</span><span class="nv">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nv">height</span><span class="p">:</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="update-cell">2.7 在列表内刷新cell的选中状态</h4>
+</blockquote>
+
+<p>如果想要在 <code class="highlighter-rouge">cellForRowAtIndexPath</code> 方法中设置cell的选中状态，不要使用 <code class="highlighter-rouge">setSelected</code> 方法， 而是使用 <code class="highlighter-rouge">selectRowAtIndexPath</code> 方法，因为 <code class="highlighter-rouge">setSelected</code> 会被调起两遍。</p>
+
+<p><img src="/images/20170901/cell_selected.png" alt="Illustration" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="i18n">2.8 项目本地化</h4>
+</blockquote>
+
+<h4 id="本地化字符串">本地化字符串</h4>
+
+<p><strong>1). PROJECT -&gt; Info -&gt; Localizations -&gt; 添加其他语言</strong></p>
+
+<p><img src="/images/localized_app/localized_step1.png" alt="Step1" /></p>
+
+<p><br /></p>
+
+<p><strong>2).</strong> 在工程中，选择 <strong>Resource</strong> 下的 <strong>Strings File</strong> 文件类型，创建新文件，命名为 <strong>Localizable.strings</strong> 。</p>
+
+<p><img src="/images/localized_app/localized_step2.png" alt="Step2" /></p>
+
+<p><br /></p>
+
+<p><strong>3).</strong> 选中创建的 <strong>Localizable.strings</strong> 文件，在右侧属性面板中点击 <strong>Localize…</strong> 创建本地化资源。</p>
+
+<p><img src="/images/localized_app/localized_step3.png" alt="Step3" /></p>
+
+<p><br /></p>
+
+<p><strong>4).</strong> 分别在不同语言文件下，用相同的 <strong>key</strong> 值配置不同语言的显示值。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  Localizable.strings(English)</span>
+<span class="s">"key"</span> <span class="o">=</span> <span class="s">"Welcome"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  Localizable.strings(Simplified)</span>
+<span class="s">"key"</span> <span class="o">=</span> <span class="s">"欢迎"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>5).</strong> 使用 <strong>NSLocalizedString</strong> 和配置的 <strong>key</strong> 来显示字符串。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">NSLocalizedString</span><span class="p">(</span><span class="s">"key"</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span> <span class="nv">comment</span><span class="p">:</span> <span class="s">""</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="本地化应用名称">本地化应用名称</h4>
+
+<p>只需在不同语言的 <strong>.strings</strong> 文件中，像上述方法一样使用 <strong>CFBundleDisplayName</strong> 作为键设置不同的显示值，之后在 <strong>info.plist</strong>文件中使用 <strong>CFBundleDisplayName</strong> 即可。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  Localizable.strings(English)</span>
+<span class="s">"CFBundleDisplayName"</span> <span class="o">=</span> <span class="s">"English App"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  Localizable.strings(Simplified)</span>
+<span class="s">"CFBundleDisplayName"</span> <span class="o">=</span> <span class="s">"中文应用"</span><span class="p">;</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="ref-links">3. 参考链接</h3>
+
+<hr />
+
+<ul>
+  <li><a href="https://github.com/infinum/FBAnnotationClustering">FBAnnotationClustering</a></li>
+  <li><a href="https://github.com/ribl/FBAnnotationClusteringSwift">FBAnnotationClusteringSwift</a></li>
+  <li><a href="https://stackoverflow.com/questions/38274115/ios-swift-mapkit-custom-annotation">StackOverflow - Swift MapKit Custom Annotation</a></li>
+  <li><a href="http://www.jianshu.com/p/42479a0e8ac6">iOS解决方案：多个scrollview联动</a></li>
+  <li><a href="https://github.com/dzenbot/DZNEmptyDataSet">DZNEmptyDataSet-Github</a></li>
+  <li><a href="https://github.com/CoderMJLee/MJRefresh">MJRefresh-Github</a></li>
+  <li><a href="https://stackoverflow.com/questions/26407149/uicollectionview-section-header-crashing-ios-8">UICollectionView section header crashing iOS 8</a></li>
+  <li><a href="https://github.com/CSStickyHeaderFlowLayout/CSStickyHeaderFlowLayout/issues/48">Crash on iOS 8 with auto sizing cells enabled</a></li>
+  <li><a href="https://stackoverflow.com/questions/24065014/infinite-loop-of-layoutattributesforelementsinrect">Infinite Loop of layoutAttributesForElementsInRect</a></li>
+</ul>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

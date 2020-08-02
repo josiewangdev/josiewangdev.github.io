@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			数字报道
+		
+	</title>
+	<meta name="description" content="数字报道">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/projects/2015-12-01/new-campus">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>数字报道</h2>
+					<!-- <p>2015.12 - 2016.03</p> -->
+					<span>2015.12</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/projects/2015-12-01/new-campus" class="enabled">中文 </a>|<a href="/en/projects/2015-12-01/new-campus"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="数字报道"><a href="https://itunes.apple.com/cn/app/%E7%BE%9A%E8%B7%91%E4%BD%93%E8%82%B2-%E5%AE%B6%E6%A0%A1%E4%BA%92%E5%8A%A8-%E5%85%B1%E5%90%8C%E6%88%90%E9%95%BF/id1233542475?mt=8">数字报道</a></h2>
+
+<hr />
+
+<p><img src="/images/apps/campuscloud.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="目录">目录</h3>
+
+<hr />
+
+<h4 id="1-概述">1. <a href="#p1">概述</a></h4>
+
+<p>1.1 <a href="#p11">基本信息</a></p>
+
+<p>1.2 <a href="#p12">结构解读</a></p>
+
+<p>1.3 <a href="#p13">第三方框架的使用</a></p>
+
+<hr />
+
+<h4 id="2-开发随笔">2. <a href="#p2">开发随笔</a></h4>
+
+<p>2.1 <a href="#p21">复杂需求逻辑与分析</a></p>
+
+<p>2.2 <a href="#p22">水波纹背景效果实现</a></p>
+
+<p>2.3 <a href="#p23">多列表的联动效果</a></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p1">1. 概述</h3>
+
+<hr />
+
+<p>数字报道是为移动通信运营商与大学校园合作而催生的一款手机端应用。 旨在学生享受在线网上报道功能的同时, 选择合作的移动运营商提供的手机号码与业务套餐。</p>
+
+<p>整个 App 提供的报道功能里包括在线选择宿舍, 购买军训用品, 录入报道信息, 登记到校时间等。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p11">1.1 基本信息</h4>
+</blockquote>
+
+<p>使用语言: <strong>Objective-C</strong></p>
+
+<p>系统要求: <strong>iOS</strong></p>
+
+<p>参与时间: <strong>2015.12 - 2016.03</strong></p>
+
+<p>负责部分:</p>
+
+<ul>
+  <li>自助报道模块</li>
+  <li>校园招聘模块</li>
+  <li>用户登陆、登出</li>
+</ul>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p12">1.2 结构解读</h4>
+</blockquote>
+
+<h4 id="网络层结构">网络层结构</h4>
+
+<p><img src="/images/new_campus/p12.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p13">1.3 第三方框架的使用</h4>
+</blockquote>
+
+<ul>
+  <li><a href="">DZNPhotoPickerController - 相册图片选择、剪裁编辑器</a></li>
+  <li><a href="">SVProgressHUD - 创建prompt</a></li>
+  <li><a href="">SWRevealViewController - 侧边栏菜单</a></li>
+  <li><a href="">MJRefresh - 列表上拉刷新，下拉加载</a></li>
+  <li><a href="">Masonry - 使用纯代码方案解决屏幕大小自适应问题</a></li>
+  <li><a href="">XLForm - 创建动态表单的框架</a></li>
+  <li><a href="">AFNetworking - 网络层</a></li>
+  <li><a href="">AFNetworkActivityLogger - 使用AFN时的调试打印工具</a></li>
+  <li><a href="">SDWebImage - 网络加载图片</a></li>
+  <li><a href="">MJExtension - 轻量级的模型与字典、数组等数据结构的转换</a></li>
+  <li><a href="">UICollectionViewLeftAlignedLayout - UICollection View 居左自动布局</a></li>
+  <li><a href="">BlocksKit - 系统方法与组件的一些block封装</a></li>
+  <li><a href="">UMengFeedback - 友盟反馈</a></li>
+  <li><a href="">UMengAnalytics-NO-IDFA - 友盟统计</a></li>
+</ul>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p2">2. 开发随笔</h3>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p21">2.1 复杂需求逻辑与分析</h4>
+</blockquote>
+
+<p>这款应用因与多家高校合作, 但不同的高校有不同的报道流程, 所以需要根据每所学校在后台配置的流程来展示不同的报道流程页面。</p>
+
+<p>所以在前端实现时, 所有的页面顺序是不固定的, 相比固定流程的页面, 需求复杂度就大幅上升了。</p>
+
+<p><img src="/images/new_campus/dynamic_flow.jpg" alt="img" /></p>
+
+<p>根据需求, 大概确定开放框架。</p>
+
+<p><img src="/images/new_campus/hierarchy.jpg" alt="img" /></p>
+
+<table>
+  <tbody>
+    <tr>
+      <td><img src="/images/new_campus/p21_1.jpg" alt="img" /></td>
+      <td><img src="/images/new_campus/p21_2.jpg" alt="img" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p22">2. 水波纹背景效果实现</h4>
+</blockquote>
+
+<p>项目中, 有个需求为下图中所示的水波纹效果作为背景, 并且需要有动态化的动画效果, 因此不能使用UI给的静态图片直接作为背景, 而是使用代码绘制。</p>
+
+<p><img src="/images/new_campus/water_wave.jpg" alt="img" /></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  WaterWaveView.h</span>
+
+<span class="k">@interface</span> <span class="nc">WaterWaveView</span> <span class="p">:</span> <span class="nc">UIView</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithWaterWaveColor</span><span class="p">:(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nv">color</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">WaterWaveView</span><span class="p">()</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIColor</span> <span class="o">*</span><span class="n">waveColor</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">paraA</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">paraB</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">startY</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">BOOL</span> <span class="n">reverse</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">WaterWaveView</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithWaterWaveColor</span><span class="p">:(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nv">color</span><span class="p">{</span>
+    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">waveColor</span> <span class="o">=</span> <span class="n">color</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">paraA</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">paraB</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">NSTimer</span> <span class="nf">scheduledTimerWithTimeInterval</span><span class="p">:</span><span class="mi">0</span><span class="p">.</span><span class="mo">02</span> <span class="nf">target</span><span class="p">:</span><span class="n">self</span> <span class="n">selector</span><span class="o">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">createWaveMotion</span><span class="p">)</span> <span class="n">userInfo</span><span class="o">:</span><span class="nb">nil</span> <span class="n">repeats</span><span class="o">:</span><span class="nb">YES</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">layoutSubviews</span><span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nf">layoutSubviews</span><span class="p">];</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">startY</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">bounds</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">createWaveMotion</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">reverse</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">paraA</span> <span class="o">-=</span> <span class="mi">0</span><span class="p">.</span><span class="mo">01</span><span class="p">;</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">paraB</span> <span class="o">+=</span> <span class="mi">0</span><span class="p">.</span><span class="mo">01</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">paraA</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+    <span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">paraA</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">3</span><span class="p">){</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">reverse</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="n">self</span><span class="p">.</span><span class="n">paraB</span> <span class="o">+=</span> <span class="mi">0</span><span class="p">.</span><span class="mo">03</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">setNeedsDisplay</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="c1">// Only override drawRect: if you perform custom drawing.</span>
+<span class="c1">// An empty implementation adversely affects performance during animation.</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">drawRect</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">rect</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">drawWaterWaveWithColor</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">waveColor</span> <span class="nf">alpha</span><span class="p">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">14</span> <span class="n">waveHeightParameter</span><span class="o">:</span><span class="n">self</span><span class="p">.</span><span class="n">paraA</span><span class="o">*</span><span class="mi">3</span> <span class="n">waveLengthParameter</span><span class="o">:</span><span class="n">self</span><span class="p">.</span><span class="n">paraB</span> <span class="n">inRect</span><span class="o">:</span><span class="n">rect</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">drawWaterWaveWithColor</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">waveColor</span> <span class="nf">alpha</span><span class="p">:</span><span class="mi">0</span><span class="p">.</span><span class="mi">08</span> <span class="n">waveHeightParameter</span><span class="o">:</span><span class="n">self</span><span class="p">.</span><span class="n">paraA</span> <span class="n">waveLengthParameter</span><span class="o">:</span><span class="n">self</span><span class="p">.</span><span class="n">paraB</span><span class="o">*</span><span class="mi">3</span> <span class="n">inRect</span><span class="o">:</span><span class="n">rect</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">drawWaterWaveWithColor</span><span class="p">:(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="nv">color</span>
+                         <span class="nf">alpha</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">alpha</span>
+           <span class="nf">waveHeightParameter</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">paraHeight</span>
+           <span class="nf">waveLengthParameter</span><span class="p">:(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nv">paraLength</span>
+                         <span class="nf">inRect</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">rect</span><span class="p">{</span>
+    
+    <span class="n">CGContextRef</span> <span class="n">context</span> <span class="o">=</span> <span class="n">UIGraphicsGetCurrentContext</span><span class="p">();</span>
+    <span class="n">CGMutablePathRef</span> <span class="n">path</span> <span class="o">=</span> <span class="n">CGPathCreateMutable</span><span class="p">();</span>
+    
+    <span class="n">CGContextSetLineWidth</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="n">CGContextSetFillColorWithColor</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">color</span><span class="p">.</span><span class="n">CGColor</span><span class="p">);</span>
+    <span class="n">CGContextSetAlpha</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">alpha</span><span class="p">);</span>
+    
+    <span class="kt">float</span> <span class="n">y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">startY</span><span class="p">;</span>
+    <span class="n">CGPathMoveToPoint</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+    <span class="k">for</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="n">DEVICE_WIDTH</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">){</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">paraHeight</span> <span class="o">*</span> <span class="n">sin</span><span class="p">(</span> <span class="n">x</span> <span class="o">*</span> <span class="n">M_PI</span><span class="o">/</span><span class="mi">180</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">paraLength</span><span class="o">/</span><span class="n">M_PI</span> <span class="p">)</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">self</span><span class="p">.</span><span class="n">startY</span><span class="p">;</span>
+        <span class="n">CGPathAddLineToPoint</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">);</span>
+    <span class="p">}</span>
+    
+    <span class="n">CGPathAddLineToPoint</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="n">DEVICE_WIDTH</span><span class="p">,</span> <span class="n">rect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+    <span class="n">CGPathAddLineToPoint</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">rect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+    <span class="n">CGPathAddLineToPoint</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">nil</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">startY</span><span class="p">);</span>
+    
+    <span class="n">CGContextAddPath</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">path</span><span class="p">);</span>
+    <span class="n">CGContextFillPath</span><span class="p">(</span><span class="n">context</span><span class="p">);</span>
+    <span class="n">CGContextDrawPath</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">kCGPathStroke</span><span class="p">);</span>
+    <span class="n">CGPathRelease</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+    
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p23">3. 多列表的联动效果</h4>
+</blockquote>
+
+<p>如图所示, 在 <strong>列表2</strong> 滚动时, 需要实现 <strong>列表1</strong> 联动的效果。</p>
+
+<p><br /></p>
+
+<p><img src="/images/new_campus/p23.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<p>这个需求实现的关键点主要在于滚动视图代理方法中, 正确处理UI的变化。</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#pragma mark - UIScrollViewDelegate
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">scrollViewDidScroll</span><span class="p">:(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="nv">scrollView</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">scrollView</span><span class="p">.</span><span class="n">tag</span> <span class="o">==</span> <span class="n">TagDetail</span> <span class="o">&amp;&amp;</span> <span class="n">self</span><span class="p">.</span><span class="n">isManualScroll</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">NSInteger</span> <span class="n">visibleDetailsSection</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">detailsTableView</span> <span class="nf">indexPathForCell</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">detailsTableView</span><span class="p">.</span><span class="n">visibleCells</span><span class="p">[</span><span class="mi">0</span><span class="p">]].</span><span class="n">section</span><span class="p">;</span>
+        <span class="n">NSIndexPath</span> <span class="o">*</span><span class="n">selectedIndexPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSIndexPath</span> <span class="nf">indexPathForRow</span><span class="p">:</span><span class="n">visibleDetailsSection</span> <span class="nf">inSection</span><span class="p">:</span><span class="mi">0</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">categoryTableView</span> <span class="nf">selectRowAtIndexPath</span><span class="p">:</span><span class="n">selectedIndexPath</span> <span class="nf">animated</span><span class="p">:</span><span class="nb">YES</span> <span class="n">scrollPosition</span><span class="o">:</span><span class="n">UITableViewScrollPositionNone</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">scrollViewWillBeginDragging</span><span class="p">:(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="nv">scrollView</span><span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">isManualScroll</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">scrollViewDidEndDragging</span><span class="p">:(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="nv">scrollView</span> <span class="nf">willDecelerate</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">decelerate</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">decelerate</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">isManualScroll</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

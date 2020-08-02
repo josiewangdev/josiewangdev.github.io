@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			URL
+		
+	</title>
+	<meta name="description" content="URL">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2017-01-03/url">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>URL</h2>
+					<!-- <p></p> -->
+					<span>2017.01</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2017-01-03/url" class="enabled">中文 </a>|<a href="/en/dev/2017-01-03/url"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="url">URL</h2>
+
+<hr />
+
+<h4 id="1-url缓存">1. <a href="#url-cache">URL缓存</a></h4>
+<h4 id="2-从-url-异步下载图片">2. <a href="#download-image-url">从 URL 异步下载图片</a></h4>
+<h4 id="3-从字符串中提取url">3. <a href="#extract-url">从字符串中提取URL</a></h4>
+<h4 id="4-ios-app-常用目录路径">4. <a href="#folders-path">iOS App 常用目录路径</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="url-cache">1. URL缓存</h4>
+</blockquote>
+
+<p><strong>NSURLCache</strong></p>
+
+<p>有时对同一个URL请求多次，返回的数据可能都是一样的，比如服务器上的某张图片，无论下载多少次，返回的数据都是一样的。 为了提高程序的响应速度，可以考虑使用缓存（内存缓存/硬盘缓存）。</p>
+
+<p>在 iOS 中，可以使用 NSURLCache 类缓存数据。</p>
+
+<p>但想实现网络缓存就需要遵循http的缓存协议，就还需要在服务端与客户端进行相应的配置。</p>
+
+<p><br /></p>
+
+<p><strong>Last-Modified</strong></p>
+
+<p>在客户端第一次请求某一个URL时，服务器端的返回状态会是200，内容是你请求的资源，同时返回给你的还有一个 <strong>Last-Modified</strong> 的属性在 HttpReponse Header 中，这个属性来标记此文件在服务期端最后被修改的时间。</p>
+
+<p>当客户端第二次请求此URL时，根据HTTP协议的规定，浏览器会向服务器传送 <strong>If-Modified-Since</strong> 请求报头(HttpRequest Header)，值为时间, 询问该时间之后文件是否有被修改过。</p>
+
+<p>如果服务器端的资源没有变化，则自动返回304状态码，内容为空，这样就节省了传输数据量，当服务器端代码发生改变或者重启服务器时，则重新发出资源，返回和第一次请求时类似，从而保证不向客户端重复发出资源，也保证当服务器有变化时，客户端能够得到最新的资源。</p>
+
+<p><br /></p>
+
+<p><strong>Etag</strong></p>
+
+<p>Etag 的原理与 Last-Modified 类似，只是它们标记文件的形式不同。 Etag 是以内容来计算一个标志，计算方式可以使用md5、SHA1等哈希算法，Last-Modified 直接以时间作标记, 但是能检查到的粒度是秒级的。</p>
+
+<p>如果某些文件<strong>修改非常频繁，比如在秒以下的时间内进行修改</strong>, 或者只是<strong>需要周期性的更改时间，但是他的内容并不改变</strong>，这时就可以使用 <strong>Etag</strong> 来解决 <strong>Last-Modified</strong> 无法解决的一些问题。</p>
+
+<p>在客户端第一次请求某一个URL时，服务器端的返回状态会是200，内容是你请求的资源，同时返回给你的还有一个 <strong>Etag</strong> 的属性在 HttpReponse Header 中。</p>
+
+<p>当客户端第二次请求此URL时，根据HTTP协议的规定，浏览器会向服务器传送 <strong>If-None-Match</strong> 请求报头(HttpRequest Header)，值为之前从服务器请求返回的 <strong>Etag</strong> 值, 询问该时间之后文件是否有被修改过。</p>
+
+<p>如果服务器端的资源没有变化，则自动返回304状态码，<strong>If-None-Match</strong> 为 <strong>False</strong>，当服务器端代码发生改变，则重新发出资源，返回200状态码和新的 Etag，客户端更新此 Etag 以便下次发送这个请求的时候使用。</p>
+
+<p><br /></p>
+
+<p><strong>使用 Etag 实现 URL 缓存示例</strong></p>
+
+<p><strong>1).</strong> 初始化并在 <code class="highlighter-rouge">application:didFinishLaunchingWithOptions:</code> 中设置一个全局的URL缓存, 缓存内存5M、磁盘30M。</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">BOOL</span><span class="p">)</span><span class="nf">application</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">didFinishLaunchingWithOptions</span><span class="p">:(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="p">)</span><span class="nv">launchOptions</span> <span class="p">{</span>
+    <span class="n">NSURLCache</span> <span class="o">*</span><span class="n">URLCache</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSURLCache</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">initWithMemoryCapacity</span><span class="p">:</span><span class="mi">5</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span><span class="mi">1024</span> <span class="nf">diskCapacity</span><span class="p">:</span><span class="mi">30</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span><span class="mi">1024</span> <span class="n">diskPath</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">NSURLCache</span> <span class="nf">setSharedURLCache</span><span class="p">:</span><span class="n">URLCache</span><span class="p">];</span>
+    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>2).</strong> 请求时发送 Etag 并配合缓存使用</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">NSURL</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURL</span> <span class="nf">URLWithString</span><span class="p">:</span><span class="s">@"http://www.baidu.com"</span><span class="p">];</span>
+<span class="n">NSMutableURLRequest</span> <span class="o">*</span><span class="n">mutableRequest</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableURLRequest</span> <span class="nf">requestWithURL</span><span class="p">:</span><span class="n">url</span> <span class="nf">cachePolicy</span><span class="p">:(</span><span class="n">NSURLRequestReloadIgnoringCacheData</span><span class="p">)</span> <span class="n">timeoutInterval</span><span class="o">:</span><span class="mi">15</span><span class="p">.</span><span class="mi">0</span><span class="p">];</span>   
+<span class="c1">//  发送etag</span>
+<span class="n">NSString</span> <span class="o">*</span><span class="n">etag</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSUserDefaults</span> <span class="nf">standardUserDefaults</span><span class="p">]</span><span class="nf">objectForKey</span><span class="p">:</span><span class="s">@"url对应的key值"</span><span class="p">];</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">etag</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">mutableRequest</span> <span class="nf">setValue</span><span class="p">:</span><span class="n">etag</span> <span class="nf">forHTTPHeaderField</span><span class="p">:</span><span class="s">@"If-None-Match"</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="p">[[</span><span class="n">NSURLSession</span> <span class="nf">sharedSession</span><span class="p">]</span><span class="nf">dataTaskWithRequest</span><span class="p">:</span><span class="n">mutableRequest</span> <span class="nf">completionHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSData</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">data</span><span class="p">,</span> <span class="n">NSURLResponse</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">response</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span> <span class="n">_Nullable</span> <span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">NSHTTPURLResponse</span> <span class="o">*</span><span class="n">httpResponse</span> <span class="o">=</span> <span class="p">(</span><span class="n">NSHTTPURLResponse</span> <span class="o">*</span><span class="p">)</span><span class="n">response</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">httpResponse</span><span class="p">.</span><span class="n">statusCode</span> <span class="o">==</span> <span class="mi">304</span><span class="p">)</span> <span class="p">{</span><span class="c1">// 如果是304，使用本地缓存</span>
+        <span class="c1">//  根据请求获取到被缓存的响应</span>
+        <span class="n">NSCachedURLResponse</span> <span class="o">*</span><span class="n">cacheResponse</span> <span class="o">=</span>  <span class="p">[[</span><span class="n">NSURLCache</span> <span class="nf">sharedURLCache</span><span class="p">]</span> <span class="nf">cachedResponseForRequest</span><span class="p">:</span><span class="n">mutableRequest</span><span class="p">];</span>
+        <span class="c1">//  拿到缓存的数据,然后进行页面显示</span>
+        <span class="n">id</span> <span class="n">data</span> <span class="o">=</span> <span class="n">cacheResponse</span><span class="p">.</span><span class="n">data</span><span class="p">;</span>
+    <span class="p">}</span><span class="k">else</span> <span class="p">{</span><span class="c1">//  假设请求成功(200)</span>
+        <span class="c1">//  获取并存储etag</span>
+        <span class="n">NSString</span> <span class="o">*</span><span class="n">etag</span> <span class="o">=</span> <span class="n">httpResponse</span><span class="p">.</span><span class="n">allHeaderFields</span><span class="p">[</span><span class="s">@"Etag"</span><span class="p">];</span>
+        <span class="p">[[</span><span class="n">NSUserDefaults</span> <span class="nf">standardUserDefaults</span><span class="p">]</span><span class="nf">setObject</span><span class="p">:</span><span class="n">etag</span> <span class="nf">forKey</span><span class="p">:</span><span class="s">@"url对应的key值"</span><span class="p">];</span>
+        <span class="c1">//  显示数据</span>
+    <span class="p">}</span>
+
+<span class="p">}];</span>
+</code></pre></div></div>
+
+<p><strong>3).</strong> 定期处理缓存</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  定期处理缓存</span>
+<span class="k">if</span> <span class="p">(</span><span class="err">缓存有效或者没到指定日期</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">request</span><span class="p">.</span><span class="n">cachePolicy</span> <span class="o">=</span> <span class="n">NSURLRequestReturnCacheDataElseLoad</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">//  获得全局的缓存对象</span>
+<span class="n">NSURLCache</span> <span class="o">*</span><span class="n">cache</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLCache</span> <span class="nf">sharedURLCache</span><span class="p">];</span>
+<span class="k">if</span> <span class="p">(</span><span class="err">缓存无效或者超时</span><span class="p">)</span> <span class="p">{</span> 
+    <span class="c1">//  删除此request对应的缓存文件</span>
+    <span class="p">[</span><span class="n">cache</span> <span class="nf">removeCachedResponseForRequest</span><span class="p">:</span><span class="n">request</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="n">NSCachedURLResponse</span> <span class="o">*</span><span class="n">response</span> <span class="o">=</span> <span class="p">[</span><span class="n">cache</span> <span class="nf">cachedResponseForRequest</span><span class="p">:</span><span class="n">request</span><span class="p">];</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"---这个请求已经存在缓存"</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"---这个请求没有缓存"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="download-image-url">2. 从 URL 异步下载图片</h4>
+</blockquote>
+
+<p>写一个 UIImageView 的扩展实现从 URL 异步下载图片</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">UIImageView</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">downloaded</span><span class="p">(</span><span class="n">from</span> <span class="nv">url</span><span class="p">:</span> <span class="kt">URL</span><span class="p">,</span> <span class="n">contentMode</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">UIViewContentMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">scaleAspectFit</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">contentMode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span> <span class="p">{</span> <span class="n">data</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">error</span> <span class="k">in</span>
+            <span class="k">guard</span>
+                <span class="k">let</span> <span class="nv">httpURLResponse</span> <span class="o">=</span> <span class="n">response</span> <span class="k">as?</span> <span class="kt">HTTPURLResponse</span><span class="p">,</span> <span class="n">httpURLResponse</span><span class="o">.</span><span class="n">statusCode</span> <span class="o">==</span> <span class="mi">200</span><span class="p">,</span>
+                <span class="k">let</span> <span class="nv">mimeType</span> <span class="o">=</span> <span class="n">response</span><span class="p">?</span><span class="o">.</span><span class="n">mimeType</span><span class="p">,</span> <span class="n">mimeType</span><span class="o">.</span><span class="nf">hasPrefix</span><span class="p">(</span><span class="s">"image"</span><span class="p">),</span>
+                <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span> <span class="n">error</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">,</span>
+                <span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+                <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+            <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="nf">async</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
+            <span class="p">}</span>
+        <span class="p">}</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">downloaded</span><span class="p">(</span><span class="n">from</span> <span class="nv">link</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">contentMode</span> <span class="nv">mode</span><span class="p">:</span> <span class="kt">UIViewContentMode</span> <span class="o">=</span> <span class="o">.</span><span class="n">scaleAspectFit</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="n">link</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+        <span class="nf">downloaded</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span> <span class="nv">contentMode</span><span class="p">:</span> <span class="n">mode</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>使用的时候直接调用</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">imageView</span><span class="o">.</span><span class="nf">downloaded</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="s">"https:/....jpg"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="extract-url">3. 从字符串中提取URL</h4>
+</blockquote>
+
+<p>使用 <code class="highlighter-rouge">NSDataDetector</code> 从一个包含URL的字符串中将URL提取出来。</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">NSString</span> <span class="o">*</span><span class="n">string</span> <span class="o">=</span> <span class="s">@"This is a sample of a http://abc.com/efg.php?abcdefg"</span><span class="p">;</span> 
+<span class="n">NSDataDetector</span> <span class="o">*</span><span class="n">linkDetector</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDataDetector</span> <span class="nf">dataDetectorWithTypes</span><span class="p">:</span><span class="n">NSTextCheckingTypeLink</span> <span class="nf">error</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span> 
+<span class="n">NSArray</span> <span class="o">*</span><span class="n">matches</span> <span class="o">=</span> <span class="p">[</span><span class="n">linkDetector</span> <span class="nf">matchesInString</span><span class="p">:</span><span class="n">string</span> <span class="nf">options</span><span class="p">:</span><span class="mi">0</span> <span class="n">range</span><span class="o">:</span><span class="n">NSMakeRange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">string</span> <span class="nf">length</span><span class="p">])];</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">NSTextCheckingResult</span> <span class="o">*</span><span class="n">match</span> <span class="k">in</span> <span class="n">matches</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">([</span><span class="n">match</span> <span class="nf">resultType</span><span class="p">]</span> <span class="o">==</span> <span class="n">NSTextCheckingTypeLink</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">matchingString</span> <span class="o">=</span> <span class="p">[</span><span class="n">match</span> <span class="nf">description</span><span class="p">];</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"found URL: %@"</span><span class="p">,</span> <span class="n">matchingString</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="folders-path">4. iOS App 常用目录路径</h4>
+</blockquote>
+
+<p><strong>文档目录路径</strong></p>
+
+<p>Document directory path ：应用中用户数据可以放在这里，iTunes备份和恢复的时候会包括此目录</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">documentPath</span> <span class="o">=</span> <span class="kt">NSSearchPathForDirectoriesInDomains</span><span class="p">(</span><span class="kt">NSSearchPathDirectory</span><span class="o">.</span><span class="kt">DocumentDirectory</span><span class="p">,</span> <span class="kt">NSSearchPathDomainMask</span><span class="o">.</span><span class="kt">UserDomainMask</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="o">!</span> <span class="k">as</span> <span class="kt">NSString</span>
+</code></pre></div></div>
+
+<p><strong>缓存目录路径</strong></p>
+
+<p>Cache directory path: 存放缓存文件，iTunes不会备份此目录，此目录下文件不会在应用退出删除</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">cachePath</span> <span class="o">=</span> <span class="kt">NSSearchPathForDirectoriesInDomains</span><span class="p">(</span><span class="kt">NSSearchPathDirectory</span><span class="o">.</span><span class="kt">CachesDirectory</span><span class="p">,</span> <span class="kt">NSSearchPathDomainMask</span><span class="o">.</span><span class="kt">UserDomainMask</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span><span class="o">.</span><span class="n">last</span><span class="o">!</span> <span class="k">as</span> <span class="kt">NSString</span>
+</code></pre></div></div>
+
+<p><strong>临时目录路径</strong></p>
+
+<p>Temporary directory path: 存放临时文件，iTunes不会备份和恢复此目录，此目录下文件可能会在应用退出后删除</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">tempPath</span> <span class="o">=</span> <span class="kt">NSTemporaryDirectory</span><span class="p">()</span> <span class="k">as</span> <span class="kt">NSString</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<h4 id="参考链接">参考链接</h4>
+
+<ul>
+  <li><a href="https://www.jianshu.com/p/ebcb0a1823be">来聊聊ios下的url缓存问题</a></li>
+</ul>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

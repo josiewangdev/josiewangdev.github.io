@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			AFNetworking
+		
+	</title>
+	<meta name="description" content="CORE:">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/dev/2015-11-15/afnetworking">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>AFNetworking</h2>
+					<!-- <p></p> -->
+					<span>2015.11</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/dev/2015-11-15/afnetworking">中文 </a>|<a href="/en/dev/2015-11-15/afnetworking" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h3 id="core">CORE:</h3>
+
+<p>AFURLConnectionOperation:一个 NSOperation 实现了NSURLConnection 的代理方法.</p>
+
+<h3 id="http-requests">HTTP Requests:</h3>
+
+<ul>
+  <li>AFHTTPRequestOperation</li>
+</ul>
+
+<p>AFURLConnectionOperation的子类,当request使用的协议为HTTP和HTTPS时,它压缩了用于决定request是否成功的状态码和内容类型.</p>
+
+<ul>
+  <li>AFJSONRequestOperation</li>
+</ul>
+
+<p>AFHTTPRequestOperation的一个子类,用于下载和处理jason response数据.</p>
+
+<ul>
+  <li>AFXMLRequestOperation</li>
+</ul>
+
+<p>AFHTTPRequestOperation的一个子类,用于下载和处理xml response数据.</p>
+
+<ul>
+  <li>AFPropertyListRequestOperation</li>
+</ul>
+
+<p>AFHTTPRequestOperation的一个子类,用于下载和处理property list response数据.</p>
+
+<h3 id="http-client">HTTP CLIENT:</h3>
+
+<ul>
+  <li>AFHTTPClient</li>
+</ul>
+
+<p><strong>捕获一个基于http协议的网络应用程序的公共交流模式包含:</strong></p>
+
+<ul>
+  <li>使用基本的url相关路径来只做request</li>
+  <li>为request自动添加设置http headers.</li>
+  <li>使用http 基础证书或者OAuth来验证request</li>
+  <li>为由client制作的requests管理一个NSOperationQueue</li>
+  <li>从NSDictionary生成一个查询字符串或http bodies.</li>
+  <li>从request中构建多部件</li>
+  <li>自动的解析http response数据为相应的表现数据</li>
+  <li>在网络可达性测试用监控和响应变化.</li>
+</ul>
+
+<h3 id="images">IMAGES</h3>
+
+<ul>
+  <li>AFImageRequestOperation</li>
+</ul>
+
+<p>一个AFHTTPRequestOperation的子类,用于下载和处理图片.</p>
+
+<ul>
+  <li>UIImageView+AFNetworking</li>
+</ul>
+
+<p>添加一些方法到UIImageView中,为了从一个URL中异步加载远程图片</p>
+
+<h3 id="xml-request">XML REQUEST</h3>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">NSURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLRequest</span> <span class="nf">requestWithURL</span><span class="p">:[</span><span class="n">NSURL</span> <span class="nf">URLWithString</span><span class="p">:</span><span class="s">@"http://api.flickr.com/services/rest/?method=flickr.groups.browse&amp;api_key=b6300e17ad3c506e706cb0072175d047&amp;cat_id=34427469792%40N01&amp;format=rest"</span><span class="p">]];</span>
+<span class="n">AFXMLRequestOperation</span> <span class="o">*</span><span class="n">operation</span> <span class="o">=</span> <span class="p">[</span><span class="n">AFXMLRequestOperation</span> <span class="nf">XMLParserRequestOperationWithRequest</span><span class="p">:</span><span class="n">request</span> <span class="nf">success</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSURLRequest</span> <span class="o">*</span><span class="n">request</span><span class="p">,</span> <span class="n">NSHTTPURLResponse</span> <span class="o">*</span><span class="n">response</span><span class="p">,</span> <span class="n">NSXMLParser</span> <span class="o">*</span><span class="n">XMLParser</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">XMLParser</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>	
+    <span class="p">[</span><span class="n">XMLParser</span> <span class="nf">parse</span><span class="p">];</span>
+<span class="p">}</span> <span class="n">failure</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span>	
+<span class="p">[</span><span class="n">operation</span> <span class="nf">start</span><span class="p">];</span></code></pre></figure>
+
+<h3 id="image-request">IMAGE REQUEST</h3>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">UIImageView</span> <span class="o">*</span><span class="n">imageView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIImageView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">100</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">,</span> <span class="mi">100</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">)];</span>
+<span class="p">[</span><span class="n">imageView</span> <span class="nf">setImageWithURL</span><span class="p">:[</span><span class="n">NSURL</span> <span class="nf">URLWithString</span><span class="p">:</span><span class="s">@"http://i.imgur.com/r4uwx.jpg"</span><span class="p">]</span> <span class="nf">placeholderImage</span><span class="p">:[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"placeholder-avatar"</span><span class="p">]];</span></code></pre></figure>
+
+<h3 id="api-client-request">API CLIENT REQUEST</h3>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">[[</span><span class="n">AFGowallaAPIClient</span> <span class="nf">sharedClient</span><span class="p">]</span> <span class="nf">getPath</span><span class="p">:</span><span class="s">@"/spots/9223"</span> <span class="nf">parameters</span><span class="p">:</span><span class="nb">nil</span> <span class="n">success</span><span class="o">:^</span><span class="p">(</span><span class="n">AFHTTPRequestOperation</span> <span class="o">*</span><span class="n">operation</span><span class="p">,</span> <span class="n">id</span> <span class="n">responseObject</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Name: %@"</span><span class="p">,</span> <span class="p">[</span><span class="n">responseObject</span> <span class="nf">valueForKeyPath</span><span class="p">:</span><span class="s">@"name"</span><span class="p">]);</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Address: %@"</span><span class="p">,</span> <span class="p">[</span><span class="n">responseObject</span> <span class="nf">valueForKeyPath</span><span class="p">:</span><span class="s">@"address.street_address"</span><span class="p">]);</span>
+<span class="p">}</span> <span class="n">failure</span><span class="o">:</span><span class="nb">nil</span><span class="p">];</span></code></pre></figure>
+
+<h3 id="file-upload-with-progress-callback">FILE UPLOAD WITH PROGRESS CALLBACK</h3>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">NSURL</span> <span class="o">*</span><span class="n">url</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURL</span> <span class="nf">URLWithString</span><span class="p">:</span><span class="s">@"http://api-base-url.com"</span><span class="p">];</span>
+<span class="n">AFHTTPClient</span> <span class="o">*</span><span class="n">httpClient</span> <span class="o">=</span> <span class="p">[[</span><span class="n">AFHTTPClient</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithBaseURL</span><span class="p">:</span><span class="n">url</span><span class="p">];</span>
+<span class="n">NSData</span> <span class="o">*</span><span class="n">imageData</span> <span class="o">=</span> <span class="n">UIImageJPEGRepresentation</span><span class="p">([</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"avatar.jpg"</span><span class="p">],</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">);</span>
+<span class="n">NSMutableURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">httpClient</span> <span class="nf">multipartFormRequestWithMethod</span><span class="p">:</span><span class="s">@"POST"</span> <span class="nf">path</span><span class="p">:</span><span class="s">@"/upload"</span> <span class="n">parameters</span><span class="o">:</span><span class="nb">nil</span> <span class="n">constructingBodyWithBlock</span><span class="o">:</span> <span class="o">^</span><span class="p">(</span><span class="n">id</span> <span class="o">&lt;</span><span class="n">AFMultipartFormData</span><span class="o">&gt;</span><span class="n">formData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">formData</span> <span class="nf">appendPartWithFileData</span><span class="p">:</span><span class="n">imageData</span> <span class="nf">name</span><span class="p">:</span><span class="s">@"avatar"</span> <span class="n">fileName</span><span class="o">:</span><span class="s">@"avatar.jpg"</span> <span class="n">mimeType</span><span class="o">:</span><span class="s">@"image/jpeg"</span><span class="p">];</span>
+<span class="p">}];</span>
+ 
+<span class="n">AFHTTPRequestOperation</span> <span class="o">*</span><span class="n">operation</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">AFHTTPRequestOperation</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithRequest</span><span class="p">:</span><span class="n">request</span><span class="p">]</span> <span class="nf">autorelease</span><span class="p">];</span>
+<span class="p">[</span><span class="n">operation</span> <span class="nf">setUploadProgressBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSInteger</span> <span class="n">bytesWritten</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">totalBytesWritten</span><span class="p">,</span> <span class="kt">long</span> <span class="kt">long</span> <span class="n">totalBytesExpectedToWrite</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"Sent %lld of %lld bytes"</span><span class="p">,</span> <span class="n">totalBytesWritten</span><span class="p">,</span> <span class="n">totalBytesExpectedToWrite</span><span class="p">);</span>
+<span class="p">}];</span>
+<span class="p">[</span><span class="n">operation</span> <span class="nf">start</span><span class="p">];</span></code></pre></figure>
+
+<h3 id="streaming-request">STREAMING REQUEST</h3>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">NSURLRequest</span> <span class="o">*</span><span class="n">request</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSURLRequest</span> <span class="nf">requestWithURL</span><span class="p">:[</span><span class="n">NSURL</span> <span class="nf">URLWithString</span><span class="p">:</span><span class="s">@"http://localhost:8080/encode"</span><span class="p">]];</span>
+<span class="n">AFHTTPRequestOperation</span> <span class="o">*</span><span class="n">operation</span> <span class="o">=</span> <span class="p">[[[</span><span class="n">AFHTTPRequestOperation</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithRequest</span><span class="p">:</span><span class="n">request</span><span class="p">]</span> <span class="nf">autorelease</span><span class="p">];</span>
+<span class="n">operation</span><span class="p">.</span><span class="n">inputStream</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSInputStream</span> <span class="nf">inputStreamWithFileAtPath</span><span class="p">:[[</span><span class="n">NSBundle</span> <span class="nf">mainBundle</span><span class="p">]</span> <span class="nf">pathForResource</span><span class="p">:</span><span class="s">@"large-image"</span> <span class="nf">ofType</span><span class="p">:</span><span class="s">@"tiff"</span><span class="p">]];</span>
+<span class="n">operation</span><span class="p">.</span><span class="n">outputStream</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSOutputStream</span> <span class="nf">outputStreamToMemory</span><span class="p">];</span>
+<span class="p">[</span><span class="n">operation</span> <span class="nf">start</span><span class="p">];</span></code></pre></figure>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

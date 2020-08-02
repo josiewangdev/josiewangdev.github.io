@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Table View
+		
+	</title>
+	<meta name="description" content="Table View">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/dev/2018-10-21/tableview">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Table View</h2>
+					<!-- <p></p> -->
+					<span>2018.10</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/dev/2018-10-21/tableview">中文 </a>|<a href="/en/dev/2018-10-21/tableview" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="table-view">Table View</h2>
+
+<hr />
+
+<h4 id="1-table-view-section-index">1. <a href="#p1">Table view section index</a></h4>
+<h4 id="2-auto-sized-table-view-header--footer">2. <a href="#p2">Auto sized table view header &amp; footer</a></h4>
+<h4 id="3-delay-the-execution-until-table-view-finish-reloading">3. <a href="#p3">Delay the execution until table view finish reloading</a></h4>
+<h4 id="4-列表中图片加载逻辑的优化">4. <a href="#p4">列表中图片加载逻辑的优化</a></h4>
+<h4 id="5-table-view-cell-swipe-left-actions">5. <a href="#p5">Table view cell swipe-left actions</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p1">1. Table view section index</h4>
+</blockquote>
+
+<p>To implement the section index in table view, just needs simple fuctions as following:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  return the index title for each section</span>
+<span class="kd">func</span> <span class="nf">sectionIndexTitles</span><span class="p">(</span><span class="k">for</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">String</span><span class="p">]?</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">allTitles</span>
+<span class="p">}</span>
+
+<span class="c1">//  return the coressponding section index for each title</span>
+<span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">sectionForSectionIndexTitle</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="n">at</span> <span class="nv">index</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">tpIndex</span><span class="p">:</span><span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">allTitles</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span>
+        <span class="k">if</span> <span class="nv">$0</span> <span class="o">==</span> <span class="n">title</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">tpIndex</span>
+        <span class="p">}</span>
+        <span class="n">tpIndex</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="p">})</span>
+    <span class="k">return</span> <span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p2">2. Auto sized table view header &amp; footer</h4>
+</blockquote>
+
+<p>The table view has a header and footer which allows you to put UI controls above and below the data in your table view.</p>
+
+<p>The problem is that the header and footer do not participate with Auto Layout.The height of the header and footer need to be set manually.</p>
+
+<p>You can set an initial size for your header in Xcode, but that may not work for all phone sizes or situations where you have dynamic content in your header that you hide/show at runtime.</p>
+
+<p>The following functions will resize the header or footer to the proper size based on the Auto Layout constraints.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">sizeHeaderToFit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">headerView</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">tableHeaderView</span> <span class="p">{</span>
+        <span class="n">headerView</span><span class="o">.</span><span class="nf">setNeedsLayout</span><span class="p">()</span>
+        <span class="n">headerView</span><span class="o">.</span><span class="nf">layoutIfNeeded</span><span class="p">()</span>
+        <span class="k">let</span> <span class="nv">height</span> <span class="o">=</span> <span class="n">headerView</span><span class="o">.</span><span class="nf">systemLayoutSizeFitting</span><span class="p">(</span><span class="kt">UILayoutFittingCompressedSize</span><span class="p">)</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">var</span> <span class="nv">frame</span> <span class="o">=</span> <span class="n">headerView</span><span class="o">.</span><span class="n">frame</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="n">headerView</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">tableHeaderView</span> <span class="o">=</span> <span class="n">headerView</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+    
+<span class="kd">func</span> <span class="nf">sizeFooterToFit</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="k">let</span> <span class="nv">footerView</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="n">tableFooterView</span> <span class="p">{</span>
+        <span class="n">footerView</span><span class="o">.</span><span class="nf">setNeedsLayout</span><span class="p">()</span>
+        <span class="n">footerView</span><span class="o">.</span><span class="nf">layoutIfNeeded</span><span class="p">()</span>
+        <span class="k">let</span> <span class="nv">height</span> <span class="o">=</span> <span class="n">footerView</span><span class="o">.</span><span class="nf">systemLayoutSizeFitting</span><span class="p">(</span><span class="kt">UILayoutFittingCompressedSize</span><span class="p">)</span><span class="o">.</span><span class="n">height</span>
+        <span class="k">var</span> <span class="nv">frame</span> <span class="o">=</span> <span class="n">footerView</span><span class="o">.</span><span class="n">frame</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="n">footerView</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">tableFooterView</span> <span class="o">=</span> <span class="n">footerView</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>You can call these functions when your header or footer view content has changed.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">configTableViewHeader</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//  update the table view header content</span>
+    <span class="o">...</span>
+    <span class="nf">sizeHeaderToFit</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p3">3. Delay the execution until table view finish reloading</h4>
+</blockquote>
+
+<p>In the actual project development, it’s a common scenario that we need to wait the table view finishing the reloading or updating then we could do the next step.</p>
+
+<p>There are two solutions:</p>
+
+<p><strong>1).</strong></p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">reloadData</span><span class="p">];</span>
+<span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">layoutIfNeeded</span><span class="p">];</span>
+
+<span class="c1">//reload finish</span>
+<span class="c1">//layoutIfNeeded will force to reload the view and wait the reload finishing</span>
+<span class="o">&lt;</span><span class="err">#</span> <span class="n">write</span> <span class="n">you</span> <span class="n">next</span> <span class="n">step</span> <span class="n">code</span> <span class="n">here</span> <span class="err">#</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p><strong>2).</strong></p>
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">reloadData</span><span class="p">];</span>
+<span class="n">dispatch_sync</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+<span class="c1">//reload finish</span>
+<span class="o">&lt;</span><span class="err">#</span> <span class="n">write</span> <span class="n">you</span> <span class="n">next</span> <span class="n">step</span> <span class="n">code</span> <span class="n">here</span> <span class="err">#</span><span class="o">&gt;</span>
+<span class="p">});</span>
+</code></pre></div></div>
+<hr />
+
+<p><br /></p>
+
+<h4 id="p4">4. 列表中图片加载逻辑的优化</h4>
+
+<p>1). 当用户手动 drag table view 的时候，会加载 cell 中的图片</p>
+
+<p>2). 在用户快速滑动的减速过程中，不加载过程中 cell 中的图片（但文字信息还是会被加载，只是减少减速过程中的网络开销和图片加载的开销）</p>
+
+<p>3). 在减速结束后，加载所有可见 cell 的图片（如果需要的话）</p>
+
+<p>问题 1：</p>
+
+<p>前面提到，刚开始拖动的时候，dragging 为 YES，decelerating 为 NO；decelerate 过程中，dragging 和 decelerating 都为 YES；decelerate 未结束时开始下一次拖动，dragging 和 decelerating 依然都为 YES。所以无法简单通过 table view 的 dragging 和 decelerating 判断是在用户拖动还是减速过程。</p>
+
+<p>解决这个问题很简单，添加一个变量如 userDragging，在 willBeginDragging 中设为 YES，didEndDragging 中设为 NO。那么 tableView: cellForRowAtIndexPath: 方法中，是否 load 图片的逻辑就是：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">self</span><span class="o">.</span><span class="n">userDragging</span> <span class="o">&amp;&amp;</span> <span class="n">tableView</span><span class="o">.</span><span class="n">decelerating</span><span class="p">)</span> <span class="p">{</span>  
+    <span class="n">cell</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">//  code for loading image from network or disk</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>问题 2：</p>
+
+<p>这么做的话，decelerate 结束后，屏幕上的 cell 都是不带图片的，解决这个问题也不难，你需要一个形如 loadImageForVisibleCells 的方法，加载可见 cell 的图片：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="n">loadImageForVisibleCells</span>
+<span class="p">{</span>
+    <span class="kt">NSArray</span> <span class="o">*</span><span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">tableView</span> <span class="n">visibleCells</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">GLImageCell</span> <span class="o">*</span><span class="n">cell</span> <span class="k">in</span> <span class="n">cells</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">NSIndexPath</span> <span class="o">*</span><span class="n">indexPath</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">tableView</span> <span class="nv">indexPathForCell</span><span class="p">:</span><span class="n">cell</span><span class="p">];</span>
+        <span class="p">[</span><span class="k">self</span> <span class="nv">setupCell</span><span class="p">:</span><span class="n">cell</span> <span class="nv">withIndexPath</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>问题 3：</p>
+
+<p>这个问题可能不容易被发现，在减速过程中如果用户开始新的拖动，当前屏幕的 cell 并不会被加载（前文提到的调用顺序问题导致），而且问题 1 的方案并不能解决问题 3，因为这些 cell 已经在屏上，不会再次经过 cellForRowAtIndexPath 方法。虽然不容易发现，但解决很简单，只需要在 scrollViewWillBeginDragging: 方法里也调用一次 loadImageForVisibleCells 即可。</p>
+
+<p><strong>再优化</strong></p>
+
+<p>如果你的 App 只有图片没有文字。配合 SDWebImage，可以再优化了一下这个方法以提升用户体验：</p>
+
+<ul>
+  <li>如果内存中有图片的缓存，减速过程中也会加载该图片</li>
+  <li>如果图片属于 targetContentOffset 能看到的 cell，正常加载，这样一来，快速滚动的最后一屏出来的的过程中，用户就能看到目标区域的图片逐渐加载</li>
+  <li>你可以尝试用类似 fade in 或者 flip 的效果缓解生硬的突然出现（尤其是像只有图片的 App）</li>
+</ul>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">scrollViewWillBeginDragging</span><span class="p">:(</span><span class="kt">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">scrollView</span>
+<span class="p">{</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">targetRect</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>
+    <span class="p">[</span><span class="k">self</span> <span class="n">loadImageForVisibleCells</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">scrollViewWillEndDragging</span><span class="p">:(</span><span class="kt">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">scrollView</span> <span class="nv">withVelocity</span><span class="p">:(</span><span class="kt">CGPoint</span><span class="p">)</span><span class="n">velocity</span> <span class="nv">targetContentOffset</span><span class="p">:(</span><span class="k">inout</span> <span class="kt">CGPoint</span> <span class="o">*</span><span class="p">)</span><span class="n">targetContentOffset</span>
+<span class="p">{</span>
+    <span class="kt">CGRect</span> <span class="n">targetRect</span> <span class="o">=</span> <span class="kt">CGRectMake</span><span class="p">(</span><span class="n">targetContentOffset</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span> <span class="n">targetContentOffset</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">,</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">scrollView</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">);</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">targetRect</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSValue</span> <span class="nv">valueWithCGRect</span><span class="p">:</span><span class="n">targetRect</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="n">void</span><span class="p">)</span><span class="nv">scrollViewDidEndDecelerating</span><span class="p">:(</span><span class="kt">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">scrollView</span>
+<span class="p">{</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">targetRect</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">;</span>
+    <span class="p">[</span><span class="k">self</span> <span class="n">loadImageForVisibleCells</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>是否需要加载图片的逻辑：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BOOL shouldLoadImage = YES;  
+if (self.targetRect &amp;&amp; !CGRectIntersectsRect([self.targetRect CGRectValue], cellFrame)) {  
+    SDImageCache *cache = [manager imageCache];
+    NSString *key = [manager cacheKeyForURL:targetURL];
+    if (![cache imageFromMemoryCacheForKey:key]) {
+        shouldLoadImage = NO;
+    }
+}
+if (shouldLoadImage) {  
+    // load image
+}
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p5">5. Table view cell swipe-left actions</h4>
+</blockquote>
+
+<p><strong>System default style</strong></p>
+
+<p>You can use the delegate function <code class="highlighter-rouge">tableView:commitEditingStyle:forRowAtIndexPath</code> to implement the iOS default swipe actions.</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//ObjC</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">commitEditingStyle</span><span class="p">:(</span><span class="n">UITableViewCellEditingStyle</span><span class="p">)</span><span class="nv">editingStyle</span> <span class="nf">forRowAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">editingStyle</span> <span class="o">==</span> <span class="n">UITableViewCellEditingStyleDelete</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// do the remove action</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// handle other other actions</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Customize swipe-left actions</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">canEditRowAtIndexPath</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">NSIndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="c1">// 要显示自定义的action,cell必须处于编辑状态</span>
+    <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">commitEditingStyle</span> <span class="nv">editingStyle</span><span class="p">:</span> <span class="kt">UITableViewCellEditingStyle</span><span class="p">,</span> <span class="n">forRowAtIndexPath</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">NSIndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 在此处自定义action</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>改变按钮上的文字：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">titleForDeleteConfirmationButtonForRowAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span>
+<span class="p">{</span>    
+    <span class="k">return</span> <span class="s">@"自定义删除"</span><span class="p">;</span>    
+<span class="p">}</span> 
+</code></pre></div></div>
+
+<h4 id="自定义图标实现方法">自定义图标实现方法</h4>
+
+<p><strong>1). 自定义多个左滑菜单选项</strong></p>
+
+<p>如果需要超过一个左滑选项，需要实现代理方法tableView:editActionsForRowAtIndexPath，在里面创建多个UITableViewRowAction：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="c1">// delete action</span>
+    <span class="n">UITableViewRowAction</span> <span class="o">*</span><span class="n">deleteAction</span> <span class="o">=</span> <span class="p">[</span><span class="n">UITableViewRowAction</span> <span class="nf">rowActionWithStyle</span><span class="p">:</span><span class="n">UITableViewRowActionStyleNormal</span> <span class="nf">title</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@"DeleteLabel"</span><span class="p">,</span> <span class="s">@""</span><span class="p">)</span> <span class="n">handler</span><span class="o">:^</span><span class="p">(</span><span class="n">UITableViewRowAction</span> <span class="o">*</span><span class="n">action</span><span class="p">,</span> <span class="n">NSIndexPath</span> <span class="o">*</span><span class="n">indexPath</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">tableView</span> <span class="nf">setEditing</span><span class="p">:</span><span class="nb">NO</span> <span class="nf">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>  <span class="c1">// 这句很重要，退出编辑模式，隐藏左滑菜单</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">removeNotificationAction</span><span class="p">:</span><span class="n">index</span><span class="p">];</span>
+    <span class="p">}];</span>
+    
+    <span class="c1">// read action</span>
+    <span class="c1">// 根据cell当前的状态改变选项文字</span>
+    <span class="n">NSInteger</span> <span class="n">index</span> <span class="o">=</span> <span class="n">indexPath</span><span class="p">.</span><span class="n">section</span><span class="p">;</span> 
+    <span class="n">BOOL</span> <span class="n">isRead</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NotificationManager</span> <span class="nf">instance</span><span class="p">]</span> <span class="nf">read</span><span class="p">:</span><span class="n">index</span><span class="p">];</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">readTitle</span> <span class="o">=</span> <span class="n">isRead</span> <span class="p">?</span> <span class="s">@"Unread"</span> <span class="p">:</span> <span class="s">@"Read"</span><span class="p">;</span>
+
+    <span class="c1">// 创建action</span>
+    <span class="n">UITableViewRowAction</span> <span class="o">*</span><span class="n">readAction</span> <span class="o">=</span> <span class="p">[</span><span class="n">UITableViewRowAction</span> <span class="nf">rowActionWithStyle</span><span class="p">:</span><span class="n">UITableViewRowActionStyleNormal</span> <span class="nf">title</span><span class="p">:</span><span class="n">readTitle</span> <span class="n">handler</span><span class="o">:^</span><span class="p">(</span><span class="n">UITableViewRowAction</span> <span class="o">*</span><span class="n">action</span><span class="p">,</span> <span class="n">NSIndexPath</span> <span class="o">*</span><span class="n">indexPath</span><span class="p">)</span> 
+    <span class="p">{</span>        
+        <span class="p">[</span><span class="n">tableView</span> <span class="nf">setEditing</span><span class="p">:</span><span class="nb">NO</span> <span class="nf">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>  <span class="c1">// 这句很重要，退出编辑模式，隐藏左滑菜单</span>
+        <span class="p">[[</span><span class="n">NotificationManager</span> <span class="nf">instance</span><span class="p">]</span> <span class="nf">setRead</span><span class="p">:</span><span class="o">!</span><span class="n">isRead</span> <span class="nf">index</span><span class="p">:</span><span class="n">index</span><span class="p">];</span>
+    <span class="p">}];</span>
+    
+    <span class="c1">//改变按钮背景颜色</span>
+    <span class="n">deleteAction</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">orangeColor</span><span class="p">];</span>
+    <span class="n">readAction</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">blueColor</span><span class="p">];</span>
+    
+    <span class="k">return</span> <span class="p">@[</span><span class="n">deleteAction</span><span class="p">,</span> <span class="n">readAction</span><span class="p">];</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">editActionsForRowAtIndexPath</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">NSIndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">AnyObject</span><span class="p">]?</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">more</span> <span class="o">=</span> <span class="kt">UITableViewRowAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="kt">Normal</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"More"</span><span class="p">)</span> <span class="p">{</span> <span class="n">action</span><span class="p">,</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"more button tapped"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">more</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="nf">lightGrayColor</span><span class="p">()</span>
+    
+    <span class="k">let</span> <span class="nv">favorite</span> <span class="o">=</span> <span class="kt">UITableViewRowAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="kt">Normal</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"Favorite"</span><span class="p">)</span> <span class="p">{</span> <span class="n">action</span><span class="p">,</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"favorite button tapped"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">favorite</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="nf">orangeColor</span><span class="p">()</span>
+    
+    <span class="k">let</span> <span class="nv">share</span> <span class="o">=</span> <span class="kt">UITableViewRowAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="kt">Normal</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"Share"</span><span class="p">)</span> <span class="p">{</span> <span class="n">action</span><span class="p">,</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="nf">println</span><span class="p">(</span><span class="s">"share button tapped"</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="n">share</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="nf">blueColor</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">[</span><span class="n">share</span><span class="p">,</span> <span class="n">favorite</span><span class="p">,</span> <span class="n">more</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>2). 自定义左滑选项外观</strong></p>
+
+<p>需要遍历UITableView的子视图拿到选项按钮（UIButton）的reference，因为iOS8-10中，左滑选项是UITableViewCell的子视图，而在iOS11中，左滑选项变成了UITableView的子视图。对iOS8-10和iOS11做不同处理：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">IBOutlet</span> <span class="n">UITableView</span> <span class="o">*</span><span class="n">tableView</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">strong</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSIndexPath</span><span class="o">*</span> <span class="n">editingIndexPath</span><span class="p">;</span>  <span class="c1">//当前左滑cell的index，在代理方法中设置</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLayoutSubviews</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLayoutSubviews</span><span class="p">];</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">editingIndexPath</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">configSwipeButtons</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">configSwipeButtons</span>
+<span class="p">{</span>
+    <span class="c1">// 获取选项按钮的reference</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO</span><span class="p">(</span><span class="s">@"11.0"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="c1">// iOS 11层级 (Xcode 9编译): UITableView -&gt; UISwipeActionPullView</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">subview</span> <span class="k">in</span> <span class="n">self</span><span class="p">.</span><span class="n">tableView</span><span class="p">.</span><span class="n">subviews</span><span class="p">)</span>
+        <span class="p">{</span>
+              <span class="k">if</span> <span class="p">([</span><span class="n">subview</span> <span class="nf">isKindOfClass</span><span class="p">:</span><span class="n">NSClassFromString</span><span class="p">(</span><span class="s">@"UISwipeActionPullView"</span><span class="p">)]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">subview</span><span class="p">.</span><span class="n">subviews</span> <span class="nf">count</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span>
+              <span class="p">{</span>
+                   <span class="c1">// 和iOS 10的按钮顺序相反</span>
+                   <span class="n">UIButton</span> <span class="o">*</span><span class="n">deleteButton</span> <span class="o">=</span> <span class="n">subsubview</span><span class="p">.</span><span class="n">subviews</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+                   <span class="n">UIButton</span> <span class="o">*</span><span class="n">readButton</span> <span class="o">=</span> <span class="n">subsubview</span><span class="p">.</span><span class="n">subviews</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+                        
+                   <span class="p">[</span><span class="n">self</span> <span class="nf">configDeleteButton</span><span class="p">:</span><span class="n">deleteButton</span><span class="p">];</span>
+                   <span class="p">[</span><span class="n">self</span> <span class="nf">configReadButton</span><span class="p">:</span><span class="n">readButton</span><span class="p">];</span>
+              <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="c1">// iOS 8-10层级: UITableView -&gt; UITableViewCell -&gt; UITableViewCellDeleteConfirmationView</span>
+        <span class="n">NotificationCell</span> <span class="o">*</span><span class="n">tableCell</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">cellForRowAtIndexPath</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">editingIndexPath</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">subview</span> <span class="k">in</span> <span class="n">tableCell</span><span class="p">.</span><span class="n">subviews</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">([</span><span class="n">subview</span> <span class="nf">isKindOfClass</span><span class="p">:</span><span class="n">NSClassFromString</span><span class="p">(</span><span class="s">@"UITableViewCellDeleteConfirmationView"</span><span class="p">)]</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">subview</span><span class="p">.</span><span class="n">subviews</span> <span class="nf">count</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">UIButton</span> <span class="o">*</span><span class="n">deleteButton</span> <span class="o">=</span> <span class="n">subview</span><span class="p">.</span><span class="n">subviews</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+                <span class="n">UIButton</span> <span class="o">*</span><span class="n">readButton</span> <span class="o">=</span> <span class="n">subview</span><span class="p">.</span><span class="n">subviews</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+                
+                <span class="p">[</span><span class="n">self</span> <span class="nf">configDeleteButton</span><span class="p">:</span><span class="n">deleteButton</span><span class="p">];</span>
+                <span class="p">[</span><span class="n">self</span> <span class="nf">configReadButton</span><span class="p">:</span><span class="n">readButton</span><span class="p">];</span>
+                <span class="p">[</span><span class="n">subview</span> <span class="nf">setBackgroundColor</span><span class="p">:[[</span><span class="n">ColorUtil</span> <span class="nf">instance</span><span class="p">]</span> <span class="nf">colorWithHexString</span><span class="p">:</span><span class="s">@"E5E8E8"</span><span class="p">]];</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="p">[</span><span class="n">self</span> <span class="nf">configDeleteButton</span><span class="p">:</span><span class="n">deleteButton</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">configReadButton</span><span class="p">:</span><span class="n">readButton</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">willBeginEditingRowAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span>
+<span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">editingIndexPath</span> <span class="o">=</span> <span class="n">indexPath</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">setNeedsLayout</span><span class="p">];</span>   <span class="c1">// 触发-(void)viewDidLayoutSubviews</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">didEndEditingRowAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span>
+<span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">editingIndexPath</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">configDeleteButton</span><span class="p">:(</span><span class="n">UIButton</span><span class="o">*</span><span class="p">)</span><span class="nv">deleteButton</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">deleteButton</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">deleteButton</span><span class="p">.</span><span class="n">titleLabel</span> <span class="nf">setFont</span><span class="p">:[</span><span class="n">UIFont</span> <span class="nf">fontWithName</span><span class="p">:</span><span class="s">@"SFUIText-Regular"</span> <span class="nf">size</span><span class="p">:</span><span class="mi">12</span><span class="p">.</span><span class="mi">0</span><span class="p">]];</span>
+        <span class="p">[</span><span class="n">deleteButton</span> <span class="nf">setTitleColor</span><span class="p">:[[</span><span class="n">ColorUtil</span> <span class="nf">instance</span><span class="p">]</span> <span class="nf">colorWithHexString</span><span class="p">:</span><span class="s">@"D0021B"</span><span class="p">]</span> <span class="nf">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">deleteButton</span> <span class="nf">setImage</span><span class="p">:[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"Delete_icon_.png"</span><span class="p">]</span> <span class="nf">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">deleteButton</span> <span class="nf">setBackgroundColor</span><span class="p">:[[</span><span class="n">ColorUtil</span> <span class="nf">instance</span><span class="p">]</span> <span class="nf">colorWithHexString</span><span class="p">:</span><span class="s">@"E5E8E8"</span><span class="p">]];</span>
+        <span class="c1">// 调整按钮上图片和文字的相对位置（该方法的实现在下面）</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">centerImageAndTextOnButton</span><span class="p">:</span><span class="n">deleteButton</span><span class="p">];</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">configReadButton</span><span class="p">:(</span><span class="n">UIButton</span><span class="o">*</span><span class="p">)</span><span class="nv">readButton</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">readButton</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">readButton</span><span class="p">.</span><span class="n">titleLabel</span> <span class="nf">setFont</span><span class="p">:[</span><span class="n">UIFont</span> <span class="nf">fontWithName</span><span class="p">:</span><span class="s">@"SFUIText-Regular"</span> <span class="nf">size</span><span class="p">:</span><span class="mi">12</span><span class="p">.</span><span class="mi">0</span><span class="p">]];</span>
+        <span class="p">[</span><span class="n">readButton</span> <span class="nf">setTitleColor</span><span class="p">:[[</span><span class="n">ColorUtil</span> <span class="nf">instance</span><span class="p">]</span> <span class="nf">colorWithHexString</span><span class="p">:</span><span class="s">@"4A90E2"</span><span class="p">]</span> <span class="nf">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+        <span class="c1">// 根据当前状态选择不同图片</span>
+        <span class="n">BOOL</span> <span class="n">isRead</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NotificationManager</span> <span class="nf">instance</span><span class="p">]</span> <span class="nf">read</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">editingIndexPath</span><span class="p">.</span><span class="n">row</span><span class="p">];</span>
+        <span class="n">UIImage</span> <span class="o">*</span><span class="n">readButtonImage</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span> <span class="n">isRead</span> <span class="p">?</span> <span class="s">@"Mark_as_unread_icon_.png"</span> <span class="p">:</span> <span class="s">@"Mark_as_read_icon_.png"</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">readButton</span> <span class="nf">setImage</span><span class="p">:</span><span class="n">readButtonImage</span> <span class="nf">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+
+        <span class="p">[</span><span class="n">readButton</span> <span class="nf">setBackgroundColor</span><span class="p">:[[</span><span class="n">ColorUtil</span> <span class="nf">instance</span><span class="p">]</span> <span class="nf">colorWithHexString</span><span class="p">:</span><span class="s">@"E5E8E8"</span><span class="p">]];</span>
+        <span class="c1">// 调整按钮上图片和文字的相对位置（该方法的实现在下面）</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">centerImageAndTextOnButton</span><span class="p">:</span><span class="n">readButton</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">centerImageAndTextOnButton</span><span class="p">:(</span><span class="n">UIButton</span><span class="o">*</span><span class="p">)</span><span class="nv">button</span>
+<span class="p">{</span>
+    <span class="c1">// this is to center the image and text on button.</span>
+    <span class="c1">// the space between the image and text</span>
+    <span class="n">CGFloat</span> <span class="n">spacing</span> <span class="o">=</span> <span class="mi">35</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+    
+    <span class="c1">// lower the text and push it left so it appears centered below the image</span>
+    <span class="n">CGSize</span> <span class="n">imageSize</span> <span class="o">=</span> <span class="n">button</span><span class="p">.</span><span class="n">imageView</span><span class="p">.</span><span class="n">image</span><span class="p">.</span><span class="n">size</span><span class="p">;</span>
+    <span class="n">button</span><span class="p">.</span><span class="n">titleEdgeInsets</span> <span class="o">=</span> <span class="n">UIEdgeInsetsMake</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span> <span class="n">imageSize</span><span class="p">.</span><span class="n">width</span><span class="p">,</span> <span class="o">-</span> <span class="p">(</span><span class="n">imageSize</span><span class="p">.</span><span class="n">height</span> <span class="o">+</span> <span class="n">spacing</span><span class="p">),</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+    
+    <span class="c1">// raise the image and push it right so it appears centered above the text</span>
+    <span class="n">CGSize</span> <span class="n">titleSize</span> <span class="o">=</span> <span class="p">[</span><span class="n">button</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">text</span> <span class="nf">sizeWithAttributes</span><span class="p">:@{</span><span class="n">NSFontAttributeName</span><span class="o">:</span> <span class="n">button</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">font</span><span class="p">}];</span>
+    <span class="n">button</span><span class="p">.</span><span class="n">imageEdgeInsets</span> <span class="o">=</span> <span class="n">UIEdgeInsetsMake</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">titleSize</span><span class="p">.</span><span class="n">height</span> <span class="o">+</span> <span class="n">spacing</span><span class="p">),</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span> <span class="n">titleSize</span><span class="p">.</span><span class="n">width</span><span class="p">);</span>
+    
+    <span class="c1">// increase the content height to avoid clipping</span>
+    <span class="n">CGFloat</span> <span class="n">edgeOffset</span> <span class="o">=</span> <span class="p">(</span><span class="n">titleSize</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">imageSize</span><span class="p">.</span><span class="n">height</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+    <span class="n">button</span><span class="p">.</span><span class="n">contentEdgeInsets</span> <span class="o">=</span> <span class="n">UIEdgeInsetsMake</span><span class="p">(</span><span class="n">edgeOffset</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">edgeOffset</span><span class="p">,</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+    
+    <span class="c1">// move whole button down, apple placed the button too high in iOS 10</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">SYSTEM_VERSION_LESS_THAN</span><span class="p">(</span><span class="s">@"11.0"</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="n">CGRect</span> <span class="n">btnFrame</span> <span class="o">=</span> <span class="n">button</span><span class="p">.</span><span class="n">frame</span><span class="p">;</span>
+        <span class="n">btnFrame</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+        <span class="n">button</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">btnFrame</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+<h4 id="reference-links">Reference links</h4>
+
+<ul>
+  <li><a href="https://www.jianshu.com/p/779f36c21632">UITableView左滑删除自定义 - 实现多选项并使用自定义图片</a></li>
+  <li><a href="https://spin.atomicobject.com/2017/08/11/swift-extending-uitableviewcontroller/">Extending UITableViewController</a></li>
+</ul>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

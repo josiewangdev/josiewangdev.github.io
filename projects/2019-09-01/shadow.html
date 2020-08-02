@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Shadow
+		
+	</title>
+	<meta name="description" content="Shadow">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/projects/2019-09-01/shadow">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Shadow</h2>
+					<!-- <p>2019.09 - 2019.12</p> -->
+					<span>2019.09</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/projects/2019-09-01/shadow" class="enabled">中文 </a>|<a href="/en/projects/2019-09-01/shadow"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="shadow"><a href="https://testflight.apple.com/join/wezq1OC4">Shadow</a></h2>
+
+<hr />
+
+<p><img src="/images/apps/shadow.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="目录">目录</h3>
+
+<hr />
+
+<h4 id="1-概述">1. <a href="#p1">概述</a></h4>
+
+<p>1.1 <a href="#p11">基本信息</a></p>
+
+<p>1.2 <a href="#p12">结构解读</a></p>
+
+<p>1.3 <a href="#p13">第三方框架的使用</a></p>
+
+<hr />
+
+<h4 id="2-开发随笔">2. <a href="#p2">开发随笔</a></h4>
+
+<p>2.1 <a href="#p21">在 Flutter 中调用 iOS 原生端代码</a></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p1">1. 概述</h3>
+
+<hr />
+
+<p>Shadow 是一款录音记录软件, 类似于录音记事本, 但是记录的内容为梦境以及情绪。</p>
+
+<p>Shadow 这个项目也是我参与的第一个 Flutter 项目, 但我的主要任务仍旧是负责 iOS 端插件的编写, 用源生 iOS 端语言编写好录音播放功能模块, 用 Flutter 语言再编写好对外提供的接口, 以供 Flutter 开发人员使用。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p11">1.1 基本信息</h4>
+</blockquote>
+
+<p>使用语言: <strong>Flutter</strong></p>
+
+<p>系统要求: <strong>iOS / Android</strong></p>
+
+<p>参与时间: <strong>2019.09 - 2019.12</strong></p>
+
+<p>负责部分:</p>
+
+<ul>
+  <li>iOS 端录音播放功能插件</li>
+  <li>登录页面</li>
+  <li>录音列表展示页</li>
+</ul>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p12">1.2 结构解读</h4>
+</blockquote>
+
+<p><img src="/images/shadow/p12.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p13">1.3 第三方框架的使用</h4>
+</blockquote>
+
+<ul>
+  <li><a href="">firebase_analytics - firebase 数据分析</a></li>
+  <li><a href="">firebase_crashlytics - firebase 崩溃监测</a></li>
+  <li><a href="">firebase_messaging - firebase 通知</a></li>
+  <li><a href="">firebase_performance - firebase 性能分析</a></li>
+</ul>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p2">2. 开发随笔</h3>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p21">2.1 在 Flutter 中调用 iOS 原生端代码</h4>
+</blockquote>
+
+<p>在 Flutter 中调用 iOS 源生端代码, 需要在 iOS 端与 Flutter 端建立通道, 两端都对在通道内接受到的消息作出处理, 就能实现相互之间的通信, 即方法调用。</p>
+
+<p><br /></p>
+
+<p><strong>1).</strong> 在 Flutter 端建立的通道 MethodChannel 以及在 Flutter 端收到从 iOS 端发送过来的消息的处理器 Handler, 以 <strong>play</strong> 和 <strong>stop</strong> 方法在两端的相互通信举例:</p>
+
+<div class="language-dart highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  flutter_audio_player.dart</span>
+
+<span class="kt">enum</span> <span class="n">AudioPlayerState</span> <span class="o">{</span>
+  <span class="n">INITIALIZED</span><span class="o">,</span>
+  <span class="n">STOPPED</span><span class="o">,</span>
+  <span class="n">BUFFERING</span><span class="o">,</span>
+  <span class="n">PLAYING</span><span class="o">,</span>
+  <span class="n">PAUSED</span><span class="o">,</span>
+  <span class="n">COMPLETED</span><span class="o">,</span>
+<span class="o">}</span>
+
+<span class="kd">class</span> <span class="nc">FlutterAudioPlayer</span> <span class="o">{</span>
+  <span class="c1">//  建立通道</span>
+  <span class="kd">static</span> <span class="kd">const</span> <span class="n">_playerChannel</span> <span class="o">=</span> <span class="kd">const</span> <span class="n">MethodChannel</span><span class="o">(</span><span class="s">'flutter_audio_player'</span><span class="o">);</span>
+
+  <span class="c1">//  从通道收到 iOS 端的调起 Flutter 端通讯后的处理器</span>
+  <span class="n">FlutterAudioPlayer</span><span class="o">()</span> <span class="o">{</span>
+    <span class="n">_playerChannel</span><span class="o">.</span><span class="na">setMethodCallHandler</span><span class="o">(</span><span class="n">_audioPlayerStateChange</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="n">AudioPlayerState</span> <span class="n">_state</span> <span class="o">=</span> <span class="n">AudioPlayerState</span><span class="o">.</span><span class="na">STOPPED</span><span class="o">;</span>
+  <span class="n">AudioPlayerState</span> <span class="kd">get</span> <span class="n">state</span> <span class="o">=&gt;</span> <span class="n">_state</span><span class="o">;</span>
+
+  <span class="c1">//  Flutter 端调用 play 后去调起 iOS 端的 play 方法</span>
+  <span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">play</span><span class="o">({</span><span class="kt">int</span> <span class="n">position</span><span class="o">})</span> <span class="n">async</span> <span class="o">=&gt;</span> <span class="n">await</span> <span class="n">_playerChannel</span><span class="o">.</span><span class="na">invokeMethod</span><span class="o">(</span><span class="s">'play'</span><span class="o">,</span> <span class="o">{</span>
+    <span class="s">'position'</span><span class="o">:</span> <span class="n">position</span><span class="o">,</span>
+  <span class="o">});</span>
+
+  <span class="c1">//  Flutter 端调用 stop 后去调起 iOS 端的 stop 方法</span>
+  <span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">stop</span><span class="o">()</span> <span class="n">async</span> <span class="o">=&gt;</span> <span class="n">await</span> <span class="n">_playerChannel</span><span class="o">.</span><span class="na">invokeMethod</span><span class="o">(</span><span class="s">'stop'</span><span class="o">);</span>
+
+  <span class="c1">//  收到从 iOS 端从通道发送过来的信息后, 在 Flutter 端的处理</span>
+  <span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span> <span class="n">_audioPlayerStateChange</span><span class="o">(</span><span class="n">MethodCall</span> <span class="n">call</span><span class="o">)</span> <span class="n">async</span> <span class="o">{</span>
+    <span class="k">switch</span> <span class="o">(</span><span class="n">call</span><span class="o">.</span><span class="na">method</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">case</span> <span class="s">"audio.onStart"</span><span class="o">:</span>
+        <span class="n">_state</span> <span class="o">=</span> <span class="n">AudioPlayerState</span><span class="o">.</span><span class="na">PLAYING</span><span class="o">;</span>
+        <span class="k">break</span><span class="o">;</span>
+      <span class="k">case</span> <span class="s">"audio.onStop"</span><span class="o">:</span>
+        <span class="n">_state</span> <span class="o">=</span> <span class="n">AudioPlayerState</span><span class="o">.</span><span class="na">STOPPED</span><span class="o">;</span>
+        <span class="k">break</span><span class="o">;</span>
+      <span class="k">default</span><span class="o">:</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">ArgumentError</span><span class="o">(</span><span class="s">'Unknown method </span><span class="si">${call.method}</span><span class="s"> '</span><span class="o">);</span>
+    <span class="o">}</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>2).</strong> 在 iOS 端导入 Flutter (Flutter 需要用 Pods 安装), 建立通道以及收到 Flutter 端发送过来后的消息处理</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  AppDelegate.swift</span>
+
+<span class="kd">import</span> <span class="kt">Flutter</span>
+
+<span class="kd">@UIApplicationMain</span>
+<span class="kd">@objc</span> <span class="kd">class</span> <span class="kt">AppDelegate</span><span class="p">:</span> <span class="kt">FlutterAppDelegate</span> <span class="p">{</span>
+    
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">application</span><span class="p">(</span>
+        <span class="n">_</span> <span class="nv">application</span><span class="p">:</span> <span class="kt">UIApplication</span><span class="p">,</span>
+        <span class="n">didFinishLaunchingWithOptions</span> <span class="nv">launchOptions</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIApplicationLaunchOptionsKey</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+        
+        <span class="kt">FirebaseApp</span><span class="o">.</span><span class="nf">configure</span><span class="p">()</span>
+        <span class="kt">GeneratedPluginRegistrant</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span>
+        <span class="nf">registerFlutterAudioPlayerChannel</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">super</span><span class="o">.</span><span class="nf">application</span><span class="p">(</span><span class="n">application</span><span class="p">,</span> <span class="nv">didFinishLaunchingWithOptions</span><span class="p">:</span> <span class="n">launchOptions</span><span class="p">)</span>
+        
+    <span class="p">}</span>
+    
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">registerFlutterAudioPlayerChannel</span><span class="p">()</span> <span class="p">{</span>
+        
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">controller</span> <span class="p">:</span> <span class="kt">FlutterViewController</span> <span class="o">=</span> <span class="n">window</span><span class="p">?</span><span class="o">.</span><span class="n">rootViewController</span> <span class="k">as?</span> <span class="kt">FlutterViewController</span> <span class="p">{</span>
+            
+            <span class="k">let</span> <span class="nv">playerChannel</span> <span class="o">=</span> <span class="kt">FlutterMethodChannel</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"flutter_audio_player"</span><span class="p">,</span>
+                                                     <span class="nv">binaryMessenger</span><span class="p">:</span> <span class="n">controller</span><span class="o">.</span><span class="n">binaryMessenger</span><span class="p">)</span>
+            
+            <span class="n">playerChannel</span><span class="o">.</span><span class="nf">setMethodCallHandler</span><span class="p">({[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="p">(</span><span class="n">call</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span> <span class="k">in</span>
+                <span class="k">switch</span> <span class="n">call</span><span class="o">.</span><span class="n">method</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="s">"play"</span><span class="p">:</span>
+                    <span class="k">var</span> <span class="nv">position</span><span class="p">:</span> <span class="kt">Int</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">if</span> <span class="k">let</span> <span class="nv">params</span> <span class="o">=</span> <span class="n">call</span><span class="o">.</span><span class="n">arguments</span> <span class="k">as?</span> <span class="p">[</span><span class="kt">String</span> <span class="p">:</span> <span class="kt">Any</span><span class="p">]</span> <span class="p">{</span>
+                        <span class="n">position</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s">"position"</span><span class="p">]</span> <span class="k">as?</span> <span class="kt">Int</span> <span class="p">??</span> <span class="mi">0</span>
+                    <span class="p">}</span>
+                    <span class="kt">SwiftFlutterAudioPlayer</span><span class="o">.</span><span class="n">sharedInstance</span><span class="o">.</span><span class="nf">play</span><span class="p">(</span><span class="nv">fromPosition</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">(</span><span class="n">position</span><span class="p">)</span><span class="o">/</span><span class="mf">1000.0</span><span class="p">,</span>
+                                                                <span class="nv">resultCallback</span><span class="p">:</span> <span class="n">result</span><span class="p">)</span>
+                <span class="k">case</span> <span class="s">"stop"</span><span class="p">:</span>
+                    <span class="kt">SwiftFlutterAudioPlayer</span><span class="o">.</span><span class="n">sharedInstance</span><span class="o">.</span><span class="nf">stop</span><span class="p">()</span>
+                    <span class="n">playerChannel</span><span class="o">.</span><span class="nf">invokeMethod</span><span class="p">(</span><span class="s">"audio.onStop"</span><span class="p">,</span> <span class="nv">arguments</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+                    <span class="nf">result</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+   
+                <span class="k">default</span><span class="p">:</span>
+                    <span class="nf">result</span><span class="p">(</span><span class="kt">FlutterMethodNotImplemented</span><span class="p">)</span>
+                    <span class="k">return</span>
+                <span class="p">}</span>
+            <span class="p">})</span>
+        <span class="p">}</span>
+    <span class="p">}</span>    
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  SwiftFlutterAudioPlayer.swift</span>
+
+<span class="kd">import</span> <span class="kt">Flutter</span>
+
+<span class="kd">class</span> <span class="kt">SwiftFlutterAudioPlayer</span><span class="p">:</span> <span class="kt">NSObject</span> <span class="p">{</span>
+    
+    <span class="kd">static</span> <span class="k">let</span> <span class="nv">sharedInstance</span> <span class="o">=</span> <span class="kt">SwiftFlutterAudioPlayer</span><span class="p">()</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">streamAudioPlayer</span><span class="p">:</span> <span class="kt">STKAudioPlayer</span><span class="p">?</span>
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">resultCallback</span><span class="p">:</span> <span class="kt">FlutterResult</span><span class="p">?</span>
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">playResultCallback</span><span class="p">:</span> <span class="kt">FlutterResult</span><span class="p">?</span>
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">currentUrl</span><span class="p">:</span> <span class="kt">URL</span><span class="p">?</span>
+
+    <span class="kd">func</span> <span class="nf">play</span><span class="p">(</span><span class="n">fromPosition</span> <span class="nv">position</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">,</span> <span class="nv">resultCallback</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="kt">FlutterResult</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">self</span><span class="o">.</span><span class="n">playResultCallback</span> <span class="o">=</span> <span class="n">resultCallback</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="n">currentUrl</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">playerState</span><span class="p">:</span> <span class="kt">STKAudioPlayerState</span> <span class="o">=</span> <span class="n">streamAudioPlayer</span><span class="p">?</span><span class="o">.</span><span class="n">state</span> <span class="p">??</span> <span class="kt">STKAudioPlayerState</span><span class="o">.</span><span class="n">disposed</span>
+            <span class="k">switch</span> <span class="n">playerState</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="o">.</span><span class="n">stopped</span><span class="p">,</span> <span class="o">.</span><span class="nv">disposed</span><span class="p">:</span>
+                <span class="nf">setupPlayerAndPlay</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+            <span class="k">case</span> <span class="o">.</span><span class="nv">playing</span><span class="p">:</span>
+                <span class="n">streamAudioPlayer</span><span class="p">?</span><span class="o">.</span><span class="nf">seek</span><span class="p">(</span><span class="nv">toTime</span><span class="p">:</span> <span class="n">position</span><span class="p">)</span>
+            <span class="k">default</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="p">}</span>
+        <span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+            <span class="nf">debugPrint</span><span class="p">(</span><span class="s">"Haven't set any url to play."</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="kd">func</span> <span class="nf">stop</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">streamAudioPlayer</span><span class="p">?</span><span class="o">.</span><span class="nf">stop</span><span class="p">()</span>
+        <span class="n">streamAudioPlayer</span><span class="p">?</span><span class="o">.</span><span class="n">hasBeenStopped</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Objective-C Notes
+		
+	</title>
+	<meta name="description" content="Objective-C Notes">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/dev/2016-08-11/objc-notes">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Objective-C Notes</h2>
+					<!-- <p></p> -->
+					<span>2016.08</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/dev/2016-08-11/objc-notes">中文 </a>|<a href="/en/dev/2016-08-11/objc-notes" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="objective-c-notes">Objective-C Notes</h2>
+
+<hr />
+
+<h4 id="1-singleton">1. <a href="#singleton">Singleton</a></h4>
+<h4 id="2-keyword-__block">2. <a href="#block">Keyword __block</a></h4>
+<h4 id="3-predicate-queries">3. <a href="#predicate">Predicate Queries</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="singleton">1. Singleton</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">+</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">sharedInstance</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="n">ClassName</span> <span class="o">*</span><span class="n">sharedInstance</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+        <span class="n">sharedInstance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ClassName</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="p">});</span>
+    <span class="k">return</span> <span class="n">sharedInstance</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="block">2. Keyword __block</h4>
+</blockquote>
+
+<p>Normally, variables that are used in blocks are copied, thus any modification done to these variables don’t show outside the block.</p>
+
+<p><img src="/images/block/block2.png" alt="block" /></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">char</span> <span class="n">localCharacter</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">aBlock</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">localCharacter</span><span class="p">;</span> <span class="c1">// use localCharacter value but cannot change it</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<p>When they are marked with <code class="highlighter-rouge">__block</code> , the modifications done inside the block are also visible outside of it, because the variables are no longer copied, but directly used as the non-local variables.</p>
+
+<p><img src="/images/block/block1.png" alt="block" /></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__block</span> <span class="kt">char</span> <span class="n">localCharacter</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">aBlock</span><span class="p">)(</span><span class="kt">void</span><span class="p">)</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">localCharacter</span> <span class="o">=</span> <span class="sc">'a'</span><span class="p">;</span> <span class="c1">// could change localCharacter value in enclosing scope</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="predicate">3. Predicate Queries</h4>
+</blockquote>
+
+<p>Using <code class="highlighter-rouge">NSPredicate</code> in Objective-C</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">NSPredicate</span> <span class="o">*</span><span class="n">predicate</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSPredicate</span> <span class="nf">predicateWithFormat</span><span class="p">:</span><span class="s">@"name contains[c] %@"</span><span class="p">,</span> <span class="n">searchText</span><span class="p">];</span>
+</code></pre></div></div>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

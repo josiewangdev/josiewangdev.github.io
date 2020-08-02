@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Collection View
+		
+	</title>
+	<meta name="description" content="Collection View">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/dev/2018-10-19/collectionview">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Collection View</h2>
+					<!-- <p></p> -->
+					<span>2018.10</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/dev/2018-10-19/collectionview">中文 </a>|<a href="/en/dev/2018-10-19/collectionview" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="collection-view">Collection View</h2>
+
+<hr />
+
+<h4 id="1-自定义uicollectionview-layout">1. <a href="#">自定义UICollectionView Layout</a></h4>
+<h4 id="2-sticky-headerfooter-in-collection-view">2. <a href="#">Sticky header/footer in collection view</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="1-自定义uicollectionview-layout-">1. 自定义UICollectionView Layout {#}</h4>
+</blockquote>
+
+<p>自定义UICollectionViewLayout子类CustomCollectionViewLayout</p>
+
+<p>1). 重写prepareLayout，存储布局信息。</p>
+
+<p>2). 基于prepareLayout方法中的布局信息，使用collectionViewContentSize方法返回UICollectionView的内容尺寸。</p>
+
+<p>3). 使用layoutAttributesForElementsInRect返回指定区域cell、Supplementary View和Decoration View的布局属性。</p>
+
+<p>4). 获取对应indexPath的UICollectionViewLayoutAttributes，这个类其实专门用来存储视图的内容，例如frame、size、apha、hidden等等，layout最后会拿着这些frame设置给对应的视图。</p>
+
+<p>5). 存储attributes到二维数组layoutInfoArr当中。</p>
+
+<p>6). 计算出内容尺寸并保存到全局变量contentSize当中。</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">prepareLayout</span><span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nf">prepareLayout</span><span class="p">];</span>
+    <span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">layoutInfoArr</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableArray</span> <span class="nf">array</span><span class="p">];</span>
+    <span class="n">NSInteger</span> <span class="n">maxNumberOfItems</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="c1">//获取UICollectionViewLayoutAttributes布局信息</span>
+    <span class="n">NSInteger</span> <span class="n">numberOfSections</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">collectionView</span> <span class="nf">numberOfSections</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">section</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">section</span> <span class="o">&lt;</span> <span class="n">numberOfSections</span><span class="p">;</span> <span class="n">section</span><span class="o">++</span><span class="p">){</span>
+        <span class="n">NSInteger</span> <span class="n">numberOfItems</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">collectionView</span> <span class="nf">numberOfItemsInSection</span><span class="p">:</span><span class="n">section</span><span class="p">];</span>
+        <span class="n">NSMutableArray</span> <span class="o">*</span><span class="n">subArr</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMutableArray</span> <span class="nf">arrayWithCapacity</span><span class="p">:</span><span class="n">numberOfItems</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">NSInteger</span> <span class="n">item</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">item</span> <span class="o">&lt;</span> <span class="n">numberOfItems</span><span class="p">;</span> <span class="n">item</span><span class="o">++</span><span class="p">){</span>
+            <span class="n">NSIndexPath</span> <span class="o">*</span><span class="n">indexPath</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSIndexPath</span> <span class="nf">indexPathForItem</span><span class="p">:</span><span class="n">item</span> <span class="nf">inSection</span><span class="p">:</span><span class="n">section</span><span class="p">];</span>
+            <span class="n">UICollectionViewLayoutAttributes</span> <span class="o">*</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">layoutAttributesForItemAtIndexPath</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+            <span class="p">[</span><span class="n">subArr</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">attributes</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">maxNumberOfItems</span> <span class="o">&lt;</span> <span class="n">numberOfItems</span><span class="p">){</span>
+            <span class="n">maxNumberOfItems</span> <span class="o">=</span> <span class="n">numberOfItems</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="c1">//添加到二维数组</span>
+        <span class="p">[</span><span class="n">layoutInfoArr</span> <span class="nf">addObject</span><span class="p">:[</span><span class="n">subArr</span> <span class="nf">copy</span><span class="p">]];</span>
+    <span class="p">}</span>
+    <span class="c1">//存储布局信息</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">layoutInfoArr</span> <span class="o">=</span> <span class="p">[</span><span class="n">layoutInfoArr</span> <span class="nf">copy</span><span class="p">];</span>
+    <span class="c1">//保存内容尺寸</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">contentSize</span> <span class="o">=</span> <span class="n">CGSizeMake</span><span class="p">(</span><span class="n">maxNumberOfItems</span><span class="o">*</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">itemSize</span><span class="p">.</span><span class="n">width</span><span class="o">+</span><span class="n">self</span><span class="p">.</span><span class="n">interitemSpacing</span><span class="p">)</span><span class="o">+</span><span class="n">self</span><span class="p">.</span><span class="n">interitemSpacing</span><span class="p">,</span> <span class="n">numberOfSections</span><span class="o">*</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">itemSize</span><span class="p">.</span><span class="n">height</span><span class="o">+</span><span class="n">self</span><span class="p">.</span><span class="n">lineSpacing</span><span class="p">)</span><span class="o">+</span><span class="n">self</span><span class="p">.</span><span class="n">lineSpacing</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>而上面代码中，获取UICollectionViewLayoutAttributes是通过layoutAttributesForItemAtIndexPath方法</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">UICollectionViewLayoutAttributes</span> <span class="o">*</span><span class="p">)</span><span class="nv">layoutAttributesForItemAtIndexPath</span><span class="p">:(</span><span class="kt">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="n">indexPath</span><span class="p">{</span>
+    <span class="kt">UICollectionViewLayoutAttributes</span> <span class="o">*</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="kt">UICollectionViewLayoutAttributes</span> <span class="nv">layoutAttributesForCellWithIndexPath</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+    <span class="c1">//每一组cell为一行</span>
+    <span class="n">attributes</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="kt">CGRectMake</span><span class="p">((</span><span class="k">self</span><span class="o">.</span><span class="n">itemSize</span><span class="o">.</span><span class="n">width</span><span class="o">+</span><span class="k">self</span><span class="o">.</span><span class="n">interitemSpacing</span><span class="p">)</span><span class="o">*</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="o">+</span><span class="k">self</span><span class="o">.</span><span class="n">interitemSpacing</span><span class="p">,</span> <span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">itemSize</span><span class="o">.</span><span class="n">height</span><span class="o">+</span><span class="k">self</span><span class="o">.</span><span class="n">lineSpacing</span><span class="p">)</span><span class="o">*</span><span class="n">indexPath</span><span class="o">.</span><span class="n">section</span><span class="o">+</span><span class="k">self</span><span class="o">.</span><span class="n">lineSpacing</span><span class="p">,</span> <span class="k">self</span><span class="o">.</span><span class="n">itemSize</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="k">self</span><span class="o">.</span><span class="n">itemSize</span><span class="o">.</span><span class="n">height</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">attributes</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>覆写collectionViewContentSize。</p>
+
+<p>collectionViewContentSize返回内容尺寸给UICollectionView。注意这个方法返回的尺寸是给UICollectionView这个继承于UIScrollView的视图作为contentSize，不是UICollectionView的视图尺寸。正是因为这一点，我们自定义layout如果想让它只能横向滑动，只需要将这个size.height设置成collectionView.height就行了。
+这个方法会多次调用，所以最好是在prepareLayout里就计算好。
+在CustomCollectionViewLayout类中，我们只需要返回前面计算好的内容尺寸就行了。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">CGSize</span><span class="p">)</span><span class="n">collectionViewContentSize</span><span class="p">{</span>
+    <span class="k">return</span> <span class="k">self</span><span class="o">.</span><span class="n">contentSize</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>覆写layoutAttributesForElementsInRect方法</p>
+
+<p>此方法需要返回一组UICollectionViewLayoutAttributes类型对象。它代表着在这个指定的区域中，我们需要显示cell、Supplementary View和Decoration View中哪些视图，而这些视图的属性则保存UICollectionViewLayoutAttributes中。
+此方法会多次调用，为了更好的性能，在这个方法当中，我们使用的UICollectionViewLayoutAttributes最好是在prepareLayout已经布局好的信息。</p>
+
+<p>在CustomCollectionViewLayout，我们遍历二维数组，找出了与指定区域有交接的UICollectionViewLayoutAttributes对象放到一个数组中，然后返回。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">layoutAttributesForElementsInRect</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">rect</span><span class="p">{</span>
+    <span class="kt">NSMutableArray</span> <span class="o">*</span><span class="n">layoutAttributesArr</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSMutableArray</span> <span class="n">array</span><span class="p">];</span>
+    <span class="p">[</span><span class="k">self</span><span class="o">.</span><span class="n">layoutInfoArr</span> <span class="nv">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">NSArray</span> <span class="o">*</span><span class="n">array</span><span class="p">,</span> <span class="kt">NSUInteger</span> <span class="n">i</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">array</span> <span class="nv">enumerateObjectsUsingBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="kt">UICollectionViewLayoutAttributes</span> <span class="o">*</span><span class="n">obj</span><span class="p">,</span> <span class="kt">NSUInteger</span> <span class="n">idx</span><span class="p">,</span> <span class="kt">BOOL</span> <span class="o">*</span> <span class="n">_Nonnull</span> <span class="n">stop</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="kt">CGRectIntersectsRect</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="n">rect</span><span class="p">))</span> <span class="p">{</span>
+                <span class="p">[</span><span class="n">layoutAttributesArr</span> <span class="nv">addObject</span><span class="p">:</span><span class="n">obj</span><span class="p">];</span>
+            <span class="p">}</span>
+        <span class="p">}];</span>
+    <span class="p">}];</span>
+    <span class="k">return</span> <span class="n">layoutAttributesArr</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>I modified his code to insure that items are ALWAYS left aligned. I found that if an item ended up on a line by itself, it would be centered by the flow layout. I made the following changes to address this issue.</p>
+
+<p>This situation would only ever occur if you have cells that vary in width, which could result in a layout like the following. The last line always left aligns due to the behavior of UICollectionViewFlowLayout, the issue lies in items that are by themselves in any line but the last one.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">NSArray</span> <span class="o">*</span><span class="p">)</span><span class="nv">layoutAttributesForElementsInRect</span><span class="p">:(</span><span class="kt">CGRect</span><span class="p">)</span><span class="n">rect</span> <span class="p">{</span>
+    <span class="kt">NSArray</span><span class="o">*</span> <span class="n">attributesToReturn</span> <span class="o">=</span> <span class="p">[</span><span class="k">super</span> <span class="nv">layoutAttributesForElementsInRect</span><span class="p">:</span><span class="n">rect</span><span class="p">];</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">UICollectionViewLayoutAttributes</span><span class="o">*</span> <span class="n">attributes</span> <span class="k">in</span> <span class="n">attributesToReturn</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kc">nil</span> <span class="o">==</span> <span class="n">attributes</span><span class="o">.</span><span class="n">representedElementKind</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">NSIndexPath</span><span class="o">*</span> <span class="n">indexPath</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">indexPath</span><span class="p">;</span>
+            <span class="n">attributes</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span> <span class="nv">layoutAttributesForItemAtIndexPath</span><span class="p">:</span><span class="n">indexPath</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">attributesToReturn</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">UICollectionViewLayoutAttributes</span> <span class="o">*</span><span class="p">)</span><span class="nv">layoutAttributesForItemAtIndexPath</span><span class="p">:(</span><span class="kt">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="n">indexPath</span> <span class="p">{</span>
+    <span class="kt">UICollectionViewLayoutAttributes</span><span class="o">*</span> <span class="n">currentItemAttributes</span> <span class="o">=</span>
+    <span class="p">[</span><span class="k">super</span> <span class="nv">layoutAttributesForItemAtIndexPath</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+
+    <span class="kt">UIEdgeInsets</span> <span class="n">sectionInset</span> <span class="o">=</span> <span class="p">[(</span><span class="kt">UICollectionViewFlowLayout</span> <span class="o">*</span><span class="p">)</span><span class="k">self</span><span class="o">.</span><span class="n">collectionView</span><span class="o">.</span><span class="n">collectionViewLayout</span> <span class="n">sectionInset</span><span class="p">];</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">indexPath</span><span class="o">.</span><span class="n">item</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// first item of section</span>
+        <span class="kt">CGRect</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">currentItemAttributes</span><span class="o">.</span><span class="n">frame</span><span class="p">;</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">sectionInset</span><span class="o">.</span><span class="n">left</span><span class="p">;</span> <span class="c1">// first item of the section should always be left aligned</span>
+        <span class="n">currentItemAttributes</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="p">;</span>
+
+        <span class="k">return</span> <span class="n">currentItemAttributes</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">NSIndexPath</span><span class="o">*</span> <span class="n">previousIndexPath</span> <span class="o">=</span> <span class="p">[</span><span class="kt">NSIndexPath</span> <span class="nv">indexPathForItem</span><span class="p">:</span><span class="n">indexPath</span><span class="o">.</span><span class="n">item</span><span class="o">-</span><span class="mi">1</span> <span class="nv">inSection</span><span class="p">:</span><span class="n">indexPath</span><span class="o">.</span><span class="n">section</span><span class="p">];</span>
+    <span class="kt">CGRect</span> <span class="n">previousFrame</span> <span class="o">=</span> <span class="p">[</span><span class="k">self</span> <span class="nv">layoutAttributesForItemAtIndexPath</span><span class="p">:</span><span class="n">previousIndexPath</span><span class="p">]</span><span class="o">.</span><span class="n">frame</span><span class="p">;</span>
+    <span class="kt">CGFloat</span> <span class="n">previousFrameRightPoint</span> <span class="o">=</span> <span class="n">previousFrame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">previousFrame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">kMaxCellSpacing</span><span class="p">;</span>
+
+    <span class="kt">CGRect</span> <span class="n">currentFrame</span> <span class="o">=</span> <span class="n">currentItemAttributes</span><span class="o">.</span><span class="n">frame</span><span class="p">;</span>
+    <span class="kt">CGRect</span> <span class="n">strecthedCurrentFrame</span> <span class="o">=</span> <span class="kt">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span>
+                                              <span class="n">currentFrame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+                                              <span class="k">self</span><span class="o">.</span><span class="n">collectionView</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                                              <span class="n">currentFrame</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="kt">CGRectIntersectsRect</span><span class="p">(</span><span class="n">previousFrame</span><span class="p">,</span> <span class="n">strecthedCurrentFrame</span><span class="p">))</span> <span class="p">{</span> <span class="c1">// if current item is the first item on the line</span>
+        <span class="c1">// the approach here is to take the current frame, left align it to the edge of the view</span>
+        <span class="c1">// then stretch it the width of the collection view, if it intersects with the previous frame then that means it</span>
+        <span class="c1">// is on the same line, otherwise it is on it's own new line</span>
+        <span class="kt">CGRect</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">currentItemAttributes</span><span class="o">.</span><span class="n">frame</span><span class="p">;</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">sectionInset</span><span class="o">.</span><span class="n">left</span><span class="p">;</span> <span class="c1">// first item on the line should always be left aligned</span>
+        <span class="n">currentItemAttributes</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">currentItemAttributes</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">CGRect</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">currentItemAttributes</span><span class="o">.</span><span class="n">frame</span><span class="p">;</span>
+    <span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">previousFrameRightPoint</span><span class="p">;</span>
+    <span class="n">currentItemAttributes</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">frame</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">currentItemAttributes</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The other solutions in here not work properly when the line is composed by only 1 item or are over complicated.</p>
+
+<p>Based on the example given by Ryan, I changed the code to detect a new line by inspecting the Y position of the new element. Very simple and quick in performance.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">LeftAlignedCollectionViewFlowLayout</span><span class="p">:</span> <span class="kt">UICollectionViewFlowLayout</span> <span class="p">{</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="k">in</span> <span class="nv">rect</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">UICollectionViewLayoutAttributes</span><span class="p">]?</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">attributes</span> <span class="o">=</span> <span class="k">super</span><span class="o">.</span><span class="nf">layoutAttributesForElements</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="n">rect</span><span class="p">)</span>
+
+        <span class="k">var</span> <span class="nv">leftMargin</span> <span class="o">=</span> <span class="n">sectionInset</span><span class="o">.</span><span class="n">left</span>
+        <span class="k">var</span> <span class="nv">maxY</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+        <span class="n">attributes</span><span class="p">?</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="n">layoutAttribute</span> <span class="k">in</span>
+            <span class="k">if</span> <span class="n">layoutAttribute</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">&gt;=</span> <span class="n">maxY</span> <span class="p">{</span>
+                <span class="n">leftMargin</span> <span class="o">=</span> <span class="n">sectionInset</span><span class="o">.</span><span class="n">left</span>
+            <span class="p">}</span>
+
+            <span class="n">layoutAttribute</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">leftMargin</span>
+
+            <span class="n">leftMargin</span> <span class="o">+=</span> <span class="n">layoutAttribute</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">width</span> <span class="o">+</span> <span class="n">minimumInteritemSpacing</span>
+            <span class="n">maxY</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="n">layoutAttribute</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">maxY</span> <span class="p">,</span> <span class="n">maxY</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">attributes</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>If you want to have supplementary views keep their size, add the following at the top of the closure in the forEach call:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">guard</span> <span class="n">layoutAttribute</span><span class="o">.</span><span class="n">representedElementCategory</span> <span class="o">==</span> <span class="o">.</span><span class="n">cell</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="2-sticky-headerfooter-in-collection-view-">2. Sticky header/footer in collection view {#}</h4>
+</blockquote>
+
+<p>The <strong>sticky header and footer</strong> was added for <code class="highlighter-rouge">UICollectionView</code> in iOS 9.0, although it’s not enabled by default and only available through following steps.</p>
+
+<p>1). Make your collection view’s <code class="highlighter-rouge">collectionViewLayout</code> property is an instance of <code class="highlighter-rouge">UICollectionViewFlowLayout</code>.</p>
+
+<p>2). Set the flow layout’s <code class="highlighter-rouge">sectionHeadersPinToVisibleBounds</code> property to <code class="highlighter-rouge">true</code>.</p>
+
+<p>3). Similar property to make footers behave the same way: <code class="highlighter-rouge">sectionFootersPinToVisibleBounds</code>.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="k">let</span> <span class="nv">layout</span> <span class="o">=</span> <span class="n">collectionView</span><span class="o">.</span><span class="n">collectionViewLayout</span> <span class="k">as?</span> <span class="kt">UICollectionViewFlowLayout</span> <span class="p">{</span>
+    <span class="n">layout</span><span class="o">.</span><span class="n">sectionHeadersPinToVisibleBounds</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="n">layout</span><span class="o">.</span><span class="n">sectionFootersPinToVisibleBounds</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<h4 id="参考链接">参考链接</h4>
+
+<ul>
+  <li><a href="https://stackoverflow.com/questions/13017257/how-do-you-determine-spacing-between-cells-in-uicollectionview-flowlayout">StackOverflow - How do you determine spacing between cells in UICollectionView flowLayout</a></li>
+  <li><a href="https://github.com/fanpyi/UICollectionViewLeftAlignedLayout-Swift">Github - UICollectionViewLeftAlignedLayout-Swift</a></li>
+  <li><a href="http://www.liuchungui.com/blog/2015/11/06/uicollectionviewzhi-zi-ding-yi-layout/">UICollectionView之自定义Layout</a></li>
+  <li><a href="https://stackoverflow.com/questions/22539979/left-align-cells-in-uicollectionview">StackOverflow - Left Align Cells in UICollectionView</a></li>
+  <li><a href="https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout/1617699-sectionheaderspintovisiblebounds">Apple Doc</a></li>
+</ul>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

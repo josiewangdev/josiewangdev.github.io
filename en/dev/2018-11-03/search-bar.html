@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Search Bar
+		
+	</title>
+	<meta name="description" content="Search Bar">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/dev/2018-11-03/search-bar">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Search Bar</h2>
+					<!-- <p></p> -->
+					<span>2018.11</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/dev/2018-11-03/search-bar">中文 </a>|<a href="/en/dev/2018-11-03/search-bar" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="search-bar">Search Bar</h2>
+
+<hr />
+
+<h4 id="1-customized-searchbar-textfield">1. <a href="#p2">Customized SearchBar TextField</a></h4>
+<h4 id="2-locking-a-uisearchbar-on-the-top">2. <a href="#p2">Locking a UISearchBar on the top</a></h4>
+<h4 id="3-bar-button-item-that-expands-to-a-search-bar">3. <a href="#p3">Bar button item that expands to a search bar</a></h4>
+<h4 id="4-usage-of-uisearchcontroller">4. <a href="#p4">Usage of UISearchController</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p1">1. Customized SearchBar TextField</h4>
+</blockquote>
+
+<p>Use key-value to get the textfield from <code class="highlighter-rouge">UISearchBar</code> subview hierarchy and set its properties as needed like background color, border color, etc.</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">UITextField</span> <span class="o">*</span><span class="n">txfSearchField</span> <span class="o">=</span> <span class="p">[</span><span class="n">searchbar</span> <span class="nf">valueForKey</span><span class="p">:</span><span class="s">@"_searchField"</span><span class="p">];</span>
+<span class="p">[</span><span class="n">txfSearchField</span> <span class="nf">setBackgroundColor</span><span class="p">:[</span><span class="n">UIColor</span> <span class="nf">whiteColor</span><span class="p">]];</span>
+<span class="p">[</span><span class="n">txfSearchField</span> <span class="nf">setLeftView</span><span class="p">:</span><span class="n">UITextFieldViewModeNever</span><span class="p">];</span>
+<span class="p">[</span><span class="n">txfSearchField</span> <span class="nf">setBorderStyle</span><span class="p">:</span><span class="n">UITextBorderStyleRoundedRect</span><span class="p">];</span>
+<span class="n">txfSearchField</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">borderWidth</span> <span class="o">=</span> <span class="mi">8</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">;</span> 
+<span class="n">txfSearchField</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">cornerRadius</span> <span class="o">=</span> <span class="mi">10</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="p">;</span>
+<span class="n">txfSearchField</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">borderColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p2">2. Locking a UISearchBar on the top</h4>
+</blockquote>
+
+<p>Locking a UISearchBar to the top of a UITableView like Game Center.</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">scrollViewDidScroll</span><span class="p">:(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="nv">scrollView</span> 
+<span class="p">{</span>
+    <span class="n">UISearchBar</span> <span class="o">*</span><span class="n">searchBar</span> <span class="o">=</span> <span class="n">searchDisplayController</span><span class="p">.</span><span class="n">searchBar</span><span class="p">;</span>
+    <span class="n">CGRect</span> <span class="n">rect</span> <span class="o">=</span> <span class="n">searchBar</span><span class="p">.</span><span class="n">frame</span><span class="p">;</span>
+    <span class="n">rect</span><span class="p">.</span><span class="n">origin</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">MIN</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">scrollView</span><span class="p">.</span><span class="n">contentOffset</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+    <span class="n">searchBar</span><span class="p">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">rect</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p3">3. Bar button item that expands to a search bar</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ExpandableView</span><span class="p">:</span> <span class="kt">UIView</span> <span class="p">{</span>
+
+    <span class="k">override</span> <span class="nf">init</span><span class="p">(</span><span class="nv">frame</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">frame</span><span class="p">:</span> <span class="n">frame</span><span class="p">)</span>
+        <span class="n">backgroundColor</span> <span class="o">=</span> <span class="o">.</span><span class="n">green</span>
+        <span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="kc">false</span>
+
+    <span class="p">}</span>
+
+    <span class="kd">required</span> <span class="nf">init</span><span class="p">?(</span><span class="n">coder</span> <span class="nv">aDecoder</span><span class="p">:</span> <span class="kt">NSCoder</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">coder</span><span class="p">:</span> <span class="n">aDecoder</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="k">var</span> <span class="nv">intrinsicContentSize</span><span class="p">:</span> <span class="kt">CGSize</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">UILayoutFittingExpandedSize</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+
+    <span class="k">var</span> <span class="nv">leftConstraint</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">!</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+
+        <span class="nf">assert</span><span class="p">(</span><span class="n">navigationController</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">,</span> <span class="s">"This view controller MUST be embedded in a navigation controller."</span><span class="p">)</span>
+
+        <span class="c1">// Expandable area.</span>
+        <span class="k">let</span> <span class="nv">expandableView</span> <span class="o">=</span> <span class="kt">ExpandableView</span><span class="p">()</span>
+        <span class="n">navigationItem</span><span class="o">.</span><span class="n">titleView</span> <span class="o">=</span> <span class="n">expandableView</span>
+
+        <span class="c1">// Search button.</span>
+        <span class="n">navigationItem</span><span class="o">.</span><span class="n">rightBarButtonItem</span> <span class="o">=</span> <span class="kt">UIBarButtonItem</span><span class="p">(</span><span class="nv">barButtonSystemItem</span><span class="p">:</span> <span class="o">.</span><span class="n">search</span><span class="p">,</span> <span class="nv">target</span><span class="p">:</span> <span class="k">self</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">toggle</span><span class="kd">)</span><span class="p">)</span>
+
+        <span class="c1">// Search bar.</span>
+        <span class="k">let</span> <span class="nv">searchBar</span> <span class="o">=</span> <span class="kt">UISearchBar</span><span class="p">()</span>
+        <span class="n">searchBar</span><span class="o">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="n">expandableView</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">searchBar</span><span class="p">)</span>
+        <span class="n">leftConstraint</span> <span class="o">=</span> <span class="n">searchBar</span><span class="o">.</span><span class="n">leftAnchor</span><span class="o">.</span><span class="nf">constraint</span><span class="p">(</span><span class="nv">equalTo</span><span class="p">:</span> <span class="n">expandableView</span><span class="o">.</span><span class="n">leftAnchor</span><span class="p">)</span>
+        <span class="n">leftConstraint</span><span class="o">.</span><span class="n">isActive</span> <span class="o">=</span> <span class="kc">false</span>
+        <span class="n">searchBar</span><span class="o">.</span><span class="n">rightAnchor</span><span class="o">.</span><span class="nf">constraint</span><span class="p">(</span><span class="nv">equalTo</span><span class="p">:</span> <span class="n">expandableView</span><span class="o">.</span><span class="n">rightAnchor</span><span class="p">)</span><span class="o">.</span><span class="n">isActive</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="n">searchBar</span><span class="o">.</span><span class="n">topAnchor</span><span class="o">.</span><span class="nf">constraint</span><span class="p">(</span><span class="nv">equalTo</span><span class="p">:</span> <span class="n">expandableView</span><span class="o">.</span><span class="n">topAnchor</span><span class="p">)</span><span class="o">.</span><span class="n">isActive</span> <span class="o">=</span> <span class="kc">true</span>
+        <span class="n">searchBar</span><span class="o">.</span><span class="n">bottomAnchor</span><span class="o">.</span><span class="nf">constraint</span><span class="p">(</span><span class="nv">equalTo</span><span class="p">:</span> <span class="n">expandableView</span><span class="o">.</span><span class="n">bottomAnchor</span><span class="p">)</span><span class="o">.</span><span class="n">isActive</span> <span class="o">=</span> <span class="kc">true</span>
+    <span class="p">}</span>
+
+    <span class="kd">@objc</span> <span class="kd">func</span> <span class="nf">toggle</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="k">let</span> <span class="nv">isOpen</span> <span class="o">=</span> <span class="n">leftConstraint</span><span class="o">.</span><span class="n">isActive</span> <span class="o">==</span> <span class="kc">true</span>
+
+        <span class="c1">// Inactivating the left constraint closes the expandable header.</span>
+        <span class="n">leftConstraint</span><span class="o">.</span><span class="n">isActive</span> <span class="o">=</span> <span class="n">isOpen</span> <span class="p">?</span> <span class="nv">false</span> <span class="p">:</span> <span class="kc">true</span>
+
+        <span class="c1">// Animate change to visible.</span>
+        <span class="kt">UIView</span><span class="o">.</span><span class="nf">animate</span><span class="p">(</span><span class="nv">withDuration</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">animations</span><span class="p">:</span> <span class="p">{</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">navigationItem</span><span class="o">.</span><span class="n">titleView</span><span class="p">?</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">isOpen</span> <span class="p">?</span> <span class="mi">0</span> <span class="p">:</span> <span class="mi">1</span>
+            <span class="k">self</span><span class="o">.</span><span class="n">navigationItem</span><span class="o">.</span><span class="n">titleView</span><span class="p">?</span><span class="o">.</span><span class="nf">layoutIfNeeded</span><span class="p">()</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p4">4. Usage of UISearchController</h4>
+</blockquote>
+
+<p><strong>1).</strong> 创建用于展示搜索结果的控制器和搜索栏</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  用于展示搜索结果的控制器</span>
+<span class="n">ResultDisplayController</span> <span class="o">*</span><span class="n">result</span> <span class="o">=</span> <span class="p">[[</span><span class="n">ResultDisplayController</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+<span class="c1">//  创建搜索框</span>
+<span class="n">UISearchController</span> <span class="o">*</span><span class="n">search</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UISearchController</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">initWithSearchResultsController</span><span class="p">:</span><span class="n">result</span><span class="p">];</span>
+<span class="n">self</span><span class="p">.</span><span class="n">tableView</span><span class="p">.</span><span class="n">tableHeaderView</span> <span class="o">=</span> <span class="n">search</span><span class="p">.</span><span class="n">searchBar</span><span class="p">;</span>
+<span class="n">search</span><span class="p">.</span><span class="n">searchResultsUpdater</span> <span class="o">=</span> <span class="n">result</span><span class="p">;</span>
+<span class="n">self</span><span class="p">.</span><span class="n">searchController</span> <span class="o">=</span> <span class="n">search</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><strong>2).</strong> 在搜索结果的控制器中去实现 <code class="highlighter-rouge">**UISearchResultsUpdating**</code> 协议</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@interface</span> <span class="nc">ResultDisplayController</span> <span class="p">:</span> <span class="nc">UIViewController</span><span class="o">&lt;</span><span class="n">UISearchResultsUpdating</span><span class="o">&gt;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">@implementation</span> <span class="nc">ResultDisplayController</span>
+
+<span class="cp">#pragma mark - UISearchResultsUpdating
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">updateSearchResultsForSearchController</span><span class="p">:(</span><span class="n">UISearchController</span> <span class="o">*</span><span class="p">)</span><span class="nv">searchController</span> <span class="p">{</span>
+    <span class="c1">//  这里处理过滤数据源的逻辑</span>
+    <span class="n">NSString</span> <span class="o">*</span><span class="n">inputStr</span> <span class="o">=</span> <span class="n">searchController</span><span class="p">.</span><span class="n">searchBar</span><span class="p">.</span><span class="n">text</span> <span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">results</span><span class="p">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">results</span> <span class="nf">removeAllObjects</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="n">str</span> <span class="k">in</span> <span class="n">self</span><span class="p">.</span><span class="n">datas</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">([</span><span class="n">str</span><span class="p">.</span><span class="n">lowercaseString</span> <span class="nf">rangeOfString</span><span class="p">:</span><span class="n">inputStr</span><span class="p">.</span><span class="n">lowercaseString</span><span class="p">].</span><span class="n">location</span> <span class="o">!=</span> <span class="n">NSNotFound</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">results</span> <span class="nf">addObject</span><span class="p">:</span><span class="n">str</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">//  然后刷新表格</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nf">reloadData</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p><strong>Search Scope</strong></p>
+
+<p>The iOS UISearchBar makes it dead easy to add a scope bar so users can change what they’re searching through. 
+In Interface Builder we can add scope titles of search bar. Also we need to adjust our filter function to use the
+ scope. We need to get the current scope from the search bar.</p>
+
+<p>The search should also reload when the scope changes, not just when the search text changes so we’ll have to implement the searchDisplayController:shouldReloadTableForSearchScope: fuction:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#pragma mark - UISearchResultsUpdating</span>
+<span class="kd">func</span> <span class="nf">searchDisplayController</span><span class="p">(</span><span class="nv">controller</span><span class="p">:</span> <span class="kt">UISearchDisplayController</span><span class="o">!</span><span class="p">,</span> <span class="n">shouldReloadTableForSearchString</span> <span class="nv">searchString</span><span class="p">:</span> <span class="kt">String</span><span class="o">!</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+  <span class="k">let</span> <span class="nv">selectedIndex</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">searchBar</span><span class="o">.</span><span class="n">selectedScopeButtonIndex</span>
+  <span class="k">self</span><span class="o">.</span><span class="nf">filterContentForSearchText</span><span class="p">(</span><span class="n">searchString</span><span class="p">,</span> <span class="nv">scope</span><span class="p">:</span> <span class="n">selectedIndex</span><span class="p">)</span>
+  <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">searchDisplayController</span><span class="p">(</span><span class="nv">controller</span><span class="p">:</span> <span class="kt">UISearchDisplayController</span><span class="p">,</span> <span class="n">shouldReloadTableForSearchScope</span> <span class="nv">searchOption</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+  <span class="k">let</span> <span class="nv">searchString</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">searchBar</span><span class="o">.</span><span class="n">text</span>
+  <span class="k">self</span><span class="o">.</span><span class="nf">filterContentForSearchText</span><span class="p">(</span><span class="n">searchString</span><span class="p">,</span> <span class="nv">scope</span><span class="p">:</span><span class="n">searchOption</span><span class="p">)</span>
+  <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Setting Up searchController‘s Parameters</strong></p>
+
+<p><strong>1).</strong> searchResultsUpdater is a property on UISearchController that conforms to the new protocol, UISearchResultsUpdating. With this protocol, UISearchResultsUpdating will inform your class of any text changes within the UISearchBar.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">searchController</span><span class="o">.</span><span class="n">searchResultsUpdater</span> <span class="o">=</span> <span class="k">self</span>
+</code></pre></div></div>
+
+<p><strong>2).</strong> By default, UISearchController obscures the view controller containing the information you’re searching. This is useful if you’re using another view controller for your searchResultsController. In this instance, you’ve set the current view to show the results, so you don’t want to obscure your view.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">searchController</span><span class="o">.</span><span class="n">obscuresBackgroundDuringPresentation</span> <span class="o">=</span> <span class="kc">false</span>
+</code></pre></div></div>
+
+<p><strong>3).</strong> Here, you set the placeholder to something that’s specific to this app.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">searchController</span><span class="o">.</span><span class="n">searchBar</span><span class="o">.</span><span class="n">placeholder</span> <span class="o">=</span> <span class="s">"Search Candies"</span>
+</code></pre></div></div>
+
+<p><strong>4).</strong> New for iOS 11, you add the searchBar to the navigationItem. This is necessary because Interface Builder is not yet compatible with UISearchController.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">navigationItem</span><span class="o">.</span><span class="n">searchController</span> <span class="o">=</span> <span class="n">searchController</span>
+</code></pre></div></div>
+
+<p><strong>5).</strong> Finally, by setting definesPresentationContext on your view controller to true, you ensure that the search bar doesn’t remain on the screen if the user navigates to another view controller while the UISearchController is active.</p>
+
+<p>```swift
+definesPresentationContext = true
+``</p>
+
+<hr />
+
+<p><br /></p>
+
+<h4 id="reference-links">Reference links</h4>
+
+<ul>
+  <li><a href="https://www.jianshu.com/p/aa9a153a5b58">系统UISearchController详解</a></li>
+  <li><a href="https://grokswift.com/swift-tableview-search-bar/">Adding a Search Bar to a Table View in Swift</a></li>
+  <li><a href="https://www.raywenderlich.com/4363809-uisearchcontroller-tutorial-getting-started">UISearchController Tutorial: Getting Started</a></li>
+</ul>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

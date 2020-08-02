@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			口袋校园
+		
+	</title>
+	<meta name="description" content="口袋校园">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/projects/2015-05-01/pocket-campus">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>口袋校园</h2>
+					<!-- <p>2015.05 - 2015.11</p> -->
+					<span>2015.05</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/projects/2015-05-01/pocket-campus" class="enabled">中文 </a>|<a href="/en/projects/2015-05-01/pocket-campus"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="口袋校园"><a href="https://itunes.apple.com/cn/app/kou-dai-xiao-yuan/id993705603?mt=8">口袋校园</a></h2>
+
+<hr />
+
+<p><img src="/images/apps/pocketcampus.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="目录">目录</h3>
+
+<hr />
+
+<h4 id="1-概述">1. <a href="#p1">概述</a></h4>
+
+<p>1.1 <a href="#p11">基本信息</a></p>
+
+<p>1.2 <a href="#p12">结构解读</a></p>
+
+<p>1.3 <a href="#p13">第三方框架的使用</a></p>
+
+<hr />
+
+<h4 id="2-开发随笔">2. <a href="#p2">开发随笔</a></h4>
+
+<p>2.1 <a href="#p21">使用 objc_setAssociatedObject 在运行时下为系统类添加属性</a></p>
+
+<p>2.2 <a href="#p22">使用 Method Swizzling 在运行时重新映射方法</a></p>
+
+<p>2.3 <a href="#p23">绘制当前视图截图</a></p>
+
+<p>2.4 <a href="#p24">使用Eventkit事件库添加日历提醒事项</a></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p1">1. 概述</h3>
+
+<hr />
+
+<p>口袋校园是我参与团队合作开发的一款为大学生提供服务的 App。</p>
+
+<p>其中包括缴纳电费, 查询学生一卡通消费记录, 发布与查看校园招聘, 白条支付等功能。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p11">1.1 基本信息</h4>
+</blockquote>
+
+<p>使用语言: <strong>Objective-C</strong></p>
+
+<p>系统要求: <strong>iOS</strong></p>
+
+<p>参与时间: <strong>2015.05 - 2015.11</strong></p>
+
+<p>负责部分:</p>
+
+<ul>
+  <li>用户登陆、登出</li>
+  <li>个人详情主页</li>
+  <li>校园招聘信息、通知中心</li>
+  <li>白条支付流程、账单详情</li>
+  <li>使用 Ping++ 集成支付宝、微信、银联等支付功能</li>
+</ul>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p12">1.2 结构解读</h4>
+</blockquote>
+
+<h4 id="主要框架">主要框架</h4>
+
+<ul>
+  <li>M – Models
+    <ul>
+      <li>Common models</li>
+      <li>Custom models</li>
+    </ul>
+  </li>
+  <li>V – Views
+    <ul>
+      <li>Common views (like toast view, alert view, cells etc.)</li>
+      <li>Custom views</li>
+    </ul>
+  </li>
+  <li>C – Controllers
+    <ul>
+      <li>Common controllers</li>
+      <li>Custom controllers</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br /></p>
+
+<h4 id="网络层结构">网络层结构</h4>
+
+<p><img src="/images/pocket_campus/p12.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p13">1.3 第三方框架的使用</h4>
+</blockquote>
+
+<ul>
+  <li><a href="">SVProgressHUD - 创建prompt</a></li>
+  <li><a href="">MBProgressHUD - 创建prompt</a></li>
+  <li><a href="">MJRefresh - 列表上拉刷新，下拉加载</a></li>
+  <li><a href="">Masonry - 使用纯代码方案解决屏幕大小自适应问题</a></li>
+  <li><a href="">XLForm - 创建动态表单的框架</a></li>
+  <li><a href="">AFNetworking - 网络层</a></li>
+  <li><a href="">AFNetworkActivityLogger - 使用AFN时的调试打印工具</a></li>
+  <li><a href="">SDWebImage - 网络加载图片</a></li>
+  <li><a href="">MagicalRecord - 使用Core Data做数据库存储的解决方案</a></li>
+  <li><a href="">MJExtension - 轻量级的模型与字典、数组等数据结构的转换</a></li>
+  <li>Pingpp/Alipay - Ping ++ 支付宝组件</li>
+  <li>Pingpp/Wx - Ping ++ 微信支付组件</li>
+  <li>Pingpp/UnionPay - Ping ++ 银联组件</li>
+</ul>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p2">2. 开发随笔</h3>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p21">2.1 使用 objc_setAssociatedObject 在运行时下为系统类关联属性</h4>
+</blockquote>
+
+<p>在 OS X 10.6 之后，Runtime系统让ObjC支持向对象动态添加变量。</p>
+
+<p>涉及到的函数有以下三个, 这些方法以键值对的形式动态地向对象添加、获取或删除关联值。</p>
+
+<div class="language-c highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  添加</span>
+<span class="kt">void</span> <span class="nf">objc_setAssociatedObject</span><span class="p">(</span><span class="n">idobject</span><span class="p">,</span><span class="n">constvoid</span><span class="o">*</span><span class="n">key</span><span class="p">,</span> <span class="n">idvalue</span><span class="p">,</span> <span class="n">objc_AssociationPolicy</span> <span class="n">policy</span><span class="p">);</span>
+<span class="c1">//  获取</span>
+<span class="n">id</span> <span class="nf">objc_getAssociatedObject</span><span class="p">(</span><span class="n">idobject</span><span class="p">,</span><span class="n">constvoid</span><span class="o">*</span><span class="n">key</span><span class="p">);</span>
+<span class="c1">//  删除</span>
+<span class="kt">void</span> <span class="nf">objc_removeAssociatedObjects</span><span class="p">(</span><span class="n">idobject</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>其中 <code class="highlighter-rouge">objc_AssociationPolicy</code> 关联政策是一组枚举常量：</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">OBJC_ASSOCIATION_ASSIGN</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>          <span class="o">&lt;</span><span class="err">指定一个弱引用关联的对象</span><span class="o">&gt;</span>
+<span class="n">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="o">&lt;</span><span class="err">指定一个强引用关联的对象</span><span class="o">&gt;</span>
+<span class="n">OBJC_ASSOCIATION_COPY_NONATOMIC</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>  <span class="o">&lt;</span><span class="err">指定相关的对象复制</span><span class="o">&gt;</span>
+<span class="n">OBJC_ASSOCIATION_RETAIN</span> <span class="o">=</span> <span class="mo">01401</span><span class="p">,</span>      <span class="o">&lt;</span><span class="err">指定强参考</span><span class="o">&gt;</span>
+<span class="n">OBJC_ASSOCIATION_COPY</span> <span class="o">=</span> <span class="mo">01403</span>         <span class="o">&lt;</span><span class="err">指定相关的对象复制</span><span class="o">&gt;</span>
+</code></pre></div></div>
+
+<p>有了这些方法, 可以轻松的解决我们在无法更改某个类源代码的情况下, 却向这个类中添加(实际上是关联)一些自定义的 <strong>property</strong> 。</p>
+
+<p>例如给系统类 <strong>UITextView</strong> 关联 <strong>placeHolder</strong> 与 <strong>placeHolderLabel</strong> 属性 。</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  UITextView+PlaceHolder.h</span>
+<span class="k">@interface</span> <span class="nc">UITextView</span> <span class="p">(</span><span class="nl">PlaceHolder</span><span class="p">)</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">NSAttributedString</span> <span class="o">*</span><span class="n">placeHolder</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">UILabel</span> <span class="o">*</span><span class="n">placeHolderLabel</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  UITextView+PlaceHolder.m</span>
+<span class="cp">#import &lt;objc/runtime.h&gt;
+</span>
+<span class="k">@implementation</span> <span class="nc">UITextView</span> <span class="p">(</span><span class="nl">PlaceHolder</span><span class="p">)</span>
+
+<span class="k">@dynamic</span> <span class="n">placeHolder</span><span class="p">;</span>
+<span class="k">@dynamic</span> <span class="n">placeHolderLabel</span><span class="p">;</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setPlaceHolder</span><span class="p">:(</span><span class="n">NSAttributedString</span> <span class="o">*</span><span class="p">)</span><span class="nv">ph</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">placeHolderLabel</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="n">UILabel</span> <span class="o">*</span><span class="n">placeHolderLabel</span> <span class="o">=</span> <span class="p">[</span><span class="n">UILabel</span> <span class="nf">new</span><span class="p">];</span>
+        <span class="n">placeHolderLabel</span><span class="p">.</span><span class="n">textColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">lightGrayColor</span><span class="p">];</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">placeHolderLabel</span> <span class="o">=</span> <span class="n">placeHolderLabel</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">placeHolderLabel</span><span class="p">];</span>
+        
+        <span class="p">[</span><span class="n">placeHolderLabel</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">).</span><span class="n">offset</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+            <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">).</span><span class="n">offset</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+        <span class="p">}];</span>
+
+    <span class="p">}</span>
+
+    <span class="n">self</span><span class="p">.</span><span class="n">placeHolderLabel</span><span class="p">.</span><span class="n">attributedText</span> <span class="o">=</span> <span class="n">ph</span><span class="p">;</span>
+    <span class="n">objc_setAssociatedObject</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="k">@selector</span><span class="p">(</span><span class="n">placeHolder</span><span class="p">),</span> <span class="n">ph</span><span class="p">,</span> <span class="n">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="n">placeHolder</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">objc_getAssociatedObject</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="k">@selector</span><span class="p">(</span><span class="n">placeHolder</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setPlaceHolderLabel</span><span class="p">:(</span><span class="n">UILabel</span> <span class="o">*</span><span class="p">)</span><span class="nv">phl</span> <span class="p">{</span>
+    <span class="n">objc_setAssociatedObject</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="k">@selector</span><span class="p">(</span><span class="n">placeHolderLabel</span><span class="p">),</span> <span class="n">phl</span><span class="p">,</span> <span class="n">OBJC_ASSOCIATION_RETAIN_NONATOMIC</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UILabel</span> <span class="o">*</span><span class="p">)</span><span class="n">placeHolderLabel</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">objc_getAssociatedObject</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="k">@selector</span><span class="p">(</span><span class="n">placeHolderLabel</span><span class="p">));</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<p>再使用 <strong>UITextView</strong> 时就可以直接调用</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">textView</span><span class="p">.</span><span class="n">placeHolder</span> <span class="o">=</span> <span class="s">@"my place holder"</span><span class="p">;</span>
+<span class="n">textView</span><span class="p">.</span><span class="n">placeHolderLabel</span><span class="p">.</span><span class="n">hidden</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p22">2.2 使用 Method Swizzling 在运行时重新映射方法</h4>
+</blockquote>
+
+<p>使用 Method Swizzling 将系统 <strong>viewDidLoad</strong> 方法映射为我的 <strong>my_viewDidLoad</strong> 方法, 之后可以观察到每当 ViewController 被创建时, 都打印了 <strong>“did load XXX”</strong> 信息, 即方法已经被替换执行了。</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  UIViewController+Swizzle.m</span>
+<span class="cp">#import &lt;objc/runtime.h&gt;
+</span>
+<span class="k">@implementation</span> <span class="nc">UIViewController</span> <span class="p">(</span><span class="nl">Swizzle</span><span class="p">)</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">load</span> <span class="p">{</span>
+    <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+        <span class="n">Method</span> <span class="n">originalMethod</span> <span class="o">=</span> <span class="n">class_getInstanceMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="k">@selector</span><span class="p">(</span><span class="n">viewDidLoad</span><span class="p">));</span>
+        <span class="n">Method</span> <span class="n">targetMethod</span> <span class="o">=</span> <span class="n">class_getInstanceMethod</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">],</span> <span class="k">@selector</span><span class="p">(</span><span class="n">my_viewDidLoad</span><span class="p">));</span>
+        <span class="n">method_exchangeImplementations</span><span class="p">(</span><span class="n">originalMethod</span><span class="p">,</span> <span class="n">targetMethod</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">my_viewDidLoad</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">my_viewDidLoad</span><span class="p">];</span>
+    <span class="n">NSLog</span><span class="p">(</span><span class="s">@"%@ did load"</span><span class="p">,</span> <span class="n">NSStringFromClass</span><span class="p">([</span><span class="n">self</span> <span class="nf">class</span><span class="p">]));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p23">2.3 绘制当前视图截图</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">-</span> <span class="p">(</span><span class="kt">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="n">capture</span> <span class="p">{</span>
+    <span class="kt">UIGraphicsBeginImageContextWithOptions</span><span class="p">(</span><span class="k">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="k">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">opaque</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">);</span>
+    <span class="p">[[</span><span class="kt">UIApplication</span> <span class="n">sharedApplication</span><span class="p">]</span><span class="o">.</span><span class="n">keyWindow</span><span class="o">.</span><span class="n">layer</span> <span class="nv">renderInContext</span><span class="p">:</span><span class="kt">UIGraphicsGetCurrentContext</span><span class="p">()];</span>
+    <span class="kt">UIImage</span> <span class="o">*</span> <span class="n">img</span> <span class="o">=</span> <span class="kt">UIGraphicsGetImageFromCurrentImageContext</span><span class="p">();</span>
+    <span class="kt">UIGraphicsEndImageContext</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">img</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p24">2.4 使用Eventkit事件库添加日历提醒事项</h4>
+</blockquote>
+
+<p>事件提醒开发包（EventKit）由事件库、事件源、日历和事件/提醒组成，他们的关系是：事件库用于直接操作日历数据库，日历数据库中的数据按事件源、日历和事件/提醒三级进行分类组织。</p>
+
+<p>每个事件源对应一个准帐户，该帐户下可以有多个日历，日历分两类，一类是用于存储事件的日历，一类是用于存储提醒的日历。</p>
+
+<p>事件库框架授权访问用户的 Calendar.app 和 Reminders.app 应用的信息。尽管是用两个不同的应用显示用户的日历和提醒数据，但确是同一个框架维护这份数据。同样地，存储这份数据的数据库叫做日历数据库，同时容纳日历和提醒信息。</p>
+
+<p>事件库不但允许你的应用获取用户已经存在的日历及提醒数据，而且它可以让你的应用为任何日历创建新的事件和提醒。另外，事件库让用户可以编辑和删除他们的事件和提醒。更高级的任务，诸如添加闹钟或指定循环事件，也可以使用事件库完成。如果日历数据库有来自你的应用外部的更改发生，事件库可以通过通知监测到，这样你的应用可以做出适当的响应。使用事件库对日历项所做的更改会自动地同步到相关的日历。</p>
+
+<p><br /></p>
+
+<p><strong>创建事件并添加到提醒事项</strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  CalendarAction.h</span>
+
+<span class="k">@interface</span> <span class="nc">CalendarAction</span> <span class="p">:</span> <span class="nc">NSObject</span>
+<span class="k">+</span>  <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">saveEventWithStartDate</span><span class="p">:(</span><span class="n">NSDate</span><span class="o">*</span><span class="p">)</span><span class="nv">startDate</span>
+                        <span class="nf">endDate</span><span class="p">:(</span><span class="n">NSDate</span><span class="o">*</span><span class="p">)</span><span class="nv">endDate</span>
+                          <span class="nf">alarm</span><span class="p">:(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">timeOffset</span>
+                     <span class="nf">eventTitle</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">title</span>
+                  <span class="nf">eventLocation</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">location</span>
+                    <span class="nf">notes</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">notes</span>
+                     <span class="nf">isReminder</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">isReminder</span><span class="p">;</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  CalendarAction.m</span>
+<span class="cp">#import &lt;EventKit/EventKit.h&gt;
+</span>
+<span class="k">@implementation</span> <span class="nc">CalendarAction</span>
+
+<span class="k">+</span>  <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">saveEventWithStartDate</span><span class="p">:(</span><span class="n">NSDate</span><span class="o">*</span><span class="p">)</span><span class="nv">startDate</span>
+                    <span class="nf">endDate</span><span class="p">:(</span><span class="n">NSDate</span><span class="o">*</span><span class="p">)</span><span class="nv">endDate</span>
+                      <span class="nf">alarm</span><span class="p">:(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">timeOffset</span>
+                 <span class="nf">eventTitle</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">title</span>
+                  <span class="nf">eventLocation</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">location</span>
+                    <span class="nf">notes</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">notes</span>
+                 <span class="nf">isReminder</span><span class="p">:(</span><span class="n">BOOL</span><span class="p">)</span><span class="nv">isReminder</span><span class="p">{</span>
+    
+    <span class="n">EKEventStore</span> <span class="o">*</span><span class="n">eventStore</span> <span class="o">=</span> <span class="p">[[</span><span class="n">EKEventStore</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    
+    <span class="k">if</span> <span class="p">([</span><span class="n">eventStore</span> <span class="nf">respondsToSelector</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="nf">requestAccessToEntityType</span><span class="p">:</span><span class="n">completion</span><span class="o">:</span><span class="p">)])</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">eventStore</span> <span class="nf">requestAccessToEntityType</span><span class="p">:</span><span class="n">EKEntityTypeEvent</span> <span class="nf">completion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">BOOL</span> <span class="n">granted</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">//  添加到UI的主queue中，否则不显示HUD</span>
+            <span class="n">dispatch_async</span><span class="p">(</span><span class="n">dispatch_get_main_queue</span><span class="p">(),</span> <span class="o">^</span><span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">granted</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="p">[</span><span class="n">self</span> <span class="nf">createEventWithStartDate</span><span class="p">:</span><span class="n">startDate</span> <span class="nf">endDate</span><span class="p">:</span><span class="n">endDate</span> <span class="n">alarm</span><span class="o">:</span><span class="n">timeOffset</span> <span class="n">eventTitle</span><span class="o">:</span><span class="n">title</span> <span class="n">eventLocation</span><span class="o">:</span><span class="n">location</span> <span class="n">notes</span><span class="o">:</span><span class="n">notes</span> <span class="n">eventStore</span><span class="o">:</span><span class="n">eventStore</span><span class="p">];</span>
+                    
+                    <span class="k">if</span> <span class="p">(</span><span class="n">isReminder</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="p">[</span><span class="n">self</span> <span class="nf">createReminderWithStartDate</span><span class="p">:</span><span class="n">startDate</span> <span class="nf">endDate</span><span class="p">:</span><span class="n">endDate</span> <span class="n">alarm</span><span class="o">:</span><span class="n">timeOffset</span> <span class="n">eventTitle</span><span class="o">:</span><span class="n">title</span> <span class="n">eventLocation</span><span class="o">:</span><span class="n">location</span> <span class="n">notes</span><span class="o">:</span><span class="n">notes</span> <span class="n">eventStore</span><span class="o">:</span><span class="n">eventStore</span><span class="p">];</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">});</span>
+        <span class="p">}];</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">createEventWithStartDate</span><span class="p">:</span><span class="n">startDate</span> <span class="nf">endDate</span><span class="p">:</span><span class="n">endDate</span> <span class="n">alarm</span><span class="o">:</span><span class="n">timeOffset</span> <span class="n">eventTitle</span><span class="o">:</span><span class="n">title</span> <span class="n">eventLocation</span><span class="o">:</span><span class="n">location</span> <span class="n">notes</span><span class="o">:</span><span class="n">notes</span> <span class="n">eventStore</span><span class="o">:</span><span class="n">eventStore</span><span class="p">];</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">isReminder</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">[</span><span class="n">self</span> <span class="nf">createReminderWithStartDate</span><span class="p">:</span><span class="n">startDate</span> <span class="nf">endDate</span><span class="p">:</span><span class="n">endDate</span> <span class="n">alarm</span><span class="o">:</span><span class="n">timeOffset</span> <span class="n">eventTitle</span><span class="o">:</span><span class="n">title</span> <span class="n">eventLocation</span><span class="o">:</span><span class="n">location</span> <span class="n">notes</span><span class="o">:</span><span class="n">notes</span> <span class="n">eventStore</span><span class="o">:</span><span class="n">eventStore</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">createEventWithStartDate</span><span class="p">:(</span><span class="n">NSDate</span><span class="o">*</span><span class="p">)</span><span class="nv">startDate</span>
+                        <span class="nf">endDate</span><span class="p">:(</span><span class="n">NSDate</span><span class="o">*</span><span class="p">)</span><span class="nv">endDate</span>
+                          <span class="nf">alarm</span><span class="p">:(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">timeOffset</span>
+                     <span class="nf">eventTitle</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">title</span>
+                    <span class="nf">eventLocation</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">location</span>
+                     <span class="nf">notes</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">notes</span>
+                       <span class="nf">eventStore</span><span class="p">:(</span><span class="n">EKEventStore</span> <span class="o">*</span><span class="p">)</span><span class="nv">eventStore</span><span class="p">{</span>
+    
+    <span class="n">EKEvent</span> <span class="o">*</span><span class="n">event</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKEvent</span> <span class="nf">eventWithEventStore</span><span class="p">:</span><span class="n">eventStore</span><span class="p">];</span>
+    <span class="n">event</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">;</span>
+    <span class="n">event</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span><span class="p">;</span>
+    <span class="n">event</span><span class="p">.</span><span class="n">notes</span> <span class="o">=</span> <span class="n">notes</span><span class="p">;</span>
+    <span class="n">event</span><span class="p">.</span><span class="n">startDate</span> <span class="o">=</span> <span class="n">startDate</span><span class="p">;</span>
+    <span class="n">event</span><span class="p">.</span><span class="n">endDate</span> <span class="o">=</span> <span class="n">endDate</span><span class="p">;</span>
+    <span class="n">event</span><span class="p">.</span><span class="n">allDay</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+    <span class="n">event</span><span class="p">.</span><span class="n">calendar</span> <span class="o">=</span> <span class="p">[</span><span class="n">eventStore</span> <span class="nf">defaultCalendarForNewEvents</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">event</span> <span class="nf">addAlarm</span><span class="p">:[</span><span class="n">EKAlarm</span> <span class="nf">alarmWithRelativeOffset</span><span class="p">:</span><span class="n">timeOffset</span><span class="p">]];</span>
+    <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">eventStore</span> <span class="nf">saveEvent</span><span class="p">:</span><span class="n">event</span> <span class="nf">span</span><span class="p">:</span><span class="n">EKSpanThisEvent</span> <span class="n">error</span><span class="o">:&amp;</span><span class="n">error</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">SVProgressHUD</span> <span class="nf">showErrorWithStatus</span><span class="p">:</span><span class="n">error</span><span class="p">.</span><span class="n">localizedDescription</span><span class="p">];</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="p">[</span><span class="n">SVProgressHUD</span> <span class="nf">showSuccessWithStatus</span><span class="p">:</span><span class="n">NSLocalizedString</span><span class="p">(</span><span class="s">@"成功添加日历"</span><span class="p">,</span> <span class="nb">nil</span><span class="p">)];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">createReminderWithStartDate</span><span class="p">:(</span><span class="n">NSDate</span><span class="o">*</span><span class="p">)</span><span class="nv">startDate</span>
+                         <span class="nf">endDate</span><span class="p">:(</span><span class="n">NSDate</span><span class="o">*</span><span class="p">)</span><span class="nv">endDate</span>
+                           <span class="nf">alarm</span><span class="p">:(</span><span class="n">NSTimeInterval</span><span class="p">)</span><span class="nv">timeOffset</span>
+                      <span class="nf">eventTitle</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">title</span>
+                   <span class="nf">eventLocation</span><span class="p">:(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">location</span>
+                        <span class="nf">notes</span><span class="p">:(</span><span class="n">NSString</span> <span class="o">*</span><span class="p">)</span><span class="nv">notes</span>
+                      <span class="nf">eventStore</span><span class="p">:(</span><span class="n">EKEventStore</span> <span class="o">*</span><span class="p">)</span><span class="nv">eventStore</span><span class="p">{</span>
+    
+    <span class="n">EKReminder</span> <span class="o">*</span><span class="n">reminder</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKReminder</span> <span class="nf">reminderWithEventStore</span><span class="p">:</span><span class="n">eventStore</span><span class="p">];</span>
+    <span class="n">reminder</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span><span class="p">;</span>
+    <span class="n">reminder</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">location</span><span class="p">;</span>
+    <span class="n">reminder</span><span class="p">.</span><span class="n">notes</span> <span class="o">=</span> <span class="n">notes</span><span class="p">;</span>
+    <span class="n">reminder</span><span class="p">.</span><span class="n">calendar</span> <span class="o">=</span> <span class="p">[</span><span class="n">eventStore</span> <span class="nf">defaultCalendarForNewReminders</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">reminder</span> <span class="nf">addAlarm</span><span class="p">:[</span><span class="n">EKAlarm</span> <span class="nf">alarmWithRelativeOffset</span><span class="p">:</span><span class="n">timeOffset</span><span class="p">]];</span>
+    <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">eventStore</span> <span class="nf">saveReminder</span><span class="p">:</span><span class="n">reminder</span> <span class="nf">commit</span><span class="p">:</span><span class="nb">YES</span> <span class="n">error</span><span class="o">:&amp;</span><span class="n">error</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">SVProgressHUD</span> <span class="nf">showErrorWithStatus</span><span class="p">:</span><span class="n">error</span><span class="p">.</span><span class="n">localizedDescription</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+
+</code></pre></div></div>
+
+<p><strong>使用时直接调用</strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="n">CalendarAction</span> <span class="nf">saveEventWithStartDate</span><span class="p">:</span><span class="n">startDate</span> 
+                                <span class="nl">endDate:</span><span class="n">endDate</span>
+                                <span class="nl">alarm:</span><span class="n">alarm</span> 
+                                <span class="nl">eventTitle:</span><span class="n">eventTitle</span> 
+                                <span class="nl">eventLocation:</span><span class="n">eventLocation</span> 
+                                <span class="nl">notes:</span><span class="nb">nil</span> 
+                                <span class="nl">isReminder:</span><span class="nb">NO</span><span class="p">];</span>
+</code></pre></div></div>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

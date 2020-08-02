@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			图片
+		
+	</title>
+	<meta name="description" content="图片">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2017-01-07/image">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>图片</h2>
+					<!-- <p></p> -->
+					<span>2017.01</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2017-01-07/image" class="enabled">中文 </a>|<a href="/en/dev/2017-01-07/image"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="图片">图片</h2>
+
+<hr />
+
+<h4 id="1-图片模糊效果">1. <a href="#p1">图片模糊效果</a></h4>
+<h4 id="2-缩放图片">2. <a href="#p2">缩放图片</a></h4>
+<h4 id="3-使用多张图片数组展示loading动画">3. <a href="#p3">使用多张图片数组展示loading动画</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p1">1. 图片模糊效果</h4>
+</blockquote>
+
+<p><strong>使用 <code class="highlighter-rouge">CoreImage</code> 的模糊滤镜给图片增加模糊效果</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  CoreImage</span>
+<span class="kd">import</span> <span class="kt">CoreImage</span>
+
+<span class="k">var</span> <span class="nv">context</span> <span class="o">=</span> <span class="kt">CIContext</span><span class="p">(</span><span class="nv">options</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">blurEffect</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//blur image</span>
+    <span class="k">let</span> <span class="nv">currentFilter</span> <span class="o">=</span> <span class="kt">CIFilter</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"CIGaussianBlur"</span><span class="p">)</span> 
+    <span class="k">let</span> <span class="nv">beginImage</span> <span class="o">=</span> <span class="kt">CIImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">bg</span><span class="o">.</span><span class="n">image</span><span class="o">!</span><span class="p">)</span>
+    <span class="n">currentFilter</span><span class="o">!.</span><span class="nf">setValue</span><span class="p">(</span><span class="n">beginImage</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">kCIInputImageKey</span><span class="p">)</span>
+    <span class="n">currentFilter</span><span class="o">!.</span><span class="nf">setValue</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">kCIInputRadiusKey</span><span class="p">)</span>
+    <span class="c1">//crop image</span>
+    <span class="k">let</span> <span class="nv">cropFilter</span> <span class="o">=</span> <span class="kt">CIFilter</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"CICrop"</span><span class="p">)</span>
+    <span class="n">cropFilter</span><span class="o">!.</span><span class="nf">setValue</span><span class="p">(</span><span class="n">currentFilter</span><span class="o">!.</span><span class="n">outputImage</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">kCIInputImageKey</span><span class="p">)</span>
+    <span class="n">cropFilter</span><span class="o">!.</span><span class="nf">setValue</span><span class="p">(</span><span class="kt">CIVector</span><span class="p">(</span><span class="nv">cgRect</span><span class="p">:</span> <span class="n">beginImage</span><span class="o">!.</span><span class="n">extent</span><span class="p">),</span> <span class="nv">forKey</span><span class="p">:</span> <span class="s">"inputRectangle"</span><span class="p">)</span>
+    <span class="c1">//output</span>
+    <span class="k">let</span> <span class="nv">output</span> <span class="o">=</span> <span class="n">cropFilter</span><span class="o">!.</span><span class="n">outputImage</span> 
+    <span class="k">let</span> <span class="nv">cgimg</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="nf">createCGImage</span><span class="p">(</span><span class="n">output</span><span class="o">!</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">output</span><span class="o">!.</span><span class="n">extent</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">processedImage</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">cgImage</span><span class="p">:</span> <span class="n">cgimg</span><span class="o">!</span><span class="p">)</span>
+    <span class="n">bg</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">processedImage</span> 
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>使用 <code class="highlighter-rouge">UIBlurEffect</code> 给图片增加一个模糊效果蒙版</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//UIBlurEffect</span>
+
+<span class="kd">func</span> <span class="nf">addBlur</span><span class="p">(</span><span class="n">_</span> <span class="nv">alpha</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// create effect</span>
+    <span class="k">let</span> <span class="nv">effect</span> <span class="o">=</span> <span class="kt">UIBlurEffect</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">dark</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">effectView</span> <span class="o">=</span> <span class="kt">UIVisualEffectView</span><span class="p">(</span><span class="nv">effect</span><span class="p">:</span> <span class="n">effect</span><span class="p">)</span>
+    <span class="c1">// set boundry and alpha</span>
+    <span class="n">effectView</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">bounds</span>
+    <span class="n">effectView</span><span class="o">.</span><span class="n">autoresizingMask</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="n">flexibleWidth</span><span class="p">,</span> <span class="o">.</span><span class="n">flexibleHeight</span><span class="p">]</span>
+    <span class="n">effectView</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+    <span class="k">self</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">effectView</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p2">2. 缩放图片</h4>
+</blockquote>
+
+<p><strong>方法1</strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nf">scaleImage</span><span class="p">:(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nv">currentImage</span> <span class="nf">toScale</span><span class="p">:(</span><span class="kt">float</span><span class="p">)</span><span class="nv">scaleSize</span> <span class="p">{</span>
+    <span class="n">UIGraphicsBeginImageContext</span><span class="p">(</span><span class="n">CGSizeMake</span><span class="p">(</span><span class="n">currentImage</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="o">*</span><span class="n">scaleSize</span><span class="p">,</span><span class="n">currentImage</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span><span class="o">*</span><span class="n">scaleSize</span><span class="p">));</span>
+    <span class="p">[</span><span class="n">currentImage</span> <span class="nf">drawInRect</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">currentImage</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span> <span class="o">*</span> <span class="n">scaleSize</span><span class="p">,</span> <span class="n">currentImage</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">*</span><span class="n">scaleSize</span><span class="p">)];</span>
+    <span class="n">UIImage</span> <span class="o">*</span><span class="n">scaledImage</span> <span class="o">=</span> <span class="n">UIGraphicsGetImageFromCurrentImageContext</span><span class="p">();</span>
+    <span class="n">UIGraphicsEndImageContext</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">scaledImage</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>方法2</strong></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">UIImage</span><span class="o">*</span><span class="p">)</span><span class="nf">imageByScalingAndCroppingForSize</span><span class="p">:(</span><span class="n">CGSize</span><span class="p">)</span><span class="nv">targetSize</span> <span class="nf">sourceImage</span><span class="p">:(</span><span class="n">UIImage</span> <span class="o">*</span><span class="p">)</span><span class="nv">sourceImg</span> <span class="p">{</span>
+    <span class="n">UIImage</span> <span class="o">*</span><span class="n">sourceImage</span> <span class="o">=</span> <span class="n">sourceImg</span><span class="p">;</span>
+    <span class="n">UIImage</span> <span class="o">*</span><span class="n">newImage</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+    <span class="n">CGSize</span> <span class="n">imageSize</span> <span class="o">=</span> <span class="n">sourceImage</span><span class="p">.</span><span class="n">size</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">width</span> <span class="o">=</span> <span class="n">imageSize</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">height</span> <span class="o">=</span> <span class="n">imageSize</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">targetWidth</span> <span class="o">=</span> <span class="n">targetSize</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">targetHeight</span> <span class="o">=</span> <span class="n">targetSize</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">scaleFactor</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">scaledWidth</span> <span class="o">=</span> <span class="n">targetWidth</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">scaledHeight</span> <span class="o">=</span> <span class="n">targetHeight</span><span class="p">;</span>
+    <span class="n">CGPoint</span> <span class="n">thumbnailPoint</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">CGSizeEqualToSize</span><span class="p">(</span><span class="n">imageSize</span><span class="p">,</span> <span class="n">targetSize</span><span class="p">)</span> <span class="o">==</span> <span class="nb">NO</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">CGFloat</span> <span class="n">widthFactor</span> <span class="o">=</span> <span class="n">targetWidth</span> <span class="o">/</span> <span class="n">width</span><span class="p">;</span>
+        <span class="n">CGFloat</span> <span class="n">heightFactor</span> <span class="o">=</span> <span class="n">targetHeight</span> <span class="o">/</span> <span class="n">height</span><span class="p">;</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">widthFactor</span> <span class="o">&gt;</span> <span class="n">heightFactor</span><span class="p">)</span>
+            <span class="n">scaleFactor</span> <span class="o">=</span> <span class="n">widthFactor</span><span class="p">;</span> <span class="c1">// scale to fit height</span>
+        <span class="k">else</span>
+            <span class="n">scaleFactor</span> <span class="o">=</span> <span class="n">heightFactor</span><span class="p">;</span> <span class="c1">// scale to fit width</span>
+        <span class="n">scaledWidth</span><span class="o">=</span> <span class="n">width</span> <span class="o">*</span> <span class="n">scaleFactor</span><span class="p">;</span>
+        <span class="n">scaledHeight</span> <span class="o">=</span> <span class="n">height</span> <span class="o">*</span> <span class="n">scaleFactor</span><span class="p">;</span>
+        
+        <span class="c1">// center the image</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">widthFactor</span> <span class="o">&gt;</span> <span class="n">heightFactor</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">thumbnailPoint</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">targetHeight</span> <span class="o">-</span> <span class="n">scaledHeight</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">widthFactor</span> <span class="o">&lt;</span> <span class="n">heightFactor</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">thumbnailPoint</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">targetWidth</span> <span class="o">-</span> <span class="n">scaledWidth</span><span class="p">)</span> <span class="o">*</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="n">UIGraphicsBeginImageContext</span><span class="p">(</span><span class="n">targetSize</span><span class="p">);</span> <span class="c1">// this will crop</span>
+    
+    <span class="n">CGRect</span> <span class="n">thumbnailRect</span> <span class="o">=</span> <span class="n">CGRectZero</span><span class="p">;</span>
+    <span class="n">thumbnailRect</span><span class="p">.</span><span class="n">origin</span> <span class="o">=</span> <span class="n">thumbnailPoint</span><span class="p">;</span>
+    <span class="n">thumbnailRect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">width</span><span class="o">=</span> <span class="n">scaledWidth</span><span class="p">;</span>
+    <span class="n">thumbnailRect</span><span class="p">.</span><span class="n">size</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">scaledHeight</span><span class="p">;</span>
+    
+    <span class="p">[</span><span class="n">sourceImage</span> <span class="nf">drawInRect</span><span class="p">:</span><span class="n">thumbnailRect</span><span class="p">];</span>
+    
+    <span class="n">newImage</span> <span class="o">=</span> <span class="n">UIGraphicsGetImageFromCurrentImageContext</span><span class="p">();</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">newImage</span> <span class="o">==</span> <span class="nb">nil</span><span class="p">)</span>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"could not scale image"</span><span class="p">);</span>
+    
+    <span class="c1">//pop the context to get back to the default</span>
+    <span class="n">UIGraphicsEndImageContext</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">newImage</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p3">3. 使用多张图片数组展示loading动画</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  CommonLoadingImageView.h</span>
+
+<span class="k">@interface</span> <span class="nc">CommonLoadingImageView</span> <span class="p">:</span> <span class="nc">UIImageView</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  CommonLoadingImageView.m</span>
+
+<span class="k">@implementation</span> <span class="nc">CommonLoadingImageView</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="n">init</span><span class="p">{</span>
+    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">animationImages</span> <span class="o">=</span> <span class="p">@[[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"loading_a"</span><span class="p">],</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"loading_b"</span><span class="p">],</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"loading_c"</span><span class="p">]];</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">animationDuration</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">startAnimating</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">dealloc</span><span class="p">{</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">stopAnimating</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+<hr />
+
+<p><br /></p>
+
+<h4 id="参考链接">参考链接</h4>
+
+<ul>
+  <li><a href="https://github.com/mbcharbonneau/UIImage-Categories">Git - UIImage Categories</a></li>
+</ul>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

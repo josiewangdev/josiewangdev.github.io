@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			羚跑体育
+		
+	</title>
+	<meta name="description" content="羚跑体育">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/projects/2016-03-01/linpoo">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>羚跑体育</h2>
+					<!-- <p>2016.03 - 2016.06</p> -->
+					<span>2016.03</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/projects/2016-03-01/linpoo" class="enabled">中文 </a>|<a href="/en/projects/2016-03-01/linpoo"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="羚跑体育"><a href="https://itunes.apple.com/cn/app/%E7%BE%9A%E8%B7%91%E4%BD%93%E8%82%B2-%E5%AE%B6%E6%A0%A1%E4%BA%92%E5%8A%A8-%E5%85%B1%E5%90%8C%E6%88%90%E9%95%BF/id1233542475?mt=8">羚跑体育</a></h2>
+
+<hr />
+
+<p><img src="/images/apps/linpoo.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="目录">目录</h3>
+
+<hr />
+
+<h4 id="1-概述">1. <a href="#p1">概述</a></h4>
+
+<p>1.1 <a href="#p11">基本信息</a></p>
+
+<p>1.2 <a href="#p12">结构解读</a></p>
+
+<p>1.3 <a href="#p13">第三方框架的使用</a></p>
+
+<hr />
+
+<h4 id="2-开发随笔">2. <a href="#p2">开发随笔</a></h4>
+
+<p>2.1 <a href="#p21">实现横/纵向均可滚动的表格视图</a></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p1">1. 概述</h3>
+
+<hr />
+
+<p>羚跑体育是一款主要用于中小学体育教育的 iPad 端应用。</p>
+
+<p>该应用为老师、学生与家长三方提供了学习与交流平台, 主要业务内容为让学生学习体育运动, 老师统计运动成绩, 家长了解学生体测情况等。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p11">1.1 基本信息</h4>
+</blockquote>
+
+<p>使用语言: <strong>Objective-C</strong></p>
+
+<p>系统要求: <strong>iOS</strong></p>
+
+<p>参与时间: <strong>2016.03 - 2016.06</strong></p>
+
+<p>负责部分:</p>
+
+<ul>
+  <li>数据报表模块</li>
+  <li>体育运动课程列表页</li>
+</ul>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p12">1.2 结构解读</h4>
+</blockquote>
+
+<h4 id="网络层结构">网络层结构</h4>
+
+<p><img src="/images/linpoo/p12.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p13">1.3 第三方框架的使用</h4>
+</blockquote>
+
+<ul>
+  <li><a href="">SVProgressHUD - 创建prompt</a></li>
+  <li><a href="">MJRefresh - 列表上拉刷新，下拉加载</a></li>
+  <li><a href="">Masonry - 使用纯代码方案解决屏幕大小自适应问题</a></li>
+  <li><a href="">Reachability - 网络状态监测</a></li>
+  <li><a href="">AFNetworking - 网络层</a></li>
+  <li><a href="">AFNetworkActivityLogger - 使用AFN时的调试打印工具</a></li>
+  <li><a href="">SDWebImage - 网络加载图片</a></li>
+  <li><a href="">MJExtension - 轻量级的模型与字典、数组等数据结构的转换</a></li>
+  <li><a href="">SBJson4 - Json解析</a></li>
+  <li><a href="">BlocksKit - 系统方法与组件的一些block封装</a></li>
+  <li><a href="">UMengFeedback - 友盟反馈</a></li>
+  <li><a href="">UMengAnalytics-NO-IDFA - 友盟统计</a></li>
+</ul>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p2">2. 开发随笔</h3>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p21">2.1 实现横/纵向均可滚动的表格视图</h4>
+</blockquote>
+
+<p>在这个需求中, 难点不在于实现横/纵向都能滚动的表格视图, 而是在于横向滚动时, 纵向的表头数据要保持不动, 纵向滚动时, 横向的表头数据需要保持不动。</p>
+
+<p><br /></p>
+
+<p><img src="/images/linpoo/p21_1.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<p>实现这个需求我使用的方法是, 将整个表格分为一个 TableView 和一个 CollectionView, 并且在 TableView 和 CollectionView 的代理方法中实现滚动时相互联动的效果。</p>
+
+<p><br /></p>
+
+<p><img src="/images/linpoo/p21_2.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  WZXSheetView.h</span>
+
+<span class="cp">#import "WZXSheetViewCellFixed.h"
+#import "WZXSheetViewCellScrollable.h"
+#import "WZXSheetFixedHeader.h"
+#import "WZXSheetScrollableHeader.h"
+</span>
+<span class="k">typedef</span> <span class="nf">void</span><span class="p">(</span><span class="o">^</span><span class="n">WZXSheetFixedCellConfigBlock</span><span class="p">)(</span><span class="n">WZXSheetViewCellFixed</span> <span class="o">*</span><span class="n">cell</span><span class="p">,</span> <span class="n">NSIndexPath</span> <span class="o">*</span><span class="n">indexPath</span><span class="p">);</span>
+<span class="k">typedef</span> <span class="nf">void</span><span class="p">(</span><span class="o">^</span><span class="n">WZXSheetScrollableCellConfigBlock</span><span class="p">)(</span><span class="n">WZXSheetViewCellScrollable</span> <span class="o">*</span><span class="n">cell</span><span class="p">,</span> <span class="n">NSIndexPath</span> <span class="o">*</span><span class="n">indexPath</span><span class="p">);</span>
+
+<span class="k">@protocol</span> <span class="nc">WZXSheetViewDelegate</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+<span class="err">@required</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="nf">viewForScrollableHeaderInSection</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">section</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@interface</span> <span class="nc">WZXSheetView</span> <span class="p">:</span> <span class="nc">UIView</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">scrollableSectionNumber</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">NSInteger</span> <span class="n">rowNumber</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">fixedSectionWidth</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">scrollableSectionWidth</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">headerHeight</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">CGFloat</span> <span class="n">rowHeight</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">weak</span><span class="p">)</span> <span class="n">id</span><span class="o">&lt;</span><span class="n">WZXSheetViewDelegate</span><span class="o">&gt;</span> <span class="n">delegate</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">WZXSheetFixedCellConfigBlock</span> <span class="n">fixedCellConfigBlock</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">WZXSheetScrollableCellConfigBlock</span> <span class="n">scrollableCellConfigBlock</span><span class="p">;</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">tableViewSectionHeader</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">collectionViewSectionHeader</span><span class="p">;</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UITableView</span> <span class="o">*</span><span class="n">fixedTableView</span><span class="p">;</span>                   <span class="cm">/**&lt; 左侧 TableView*/</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UICollectionView</span> <span class="o">*</span><span class="n">scrollableCollectionView</span><span class="p">;</span>    <span class="cm">/**&lt; 右侧 CollectionView*/</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithSheetViewDelegate</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WZXSheetViewDelegate</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">delegate</span><span class="p">;</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">reloadSheetView</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  WZXSheetView.m</span>
+
+<span class="cp">#import "WZXSheetView.h"
+</span>
+<span class="k">@interface</span> <span class="nc">WZXSheetView</span> <span class="p">()</span> <span class="o">&lt;</span><span class="n">UITableViewDelegate</span><span class="p">,</span> <span class="n">UITableViewDataSource</span><span class="p">,</span> <span class="n">UICollectionViewDelegate</span><span class="p">,</span> <span class="n">UICollectionViewDataSource</span><span class="p">,</span> <span class="n">UIScrollViewDelegate</span><span class="o">&gt;</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">sheetHeaderView</span><span class="p">;</span>                <span class="cm">/**&lt; 表头*/</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">sheetHeaderFixedView</span><span class="p">;</span>           <span class="cm">/**&lt; 表头固定部分*/</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIScrollView</span> <span class="o">*</span><span class="n">sheetHeaderScrollView</span><span class="p">;</span>    <span class="cm">/**&lt; 表头滚动部分*/</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIScrollView</span> <span class="o">*</span><span class="n">mainScrollView</span><span class="p">;</span>           <span class="cm">/**&lt; 滚动表内容*/</span>
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">UIView</span> <span class="o">*</span><span class="n">contentView</span><span class="p">;</span>
+
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">WZXSheetView</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithSheetViewDelegate</span><span class="p">:(</span><span class="n">id</span><span class="o">&lt;</span><span class="n">WZXSheetViewDelegate</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">delegate</span><span class="p">{</span>
+    <span class="n">self</span> <span class="o">=</span> <span class="p">[</span><span class="n">super</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">delegate</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">scrollableSectionNumber</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">rowNumber</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">self</span> <span class="nf">setupDefaultUI</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - SetupUI
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setupDefaultUI</span><span class="p">{</span>
+    
+    <span class="c1">//Default sheet UI</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">fixedSectionWidth</span> <span class="o">=</span> <span class="mi">205</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">scrollableSectionWidth</span> <span class="o">=</span> <span class="mi">210</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">headerHeight</span> <span class="o">=</span> <span class="mi">60</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">rowHeight</span> <span class="o">=</span> <span class="mi">44</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+    
+    
+    <span class="p">[</span><span class="n">self</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderView</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">mainScrollView</span><span class="p">];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">right</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">headerHeight</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">mainScrollView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">right</span><span class="p">.</span><span class="n">bottom</span><span class="p">.</span><span class="n">width</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">);</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderView</span><span class="p">.</span><span class="n">bottom</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderFixedView</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderScrollView</span><span class="p">];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderFixedView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">bottom</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderView</span><span class="p">);</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">width</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">fixedSectionWidth</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderScrollView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderFixedView</span><span class="p">.</span><span class="n">right</span><span class="p">);</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">right</span><span class="p">.</span><span class="n">bottom</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderView</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">mainScrollView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">fixedTableView</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">scrollableCollectionView</span><span class="p">];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">edges</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">mainScrollView</span><span class="p">);</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">width</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">mainScrollView</span><span class="p">);</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rowNumber</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">rowHeight</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">fixedTableView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span><span class="p">);</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">width</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">fixedSectionWidth</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">scrollableCollectionView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">fixedTableView</span><span class="p">.</span><span class="n">right</span><span class="p">);</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">right</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+   
+    
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">configScrollableHeaderViews</span><span class="p">{</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">self</span><span class="p">.</span><span class="n">scrollableSectionNumber</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="n">UIView</span> <span class="o">*</span><span class="n">header</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">delegate</span> <span class="nf">viewForScrollableHeaderInSection</span><span class="p">:</span><span class="n">i</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderScrollView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">header</span><span class="p">];</span>
+        
+        <span class="p">[</span><span class="n">header</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">scrollableSectionWidth</span><span class="p">);</span>
+            <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">bottom</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderScrollView</span><span class="p">);</span>
+            <span class="n">make</span><span class="p">.</span><span class="n">width</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">scrollableSectionWidth</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">self</span><span class="p">.</span><span class="n">scrollableSectionNumber</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">make</span><span class="p">.</span><span class="n">right</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderScrollView</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}];</span>
+        
+    <span class="p">}</span>
+    
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - UITableViewDataSource
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">numberOfRowsInSection</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">section</span><span class="p">{</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">rowNumber</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UITableViewCell</span> <span class="o">*</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">cellForRowAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span><span class="p">{</span>
+    
+    <span class="n">WZXSheetViewCellFixed</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">tableView</span> <span class="nf">dequeueReusableCellWithIdentifier</span><span class="p">:</span><span class="n">kFixedCellReuseID</span> <span class="nf">forIndexPath</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">fixedCellConfigBlock</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">fixedCellConfigBlock</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">indexPath</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+    
+<span class="p">}</span>
+
+
+<span class="cp">#pragma mark - UICollectionViewDataSource
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">numberOfSectionsInCollectionView</span><span class="p">:(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span><span class="p">{</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">scrollableSectionNumber</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">collectionView</span><span class="p">:(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span> <span class="nf">numberOfItemsInSection</span><span class="p">:(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">section</span><span class="p">{</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">rowNumber</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UICollectionViewCell</span> <span class="o">*</span><span class="p">)</span><span class="nf">collectionView</span><span class="p">:(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="nv">collectionView</span> <span class="nf">cellForItemAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span><span class="p">{</span>
+    
+    <span class="n">WZXSheetViewCellScrollable</span> <span class="o">*</span><span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">collectionView</span> <span class="nf">dequeueReusableCellWithReuseIdentifier</span><span class="p">:</span><span class="n">kScrollableCellReuseID</span> <span class="nf">forIndexPath</span><span class="p">:</span><span class="n">indexPath</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">scrollableCellConfigBlock</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">scrollableCellConfigBlock</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">indexPath</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+    
+<span class="p">}</span>
+
+
+<span class="cp">#pragma mark - UIScrollViewDelegate
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">scrollViewDidScroll</span><span class="p">:(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="nv">scrollView</span><span class="p">{</span>
+    
+    <span class="k">if</span> <span class="p">([</span><span class="n">scrollView</span> <span class="nf">isEqual</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">scrollableCollectionView</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderScrollView</span><span class="p">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="n">scrollView</span><span class="p">.</span><span class="n">contentOffset</span><span class="p">;</span>
+    <span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="p">([</span><span class="n">scrollView</span> <span class="nf">isEqual</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderScrollView</span><span class="p">]){</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">scrollableCollectionView</span><span class="p">.</span><span class="n">contentOffset</span> <span class="o">=</span> <span class="n">scrollView</span><span class="p">.</span><span class="n">contentOffset</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - PrivateMethod
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">reloadSheetView</span><span class="p">{</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">sheetHeaderScrollView</span><span class="p">.</span><span class="n">subviews</span> <span class="nf">bk_each</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="n">subview</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">subview</span> <span class="nf">removeFromSuperview</span><span class="p">];</span>
+    <span class="p">}];</span>
+    <span class="p">[</span><span class="n">self</span> <span class="nf">configScrollableHeaderViews</span><span class="p">];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">fixedTableView</span> <span class="nf">reloadData</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">scrollableCollectionView</span> <span class="nf">reloadData</span><span class="p">];</span>
+    
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span> <span class="nf">updateConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">make</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">rowNumber</span> <span class="o">*</span> <span class="n">self</span><span class="p">.</span><span class="n">rowHeight</span><span class="p">);</span>
+    <span class="p">}];</span>
+    
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - Getters
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="n">sheetHeaderView</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_sheetHeaderView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_sheetHeaderView</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIView</span> <span class="nf">new</span><span class="p">];</span>
+        <span class="n">_sheetHeaderView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_sheetHeaderView</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="n">sheetHeaderFixedView</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_sheetHeaderFixedView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_sheetHeaderFixedView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">WZXSheetFixedHeader</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">fixedSectionWidth</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">headerHeight</span><span class="p">)];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_sheetHeaderFixedView</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">sheetHeaderScrollView</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_sheetHeaderScrollView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_sheetHeaderScrollView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIScrollView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">_sheetHeaderScrollView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+        <span class="n">_sheetHeaderScrollView</span><span class="p">.</span><span class="n">showsHorizontalScrollIndicator</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="n">_sheetHeaderScrollView</span><span class="p">.</span><span class="n">bounces</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="n">_sheetHeaderScrollView</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_sheetHeaderScrollView</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UIScrollView</span> <span class="o">*</span><span class="p">)</span><span class="n">mainScrollView</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_mainScrollView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_mainScrollView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIScrollView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">_mainScrollView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+        <span class="n">_mainScrollView</span><span class="p">.</span><span class="n">bounces</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_mainScrollView</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UIView</span> <span class="o">*</span><span class="p">)</span><span class="n">contentView</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_contentView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_contentView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">_contentView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_contentView</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="n">fixedTableView</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_fixedTableView</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_fixedTableView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITableView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectZero</span> <span class="nf">style</span><span class="p">:</span><span class="n">UITableViewStylePlain</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">_fixedTableView</span> <span class="nf">registerClass</span><span class="p">:[</span><span class="n">WZXSheetViewCellFixed</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">forCellReuseIdentifier</span><span class="p">:</span><span class="n">kFixedCellReuseID</span><span class="p">];</span>
+        <span class="n">_fixedTableView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+        <span class="n">_fixedTableView</span><span class="p">.</span><span class="n">separatorStyle</span> <span class="o">=</span> <span class="n">UITableViewCellSeparatorStyleNone</span><span class="p">;</span>
+        <span class="n">_fixedTableView</span><span class="p">.</span><span class="n">allowsSelection</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="n">_fixedTableView</span><span class="p">.</span><span class="n">scrollEnabled</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="n">_fixedTableView</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+        <span class="n">_fixedTableView</span><span class="p">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+        
+        <span class="p">[</span><span class="n">_fixedTableView</span> <span class="nf">setBackgroundColor</span><span class="p">:[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">]];</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_fixedTableView</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UICollectionView</span> <span class="o">*</span><span class="p">)</span><span class="n">scrollableCollectionView</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">_scrollableCollectionView</span><span class="p">)</span> <span class="p">{</span>
+        
+        <span class="n">UICollectionViewFlowLayout</span> <span class="o">*</span><span class="n">sheetLayout</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UICollectionViewFlowLayout</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+        <span class="n">sheetLayout</span><span class="p">.</span><span class="n">itemSize</span> <span class="o">=</span> <span class="n">CGSizeMake</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">scrollableSectionWidth</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">rowHeight</span><span class="p">);</span>
+        <span class="n">sheetLayout</span><span class="p">.</span><span class="n">scrollDirection</span> <span class="o">=</span> <span class="n">UICollectionViewScrollDirectionHorizontal</span><span class="p">;</span>
+        <span class="n">sheetLayout</span><span class="p">.</span><span class="n">minimumLineSpacing</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+        <span class="n">sheetLayout</span><span class="p">.</span><span class="n">minimumInteritemSpacing</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">;</span>
+        <span class="n">sheetLayout</span><span class="p">.</span><span class="n">sectionHeadersPinToVisibleBounds</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+        
+        <span class="n">_scrollableCollectionView</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UICollectionView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectZero</span> <span class="nf">collectionViewLayout</span><span class="p">:</span><span class="n">sheetLayout</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">_scrollableCollectionView</span> <span class="nf">registerClass</span><span class="p">:[</span><span class="n">WZXSheetViewCellScrollable</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">forCellWithReuseIdentifier</span><span class="p">:</span><span class="n">kScrollableCellReuseID</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">_scrollableCollectionView</span> <span class="nf">registerClass</span><span class="p">:[</span><span class="n">WZXSheetScrollableHeader</span> <span class="nf">class</span><span class="p">]</span> <span class="nf">forSupplementaryViewOfKind</span><span class="p">:</span><span class="n">UICollectionElementKindSectionHeader</span> <span class="n">withReuseIdentifier</span><span class="o">:</span><span class="n">kScrollableHeaderReuseID</span><span class="p">];</span>
+        <span class="n">_scrollableCollectionView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">];</span>
+        <span class="n">_scrollableCollectionView</span><span class="p">.</span><span class="n">bounces</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span>
+        <span class="n">_scrollableCollectionView</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+        <span class="n">_scrollableCollectionView</span><span class="p">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+        
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_scrollableCollectionView</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

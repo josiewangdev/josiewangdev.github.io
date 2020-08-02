@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Masonry
+		
+	</title>
+	<meta name="description" content="Use Masonry on tableviewcell &amp; scrollview">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/dev/2018-11-07/masonry">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Masonry</h2>
+					<!-- <p></p> -->
+					<span>2018.11</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/dev/2018-11-07/masonry">中文 </a>|<a href="/en/dev/2018-11-07/masonry" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<p>Use Masonry on tableviewcell &amp; scrollview</p>
+
+<p><br /></p>
+
+<h3 id="uitableviewcell-with-masonry">UITableViewCell with Masonry</h3>
+
+<p><br /></p>
+
+<h4 id="use-the-following-autolayout-code">use the following AutoLayout code:</h4>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">subtitleLabel</span> <span class="nf">mas_makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">mas_bottom</span><span class="p">);</span>
+            <span class="n">make</span><span class="p">.</span><span class="n">right</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span><span class="p">.</span><span class="n">mas_right</span><span class="p">).</span><span class="n">with</span><span class="p">.</span><span class="n">offset</span><span class="p">(</span><span class="o">-</span><span class="n">GCBaconCellRowPadding</span><span class="p">);</span>
+            <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span><span class="p">.</span><span class="n">mas_left</span><span class="p">).</span><span class="n">with</span><span class="p">.</span><span class="n">offset</span><span class="p">(</span><span class="n">GCBaconCellRowPadding</span><span class="p">);</span>
+            <span class="n">make</span><span class="p">.</span><span class="n">bottom</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">contentView</span><span class="p">.</span><span class="n">mas_bottom</span><span class="p">);</span>
+        <span class="p">}];</span></code></pre></figure>
+
+<h4 id="in-the-cell-view-make-sure-to-use-the-following-line">In the cell view make sure to use the following line</h4>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="n">self</span><span class="p">.</span><span class="n">contentView</span><span class="p">.</span><span class="n">translatesAutoresizingMaskIntoConstraints</span> <span class="o">=</span> <span class="nb">NO</span><span class="p">;</span></code></pre></figure>
+
+<h4 id="using-the-following-code-in-the-controller">using the following code in the controller.</h4>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">-</span> <span class="p">(</span><span class="n">CGFloat</span><span class="p">)</span><span class="nf">tableView</span><span class="p">:(</span><span class="n">UITableView</span> <span class="o">*</span><span class="p">)</span><span class="nv">tableView</span> <span class="nf">heightForRowAtIndexPath</span><span class="p">:(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="nv">indexPath</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="n">GCBaconCell</span> <span class="o">*</span><span class="n">offscreenCell</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">offscreenCell</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">offscreenCell</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GCBaconCell</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithStyle</span><span class="p">:</span><span class="n">UITableViewCellStyleDefault</span>
+                                                    <span class="nl">reuseIdentifier:</span><span class="s">@"nothing"</span><span class="p">];</span>
+    <span class="p">}</span>
+
+
+    <span class="c1">// configure offscreenCell ...</span>
+
+    <span class="p">[</span><span class="n">offscreenCell</span><span class="p">.</span><span class="n">contentView</span> <span class="nf">setNeedsLayout</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">offscreenCell</span><span class="p">.</span><span class="n">contentView</span> <span class="nf">layoutIfNeeded</span><span class="p">];</span>
+
+    <span class="n">CGSize</span> <span class="n">maximumSize</span> <span class="o">=</span> <span class="n">CGSizeMake</span><span class="p">(</span><span class="mi">320</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">UILayoutFittingCompressedSize</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+    <span class="n">CGFloat</span> <span class="n">height</span> <span class="o">=</span> <span class="p">[</span><span class="n">offscreenCell</span><span class="p">.</span><span class="n">contentView</span> <span class="nf">systemLayoutSizeFittingSize</span><span class="p">:</span><span class="n">maximumSize</span><span class="p">].</span><span class="n">height</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="n">height</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><br /></p>
+
+<h3 id="uiscrollview-with-masonry">UIScrollView with masonry</h3>
+
+<p><br /></p>
+
+<h4 id="vertical-and-horizontal-scrollview-using-masonry">vertical and Horizontal scrollview using masonry</h4>
+
+<figure class="highlight"><pre><code class="language-objc" data-lang="objc"><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+<span class="p">{</span>
+  <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
+  
+  <span class="n">UIScrollView</span> <span class="o">*</span><span class="n">verticalScrollView</span> <span class="o">=</span> <span class="n">UIScrollView</span><span class="p">.</span><span class="n">new</span><span class="p">;</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">vScrollView</span> <span class="o">=</span> <span class="n">verticalScrollView</span><span class="p">;</span>
+  <span class="n">verticalScrollView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">grayColor</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">verticalScrollView</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">vScrollView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">make</span><span class="p">.</span><span class="n">edges</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">);</span>
+  <span class="p">}];</span>
+  
+    <span class="c1">// We create a dummy contentView that will hold everything (necessary to use scrollRectToVisible later)</span>
+  <span class="n">UIView</span><span class="o">*</span> <span class="n">contentView</span> <span class="o">=</span> <span class="n">UIView</span><span class="p">.</span><span class="n">new</span><span class="p">;</span>
+  <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">vScrollView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">contentView</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">contentView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">make</span><span class="p">.</span><span class="n">edges</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">vScrollView</span><span class="p">);</span> <span class="c1">// let the uiscrollview know where the edges of the contentView</span>
+    <span class="n">make</span><span class="p">.</span><span class="n">width</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">width</span><span class="p">);</span> <span class="c1">// contentView's must can be calculated based on the constraits you set \</span>
+                                         <span class="n">and</span> <span class="n">let</span> <span class="n">the</span> <span class="n">autolayout</span> <span class="n">calculate</span> <span class="n">the</span> <span class="n">width</span> <span class="n">of</span> <span class="n">the</span> <span class="n">contentView</span><span class="p">;</span>
+
+  <span class="p">}];</span>
+  
+  <span class="n">UIView</span> <span class="o">*</span><span class="n">lastView</span><span class="p">;</span>
+  <span class="n">CGFloat</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+  
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">UIView</span> <span class="o">*</span><span class="n">view</span> <span class="o">=</span> <span class="n">UIView</span><span class="p">.</span><span class="n">new</span><span class="p">;</span>
+      <span class="c1">//view.backgroundColor = [self randomColor];</span>
+    <span class="n">view</span><span class="p">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">contentView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">view</span><span class="p">];</span>
+    
+    <span class="n">UITapGestureRecognizer</span> <span class="o">*</span><span class="n">singleTap</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITapGestureRecognizer</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithTarget</span><span class="p">:</span><span class="n">self</span> <span class="nf">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">singleTap</span><span class="o">:</span><span class="p">)];</span>
+    <span class="p">[</span><span class="n">view</span> <span class="nf">addGestureRecognizer</span><span class="p">:</span><span class="n">singleTap</span><span class="p">];</span>
+    
+    <span class="p">[</span><span class="n">view</span> <span class="nf">mas_makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">lastView</span> <span class="p">?</span> <span class="n">lastView</span><span class="p">.</span><span class="n">bottom</span> <span class="p">:</span> <span class="mi">@0</span><span class="p">);</span>
+      <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">contentView</span><span class="p">.</span><span class="n">left</span><span class="p">);</span>
+      <span class="n">make</span><span class="p">.</span><span class="n">width</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">contentView</span><span class="p">.</span><span class="n">width</span><span class="p">);</span>
+      <span class="n">make</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="err">@</span><span class="p">(</span><span class="n">height</span><span class="p">));</span>
+    <span class="p">}];</span>
+    
+      <span class="c1">//add Subview + content</span>
+      <span class="p">[</span><span class="n">self</span> <span class="nf">createHorizontalScrollView</span><span class="p">:</span><span class="n">view</span><span class="p">];</span>
+    <span class="n">lastView</span> <span class="o">=</span> <span class="n">view</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="p">[</span><span class="n">contentView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">make</span><span class="p">.</span><span class="n">bottom</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">lastView</span><span class="p">.</span><span class="n">bottom</span><span class="p">);</span> <span class="c1">// contentView's must can be calculated based on the constraits you set  \</span>
+                                          <span class="n">and</span> <span class="n">let</span> <span class="n">the</span> <span class="n">autolayout</span> <span class="n">calculate</span> <span class="n">the</span> <span class="n">height</span> <span class="n">of</span> <span class="n">the</span> <span class="n">contentView</span><span class="p">;</span>
+    
+  <span class="p">}];</span>
+
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">singleTap</span><span class="p">:(</span><span class="n">UITapGestureRecognizer</span><span class="o">*</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
+    <span class="c1">//[sender.view setAlpha:sender.view.alpha / 1.20]; // To see something happen on screen when you tap :O</span>
+  <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">vScrollView</span> <span class="nf">scrollRectToVisible</span><span class="p">:</span><span class="n">sender</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">frame</span> <span class="nf">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"touched row %d"</span><span class="p">,</span><span class="n">sender</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">tag</span><span class="p">);</span>
+<span class="p">};</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="nf">createHorizontalScrollView</span><span class="p">:(</span><span class="n">UIView</span><span class="o">*</span><span class="p">)</span><span class="nv">rowView</span>
+<span class="p">{</span>
+  
+  <span class="n">UIScrollView</span> <span class="o">*</span><span class="n">scrollView</span> <span class="o">=</span> <span class="n">UIScrollView</span><span class="p">.</span><span class="n">new</span><span class="p">;</span>
+  <span class="n">scrollView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">grayColor</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">rowView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">scrollView</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">scrollView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">make</span><span class="p">.</span><span class="n">edges</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">rowView</span><span class="p">);</span>
+  <span class="p">}];</span>
+  
+  <span class="c1">// We create a dummy contentView that will hold everything (necessary to use scrollRectToVisible later)</span>
+  <span class="n">UIView</span><span class="o">*</span> <span class="n">contentView</span> <span class="o">=</span> <span class="n">UIView</span><span class="p">.</span><span class="n">new</span><span class="p">;</span>
+  <span class="p">[</span><span class="n">scrollView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">contentView</span><span class="p">];</span>
+  <span class="p">[</span><span class="n">contentView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">make</span><span class="p">.</span><span class="n">edges</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">scrollView</span><span class="p">);</span>
+    <span class="n">make</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">rowView</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+  <span class="p">}];</span>
+  
+  <span class="n">UIView</span> <span class="o">*</span><span class="n">lastElementView</span><span class="p">;</span>
+  <span class="n">CGFloat</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+  
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">UIView</span> <span class="o">*</span><span class="n">elementView</span> <span class="o">=</span> <span class="n">UIView</span><span class="p">.</span><span class="n">new</span><span class="p">;</span>
+    <span class="n">elementView</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nf">randomColor</span><span class="p">];</span>
+    <span class="n">elementView</span><span class="p">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">rowView</span><span class="p">.</span><span class="n">tag</span> <span class="o">*</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="p">[</span><span class="n">contentView</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">elementView</span><span class="p">];</span>
+    
+      <span class="c1">// Tap</span>
+    <span class="n">UITapGestureRecognizer</span> <span class="o">*</span><span class="n">singleTap</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UITapGestureRecognizer</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithTarget</span><span class="p">:</span><span class="n">self</span> <span class="nf">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">elementTap</span><span class="o">:</span><span class="p">)];</span>
+    <span class="p">[</span><span class="n">elementView</span> <span class="nf">addGestureRecognizer</span><span class="p">:</span><span class="n">singleTap</span><span class="p">];</span>
+    
+    <span class="p">[</span><span class="n">elementView</span> <span class="nf">mas_makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">make</span><span class="p">.</span><span class="n">left</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">lastElementView</span> <span class="p">?</span> <span class="n">lastElementView</span><span class="p">.</span><span class="n">right</span> <span class="p">:</span> <span class="mi">@0</span><span class="p">);</span>
+      <span class="n">make</span><span class="p">.</span><span class="n">top</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">contentView</span><span class="p">.</span><span class="n">top</span><span class="p">);</span>
+      <span class="n">make</span><span class="p">.</span><span class="n">height</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">contentView</span><span class="p">.</span><span class="n">height</span><span class="p">);</span>
+      <span class="n">make</span><span class="p">.</span><span class="n">width</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="err">@</span><span class="p">(</span><span class="n">width</span><span class="p">));</span>
+    <span class="p">}];</span>
+    
+    <span class="n">lastElementView</span> <span class="o">=</span> <span class="n">elementView</span><span class="p">;</span>
+  <span class="p">}</span>
+  
+  <span class="p">[</span><span class="n">contentView</span> <span class="nf">makeConstraints</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">MASConstraintMaker</span> <span class="o">*</span><span class="n">make</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">make</span><span class="p">.</span><span class="n">right</span><span class="p">.</span><span class="n">equalTo</span><span class="p">(</span><span class="n">lastElementView</span><span class="p">.</span><span class="n">right</span><span class="p">);</span>
+  <span class="p">}];</span>
+  
+  <span class="k">return</span> <span class="nb">nil</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">UIColor</span> <span class="o">*</span><span class="p">)</span><span class="n">randomColor</span> <span class="p">{</span>
+  <span class="n">CGFloat</span> <span class="n">hue</span> <span class="o">=</span> <span class="p">(</span> <span class="n">arc4random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">256</span> <span class="o">/</span> <span class="mi">256</span><span class="p">.</span><span class="mi">0</span> <span class="p">);</span>  <span class="c1">//  0.0 to 1.0</span>
+  <span class="n">CGFloat</span> <span class="n">saturation</span> <span class="o">=</span> <span class="p">(</span> <span class="n">arc4random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">128</span> <span class="o">/</span> <span class="mi">256</span><span class="p">.</span><span class="mi">0</span> <span class="p">)</span> <span class="o">+</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">;</span>  <span class="c1">//  0.5 to 1.0, away from white</span>
+  <span class="n">CGFloat</span> <span class="n">brightness</span> <span class="o">=</span> <span class="p">(</span> <span class="n">arc4random</span><span class="p">()</span> <span class="o">%</span> <span class="mi">128</span> <span class="o">/</span> <span class="mi">256</span><span class="p">.</span><span class="mi">0</span> <span class="p">)</span> <span class="o">+</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">;</span>  <span class="c1">//  0.5 to 1.0, away from black</span>
+  <span class="k">return</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">colorWithHue</span><span class="p">:</span><span class="n">hue</span> <span class="nf">saturation</span><span class="p">:</span><span class="n">saturation</span> <span class="n">brightness</span><span class="o">:</span><span class="n">brightness</span> <span class="n">alpha</span><span class="o">:</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">elementTap</span><span class="p">:(</span><span class="n">UITapGestureRecognizer</span><span class="o">*</span><span class="p">)</span><span class="nv">sender</span> <span class="p">{</span>
+  <span class="p">[</span><span class="n">sender</span><span class="p">.</span><span class="n">view</span> <span class="nf">setAlpha</span><span class="p">:</span><span class="n">sender</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">alpha</span> <span class="o">/</span> <span class="mi">1</span><span class="p">.</span><span class="mi">20</span><span class="p">];</span> <span class="c1">// To see something happen on screen when you tap :O</span>
+  <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">vScrollView</span> <span class="nf">scrollRectToVisible</span><span class="p">:</span><span class="n">sender</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">frame</span> <span class="nf">animated</span><span class="p">:</span><span class="nb">YES</span><span class="p">];</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"touched element %d"</span><span class="p">,</span><span class="n">sender</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">tag</span><span class="p">);</span>
+<span class="p">};</span></code></pre></figure>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

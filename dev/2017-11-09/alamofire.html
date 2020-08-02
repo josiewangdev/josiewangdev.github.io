@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Alamofire
+		
+	</title>
+	<meta name="description" content="Alamofire">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2017-11-09/alamofire">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Alamofire</h2>
+					<!-- <p></p> -->
+					<span>2017.11</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2017-11-09/alamofire" class="enabled">中文 </a>|<a href="/en/dev/2017-11-09/alamofire"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="alamofire">Alamofire</h2>
+
+<hr />
+
+<p>使用语言: <strong>Swift</strong></p>
+
+<hr />
+
+<blockquote>
+  <h4 id="usage">实际应用</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Alamofire</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="o">.</span><span class="kt">GET</span><span class="p">,</span> <span class="s">"https://httpbin.org/get"</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="s">"foo"</span><span class="p">:</span> <span class="s">"bar"</span><span class="p">])</span>
+    <span class="o">.</span><span class="n">responseJSON</span> <span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+
+        <span class="nf">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">request</span><span class="p">)</span>  <span class="c1">// 请求对象</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">response</span><span class="p">)</span> <span class="c1">// 响应对象</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>     <span class="c1">// 服务端返回的数据</span>
+
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">JSON</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span><span class="o">.</span><span class="n">value</span> <span class="p">{</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"JSON: </span><span class="se">\(</span><span class="kt">JSON</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">}</span>
+
+<span class="p">}</span>
+<span class="c1">// Alamofire 目前支持的数据序列化方法：</span>
+<span class="c1">// response()</span>
+<span class="c1">// responseData()</span>
+<span class="c1">// responseString(encoding: NSStringEncoding)</span>
+<span class="c1">// responseJSON(options: NSJSONReadingOptions)</span>
+<span class="c1">// responsePropertyList(options: NSPropertyListReadOptions)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="上传文件">上传文件</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">fileURL</span> <span class="o">=</span> <span class="kt">NSBundle</span><span class="o">.</span><span class="nf">mainBundle</span><span class="p">()</span><span class="o">.</span><span class="kt">URLForResource</span><span class="p">(</span><span class="s">"Default"</span><span class="p">,</span> <span class="nv">withExtension</span><span class="p">:</span> <span class="s">"png"</span><span class="p">)</span>
+<span class="kt">Alamofire</span><span class="o">.</span><span class="nf">upload</span><span class="p">(</span><span class="o">.</span><span class="kt">POST</span><span class="p">,</span> <span class="s">"https://httpbin.org/post"</span><span class="p">,</span> <span class="nv">file</span><span class="p">:</span> <span class="n">fileURL</span><span class="p">)</span>
+
+<span class="c1">//我们还可以获取上传时候的进度</span>
+<span class="kt">Alamofire</span><span class="o">.</span><span class="nf">upload</span><span class="p">(</span><span class="o">.</span><span class="kt">POST</span><span class="p">,</span> <span class="s">"https://httpbin.org/post"</span><span class="p">,</span> <span class="nv">file</span><span class="p">:</span> <span class="n">fileURL</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">progress</span> <span class="p">{</span> <span class="n">bytesWritten</span><span class="p">,</span> <span class="n">totalBytesWritten</span><span class="p">,</span> <span class="n">totalBytesExpectedToWrite</span> <span class="k">in</span>
+             <span class="nf">print</span><span class="p">(</span><span class="n">totalBytesWritten</span><span class="p">)</span>
+
+             <span class="c1">// This closure is NOT called on the main queue for performance</span>
+             <span class="c1">// reasons. To update your ui, dispatch to the main queue.</span>
+             <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">())</span> <span class="p">{</span>
+                 <span class="nf">print</span><span class="p">(</span><span class="s">"Total bytes written on main queue: </span><span class="se">\(</span><span class="n">totalBytesWritten</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+             <span class="p">}</span>
+         <span class="p">}</span>
+         <span class="o">.</span><span class="n">responseJSON</span> <span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+             <span class="nf">debugPrint</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+         <span class="p">}</span>
+
+<span class="c1">//MultipartFormData 形式的表单数据上传</span>
+<span class="kt">Alamofire</span><span class="o">.</span><span class="nf">upload</span><span class="p">(</span>
+    <span class="o">.</span><span class="kt">POST</span><span class="p">,</span>
+    <span class="s">"https://httpbin.org/post"</span><span class="p">,</span>
+    <span class="nv">multipartFormData</span><span class="p">:</span> <span class="p">{</span> <span class="n">multipartFormData</span> <span class="k">in</span>
+        <span class="n">multipartFormData</span><span class="o">.</span><span class="nf">appendBodyPart</span><span class="p">(</span><span class="nv">fileURL</span><span class="p">:</span> <span class="n">unicornImageURL</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"unicorn"</span><span class="p">)</span>
+        <span class="n">multipartFormData</span><span class="o">.</span><span class="nf">appendBodyPart</span><span class="p">(</span><span class="nv">fileURL</span><span class="p">:</span> <span class="n">rainbowImageURL</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"rainbow"</span><span class="p">)</span>
+    <span class="p">},</span>
+    <span class="nv">encodingCompletion</span><span class="p">:</span> <span class="p">{</span> <span class="n">encodingResult</span> <span class="k">in</span>
+        <span class="k">switch</span> <span class="n">encodingResult</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Success</span><span class="p">(</span><span class="k">let</span> <span class="nv">upload</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+            <span class="n">upload</span><span class="o">.</span><span class="n">responseJSON</span> <span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+                <span class="nf">debugPrint</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="k">case</span> <span class="o">.</span><span class="kt">Failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">encodingError</span><span class="p">):</span>
+            <span class="nf">print</span><span class="p">(</span><span class="n">encodingError</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="下载文件">下载文件</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Alamofire</span><span class="o">.</span><span class="nf">download</span><span class="p">(</span><span class="o">.</span><span class="kt">GET</span><span class="p">,</span> <span class="s">"https://httpbin.org/stream/100"</span><span class="p">)</span> <span class="p">{</span> <span class="n">temporaryURL</span><span class="p">,</span> <span class="n">response</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">fileManager</span> <span class="o">=</span> <span class="kt">NSFileManager</span><span class="o">.</span><span class="nf">defaultManager</span><span class="p">()</span>
+    <span class="k">let</span> <span class="nv">directoryURL</span> <span class="o">=</span> <span class="n">fileManager</span><span class="o">.</span><span class="kt">URLsForDirectory</span><span class="p">(</span><span class="o">.</span><span class="kt">DocumentDirectory</span><span class="p">,</span> <span class="nv">inDomains</span><span class="p">:</span> <span class="o">.</span><span class="kt">UserDomainMask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">let</span> <span class="nv">pathComponent</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">suggestedFilename</span>
+
+    <span class="k">return</span> <span class="n">directoryURL</span><span class="o">.</span><span class="kt">URLByAppendingPathComponent</span><span class="p">(</span><span class="n">pathComponent</span><span class="o">!</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">//设置默认的下载存储位置</span>
+<span class="k">let</span> <span class="nv">destination</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="kt">Request</span><span class="o">.</span><span class="nf">suggestedDownloadDestination</span><span class="p">(</span><span class="nv">directory</span><span class="p">:</span> <span class="o">.</span><span class="kt">DocumentDirectory</span><span class="p">,</span> <span class="nv">domain</span><span class="p">:</span> <span class="o">.</span><span class="kt">UserDomainMask</span><span class="p">)</span>
+<span class="kt">Alamofire</span><span class="o">.</span><span class="nf">download</span><span class="p">(</span><span class="o">.</span><span class="kt">GET</span><span class="p">,</span> <span class="s">"https://httpbin.org/stream/100"</span><span class="p">,</span> <span class="nv">destination</span><span class="p">:</span> <span class="n">destination</span><span class="p">)</span>
+
+<span class="c1">//也提供了 progress 方法检测下载的进度</span>
+<span class="kt">Alamofire</span><span class="o">.</span><span class="nf">download</span><span class="p">(</span><span class="o">.</span><span class="kt">GET</span><span class="p">,</span> <span class="s">"https://httpbin.org/stream/100"</span><span class="p">,</span> <span class="nv">destination</span><span class="p">:</span> <span class="n">destination</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">progress</span> <span class="p">{</span> <span class="n">bytesRead</span><span class="p">,</span> <span class="n">totalBytesRead</span><span class="p">,</span> <span class="n">totalBytesExpectedToRead</span> <span class="k">in</span>
+             <span class="nf">print</span><span class="p">(</span><span class="n">totalBytesRead</span><span class="p">)</span>
+
+             <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">())</span> <span class="p">{</span>
+                 <span class="nf">print</span><span class="p">(</span><span class="s">"Total bytes read on main queue: </span><span class="se">\(</span><span class="n">totalBytesRead</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+             <span class="p">}</span>
+         <span class="p">}</span>
+         <span class="o">.</span><span class="n">response</span> <span class="p">{</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">error</span> <span class="k">in</span>
+             <span class="k">if</span> <span class="k">let</span> <span class="nv">error</span> <span class="o">=</span> <span class="n">error</span> <span class="p">{</span>
+                 <span class="nf">print</span><span class="p">(</span><span class="s">"Failed with error: </span><span class="se">\(</span><span class="n">error</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+             <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                 <span class="nf">print</span><span class="p">(</span><span class="s">"Downloaded file successfully"</span><span class="p">)</span>
+             <span class="p">}</span>
+         <span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="http-验证">HTTP 验证</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">user</span> <span class="o">=</span> <span class="s">"user"</span>
+<span class="k">let</span> <span class="nv">password</span> <span class="o">=</span> <span class="s">"password"</span>
+
+<span class="kt">Alamofire</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="o">.</span><span class="kt">GET</span><span class="p">,</span> <span class="s">"https://httpbin.org/basic-auth/</span><span class="se">\(</span><span class="n">user</span><span class="se">)</span><span class="s">/</span><span class="se">\(</span><span class="n">password</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+         <span class="o">.</span><span class="nf">authenticate</span><span class="p">(</span><span class="nv">user</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span> <span class="nv">password</span><span class="p">:</span> <span class="n">password</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">responseJSON</span> <span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+             <span class="nf">debugPrint</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+         <span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="http-响应状态信息识别">HTTP 响应状态信息识别</h4>
+
+<p>Alamofire 还提供了 HTTP 响应状态的判断识别，通过 validate 方法，对于在我们期望之外的 HTTP 响应状态信息，Alamofire 会提供报错信息：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Alamofire</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="o">.</span><span class="kt">GET</span><span class="p">,</span> <span class="s">"https://httpbin.org/get"</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="s">"foo"</span><span class="p">:</span> <span class="s">"bar"</span><span class="p">])</span>
+         <span class="o">.</span><span class="nf">validate</span><span class="p">(</span><span class="nv">statusCode</span><span class="p">:</span> <span class="mi">200</span><span class="o">..&lt;</span><span class="mi">300</span><span class="p">)</span>
+         <span class="o">.</span><span class="nf">validate</span><span class="p">(</span><span class="nv">contentType</span><span class="p">:</span> <span class="p">[</span><span class="s">"application/json"</span><span class="p">])</span>
+         <span class="o">.</span><span class="n">response</span> <span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+             <span class="nf">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+         <span class="p">}</span>
+</code></pre></div></div>
+
+<p>validate 方法还提供自动识别机制，我们调用 validate 方法时不传入任何参数，则会自动认为 200…299 的状态吗为正常：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">Alamofire</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="o">.</span><span class="kt">GET</span><span class="p">,</span> <span class="s">"https://httpbin.org/get"</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="s">"foo"</span><span class="p">:</span> <span class="s">"bar"</span><span class="p">])</span>
+         <span class="o">.</span><span class="nf">validate</span><span class="p">()</span>
+         <span class="o">.</span><span class="n">responseJSON</span> <span class="p">{</span> <span class="n">response</span> <span class="k">in</span>
+             <span class="k">switch</span> <span class="n">response</span><span class="o">.</span><span class="n">result</span> <span class="p">{</span>
+             <span class="k">case</span> <span class="o">.</span><span class="kt">Success</span><span class="p">:</span>
+                 <span class="nf">print</span><span class="p">(</span><span class="s">"Validation Successful"</span><span class="p">)</span>
+             <span class="k">case</span> <span class="o">.</span><span class="kt">Failure</span><span class="p">(</span><span class="k">let</span> <span class="nv">error</span><span class="p">):</span>
+                 <span class="nf">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+             <span class="p">}</span>
+         <span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h4 id="调试状态">调试状态</h4>
+
+<p>我们通过使用 debugPrint 函数，可以打印出请求的详细信息，这样对我们调试非常的方便：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">request</span> <span class="o">=</span> <span class="kt">Alamofire</span><span class="o">.</span><span class="nf">request</span><span class="p">(</span><span class="o">.</span><span class="kt">GET</span><span class="p">,</span> <span class="s">"https://httpbin.org/get"</span><span class="p">,</span> <span class="nv">parameters</span><span class="p">:</span> <span class="p">[</span><span class="s">"foo"</span><span class="p">:</span> <span class="s">"bar"</span><span class="p">])</span>
+<span class="nf">debugPrint</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>这样就会产生如下输出：</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">curl</span> <span class="o">-</span><span class="n">i</span> <span class="p">\</span>
+    <span class="o">-</span><span class="kt">H</span> <span class="s">"User-Agent: Alamofire"</span> <span class="p">\</span>
+    <span class="o">-</span><span class="kt">H</span> <span class="s">"Accept-Encoding: Accept-Encoding: gzip;q=1.0,compress;q=0.5"</span> <span class="p">\</span>
+    <span class="o">-</span><span class="kt">H</span> <span class="s">"Accept-Language: en;q=1.0,fr;q=0.9,de;q=0.8,zh-Hans;q=0.7,zh-Hant;q=0.6,ja;q=0.5"</span> <span class="p">\</span>
+    <span class="s">"https://httpbin.org/get?foo=bar"</span>
+</code></pre></div></div>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

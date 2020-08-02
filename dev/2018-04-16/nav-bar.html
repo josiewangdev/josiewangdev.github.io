@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			导航栏
+		
+	</title>
+	<meta name="description" content="导航栏">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2018-04-16/nav-bar">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>导航栏</h2>
+					<!-- <p></p> -->
+					<span>2018.04</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2018-04-16/nav-bar" class="enabled">中文 </a>|<a href="/en/dev/2018-04-16/nav-bar"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="导航栏">导航栏</h2>
+
+<hr />
+
+<h4 id="1-调整返回按钮文字位置">1. <a href="#back-button-title">调整返回按钮文字位置</a></h4>
+<h4 id="2-修改返回按钮样式">2. <a href="#back-button-image">修改返回按钮样式</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="back-button-title">1. 调整返回按钮文字位置</h4>
+</blockquote>
+
+<p>在我们不需要在导航栏上显示返回按钮的文字的时候，我们可以用以下代码将按钮文字移出屏幕。</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  Objective-C</span>
+<span class="k">if</span><span class="p">(</span><span class="err">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mi">11</span><span class="p">,</span> <span class="o">*</span><span class="p">))</span> <span class="p">{</span>
+    <span class="p">[[</span><span class="n">UIBarButtonItem</span> <span class="nf">appearance</span><span class="p">]</span> <span class="nf">setTitleTextAttributes</span><span class="p">:@{</span><span class="n">NSForegroundColorAttributeName</span><span class="o">:</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">]}</span> <span class="nf">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+    <span class="p">[[</span><span class="n">UIBarButtonItem</span> <span class="nf">appearance</span><span class="p">]</span> <span class="nf">setTitleTextAttributes</span><span class="p">:@{</span><span class="n">NSForegroundColorAttributeName</span><span class="o">:</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">clearColor</span><span class="p">]}</span> <span class="nf">forState</span><span class="p">:</span><span class="n">UIControlStateHighlighted</span><span class="p">];</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="p">[[</span><span class="n">UIBarButtonItem</span> <span class="nf">appearance</span><span class="p">]</span> <span class="nf">setBackButtonTitlePositionAdjustment</span><span class="p">:</span><span class="n">UIOffsetMake</span><span class="p">(</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="nf">forBarMetrics</span><span class="p">:</span><span class="n">UIBarMetricsDefault</span><span class="p">];</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  Swift</span>
+<span class="kt">UIBarButtonItem</span><span class="o">.</span><span class="nf">appearance</span><span class="p">()</span><span class="o">.</span><span class="nf">setBackButtonTitlePositionAdjustment</span><span class="p">(</span><span class="kt">UIOffsetMake</span><span class="p">(</span><span class="o">-</span><span class="mi">300</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="nv">for</span><span class="p">:</span><span class="kt">UIBarMetrics</span><span class="o">.</span><span class="k">default</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<h4 id="back-button-image">2. 修改返回按钮样式</h4>
+
+<p>使用以下代码修改导航栏返回按钮样式</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">var</span> <span class="nv">backButtonImage</span><span class="p">:</span> <span class="kt">UIImage</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"backButton"</span><span class="p">)</span><span class="o">!</span>
+<span class="kt">UINavigationBar</span><span class="o">.</span><span class="nf">appearance</span><span class="p">()</span><span class="o">.</span><span class="n">backIndicatorImage</span> <span class="o">=</span> <span class="n">backButtonImage</span>
+<span class="kt">UINavigationBar</span><span class="o">.</span><span class="nf">appearance</span><span class="p">()</span><span class="o">.</span><span class="n">backIndicatorTransitionMaskImage</span> <span class="o">=</span> <span class="n">backButtonImage</span>
+</code></pre></div></div>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

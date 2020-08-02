@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			Image
+		
+	</title>
+	<meta name="description" content="Image">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/en/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/en/dev/2017-01-07/image">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>Image</h2>
+					<!-- <p></p> -->
+					<span>2017.01</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item lang">
+					        <a href="/dev/2017-01-07/image">中文 </a>|<a href="/en/dev/2017-01-07/image" class="enabled"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="image">Image</h2>
+
+<hr />
+
+<h4 id="1-crop-image">1. <a href="#crop-image">Crop image</a></h4>
+<h4 id="2-blur-image">2. <a href="#blur-image">Blur Image</a></h4>
+
+<hr />
+<p><br /></p>
+
+<blockquote>
+  <h4 id="crop-image">1. 剪裁图片</h4>
+</blockquote>
+
+<p>自定义剪裁图片视图而非使用系统自带的编辑视图。</p>
+
+<p>将图片放在一个可滚动和缩放的 image view 中。</p>
+
+<p>在 image view 上是一个固定位置的 “剪裁示意框”。</p>
+
+<p>通过示意框的可见区域参数（保留的部分）和边界宽度（剪裁的部分）可以得到图片对应的剪裁区域。</p>
+
+<p>再使用扩展类 <code class="highlighter-rouge">UIImage+Resize</code> 可进行剪裁。</p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="crop-image">1. Crop image</h4>
+</blockquote>
+
+<p>Disable editing for the image picker and handle it yourself.</p>
+
+<p>Put the image in a scrollable, zoomable image view.</p>
+
+<p>On top of the image view is a fixed position “crop guide view” that draws the crop indicator the user sees.</p>
+
+<p>Assuming the guide view has properties for the visible rect (the part to keep) and edge widths (the part to discard) you can get the cropping rectangle like so.</p>
+
+<p>You can use the <code class="highlighter-rouge">UIImage+Resize</code> category to do the actual cropping.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">CGRect</span> <span class="n">cropGuide</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">cropGuideView</span><span class="o">.</span><span class="n">visibleRect</span><span class="p">;</span>
+<span class="kt">UIEdgeInsets</span> <span class="n">edges</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">cropGuideView</span><span class="o">.</span><span class="n">edgeWidths</span><span class="p">;</span>
+<span class="kt">CGPoint</span> <span class="n">cropGuideOffset</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">cropScrollView</span><span class="o">.</span><span class="n">contentOffset</span><span class="p">;</span>
+
+<span class="kt">CGPoint</span> <span class="n">origin</span> <span class="o">=</span> <span class="kt">CGPointMake</span><span class="p">(</span> <span class="n">cropGuideOffset</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">edges</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">cropGuideOffset</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">edges</span><span class="o">.</span><span class="n">top</span> <span class="p">);</span>
+<span class="kt">CGSize</span> <span class="n">size</span> <span class="o">=</span> <span class="n">cropGuide</span><span class="o">.</span><span class="n">size</span><span class="p">;</span>
+<span class="kt">CGRect</span> <span class="n">crop</span> <span class="o">=</span> <span class="p">{</span> <span class="n">origin</span><span class="p">,</span> <span class="n">size</span> <span class="p">};</span>
+
+<span class="n">crop</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">crop</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="k">self</span><span class="o">.</span><span class="n">cropScrollView</span><span class="o">.</span><span class="n">zoomScale</span><span class="p">;</span>
+<span class="n">crop</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">crop</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="k">self</span><span class="o">.</span><span class="n">cropScrollView</span><span class="o">.</span><span class="n">zoomScale</span><span class="p">;</span>
+<span class="n">crop</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">crop</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span> <span class="o">/</span> <span class="k">self</span><span class="o">.</span><span class="n">cropScrollView</span><span class="o">.</span><span class="n">zoomScale</span><span class="p">;</span>
+<span class="n">crop</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">crop</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="k">self</span><span class="o">.</span><span class="n">cropScrollView</span><span class="o">.</span><span class="n">zoomScale</span><span class="p">;</span>
+
+<span class="n">photo</span> <span class="o">=</span> <span class="p">[</span><span class="n">photo</span> <span class="nv">croppedImage</span><span class="p">:</span><span class="n">crop</span><span class="p">];</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="blur-image">2. Blur Image</h4>
+</blockquote>
+
+<p>There are two ways to make the blur effect on a image.</p>
+
+<p>1). Using blur fileter of <code class="highlighter-rouge">CoreImage</code></p>
+
+<p>2). Creating a blurring overlay view using <code class="highlighter-rouge">UIBlurEffect</code></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  CoreImage</span>
+
+<span class="kd">import</span> <span class="kt">CoreImage</span>
+
+<span class="k">var</span> <span class="nv">context</span> <span class="o">=</span> <span class="kt">CIContext</span><span class="p">(</span><span class="nv">options</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">blurEffect</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">//blur image</span>
+    <span class="k">let</span> <span class="nv">currentFilter</span> <span class="o">=</span> <span class="kt">CIFilter</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"CIGaussianBlur"</span><span class="p">)</span> 
+    <span class="k">let</span> <span class="nv">beginImage</span> <span class="o">=</span> <span class="kt">CIImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">bg</span><span class="o">.</span><span class="n">image</span><span class="o">!</span><span class="p">)</span>
+    <span class="n">currentFilter</span><span class="o">!.</span><span class="nf">setValue</span><span class="p">(</span><span class="n">beginImage</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">kCIInputImageKey</span><span class="p">)</span>
+    <span class="n">currentFilter</span><span class="o">!.</span><span class="nf">setValue</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">kCIInputRadiusKey</span><span class="p">)</span>
+    <span class="c1">//crop image</span>
+    <span class="k">let</span> <span class="nv">cropFilter</span> <span class="o">=</span> <span class="kt">CIFilter</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"CICrop"</span><span class="p">)</span>
+    <span class="n">cropFilter</span><span class="o">!.</span><span class="nf">setValue</span><span class="p">(</span><span class="n">currentFilter</span><span class="o">!.</span><span class="n">outputImage</span><span class="p">,</span> <span class="nv">forKey</span><span class="p">:</span> <span class="n">kCIInputImageKey</span><span class="p">)</span>
+    <span class="n">cropFilter</span><span class="o">!.</span><span class="nf">setValue</span><span class="p">(</span><span class="kt">CIVector</span><span class="p">(</span><span class="nv">cgRect</span><span class="p">:</span> <span class="n">beginImage</span><span class="o">!.</span><span class="n">extent</span><span class="p">),</span> <span class="nv">forKey</span><span class="p">:</span> <span class="s">"inputRectangle"</span><span class="p">)</span>
+    <span class="c1">//output</span>
+    <span class="k">let</span> <span class="nv">output</span> <span class="o">=</span> <span class="n">cropFilter</span><span class="o">!.</span><span class="n">outputImage</span> 
+    <span class="k">let</span> <span class="nv">cgimg</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="nf">createCGImage</span><span class="p">(</span><span class="n">output</span><span class="o">!</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">output</span><span class="o">!.</span><span class="n">extent</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">processedImage</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">cgImage</span><span class="p">:</span> <span class="n">cgimg</span><span class="o">!</span><span class="p">)</span>
+    <span class="n">bg</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">processedImage</span> 
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  UIBlurEffect</span>
+
+<span class="kd">func</span> <span class="nf">addBlur</span><span class="p">(</span><span class="n">_</span> <span class="nv">alpha</span><span class="p">:</span> <span class="kt">CGFloat</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// create effect</span>
+    <span class="k">let</span> <span class="nv">effect</span> <span class="o">=</span> <span class="kt">UIBlurEffect</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">dark</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">effectView</span> <span class="o">=</span> <span class="kt">UIVisualEffectView</span><span class="p">(</span><span class="nv">effect</span><span class="p">:</span> <span class="n">effect</span><span class="p">)</span>
+    <span class="c1">// set boundry and alpha</span>
+    <span class="n">effectView</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">bounds</span>
+    <span class="n">effectView</span><span class="o">.</span><span class="n">autoresizingMask</span> <span class="o">=</span> <span class="p">[</span><span class="o">.</span><span class="n">flexibleWidth</span><span class="p">,</span> <span class="o">.</span><span class="n">flexibleHeight</span><span class="p">]</span>
+    <span class="n">effectView</span><span class="o">.</span><span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span>
+    <span class="k">self</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">effectView</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<h4 id="reference-links">Reference links</h4>
+
+<ul>
+  <li><a href="https://github.com/mbcharbonneau/UIImage-Categories">Git - UIImage Categories</a></li>
+</ul>
+
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/en/js/jquery.min.js"></script>
+<script type="text/javascript" src="/en/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/en/js/skel.min.js"></script>
+<script type="text/javascript" src="/en/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/en/js/main.js"></script>
+<!-- <script type="text/javascript" src="/en/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

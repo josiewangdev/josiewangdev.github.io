@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			iOS 开发随笔
+		
+	</title>
+	<meta name="description" content="iOS 开发随笔">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/dev/2018-09-13/ios-notes">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>iOS 开发随笔</h2>
+					<!-- <p></p> -->
+					<span>2018.09</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/dev/2018-09-13/ios-notes" class="enabled">中文 </a>|<a href="/en/dev/2018-09-13/ios-notes"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="ios-开发随笔">iOS 开发随笔</h2>
+
+<hr />
+
+<h4 id="1-nstimer内存管理">1. <a href="#nstimer">NSTimer内存管理</a></h4>
+<h4 id="2-系统版本检查">2. <a href="#system-version">系统版本检查</a></h4>
+<h4 id="3-防止-dylib-注入">3. <a href="#dylib-hooks">防止 dylib 注入</a></h4>
+<h4 id="4-竖屏锁屏的情况下用横屏全屏模式播放视频">4. <a href="#play-video-fullscreen">竖屏锁屏的情况下用横屏全屏模式播放视频</a></h4>
+<h4 id="5-gcd-定时器">5. <a href="#gcd-timer">GCD 定时器</a></h4>
+<h4 id="6-podfile语法">6. <a href="#pod">Podfile语法</a></h4>
+<h4 id="7-开启定位">7. <a href="#locate">开启定位</a></h4>
+<h4 id="8-不同的-url-scheme-进入app展示不同的-launch-image">8. <a href="#launch-image">不同的 URL scheme 进入App展示不同的 launch image</a></h4>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="nstimer">1. NSTimer内存管理</h4>
+</blockquote>
+
+<p>NSTimer会对其对象持有一个强引用，特别是在重复任务定时器中，很有可能产生引用循环。</p>
+
+<p>一个强引用循环没法释放的例子就是，当一个 UIViewController 有一个重复任务的定时器，但是这个定时器又持有了一个对 UIViewController 的强引用，则这个视图控制器将无法被释放。</p>
+
+<p>所以说，当你实例化了一个 NSTimer，你应该 <code class="highlighter-rouge">invalidate</code> (停止)它， 来解决强引用循环的问题。</p>
+
+<p>如果你只是调用了 <code class="highlighter-rouge">scheduledTimerWithTimeInterval</code> 这个方法，但是并没有实例化定时器，那么你的定时器的强引用则会在 <code class="highlighter-rouge">NSTimer</code> 任务完成时被释放。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="system-version">2. 系统版本检查</h4>
+</blockquote>
+
+<p>系统版本为 iOS 8.0 或以上版本的。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">os</span> <span class="o">=</span> <span class="kt">NSProcessInfo</span><span class="p">()</span><span class="o">.</span><span class="n">operatingSystemVersion</span>
+<span class="k">switch</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">majorVersion</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">minorVersion</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">patchVersion</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">case</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &gt;= 8.0.0"</span><span class="p">)</span>
+<span class="k">case</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &gt;= 7.0.0, &lt; 7.1.0"</span><span class="p">)</span>
+<span class="k">case</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &gt;= 7.1.0, &lt; 8.0.0"</span><span class="p">)</span>
+<span class="k">default</span><span class="p">:</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &lt; 7.0.0"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>系统版本低于 iOS 8.0 版本的。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">switch</span> <span class="kt">UIDevice</span><span class="o">.</span><span class="nf">currentDevice</span><span class="p">()</span><span class="o">.</span><span class="n">systemVersion</span><span class="o">.</span><span class="nf">compare</span><span class="p">(</span><span class="s">"8.0.0"</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="kt">NSStringCompareOptions</span><span class="o">.</span><span class="kt">NumericSearch</span><span class="p">)</span> <span class="p">{</span>
+<span class="k">case</span> <span class="o">.</span><span class="kt">OrderedSame</span><span class="p">,</span> <span class="o">.</span><span class="kt">OrderedDescending</span><span class="p">:</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &gt;= 8.0"</span><span class="p">)</span>
+<span class="k">case</span> <span class="o">.</span><span class="kt">OrderedAscending</span><span class="p">:</span>
+    <span class="nf">println</span><span class="p">(</span><span class="s">"iOS &lt; 8.0"</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="dylib-hooks">3. 防止 dylib 注入</h4>
+</blockquote>
+
+<p>将这一行代码加到”Other Linker Flags”里, 可阻止大部分的dylib代码注入。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">-Wl</span>,-sectcreate,__RESTRICT,__restrict,/dev/null
+</code></pre></div></div>
+
+<p><img src="/images/dylib_hook/dylib_hook.jpg" alt="dylib" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="play-video-fullscreen">4. 竖屏锁屏的情况下用横屏全屏模式播放视频</h4>
+</blockquote>
+
+<p>怎样在竖屏锁屏的情况下用横屏全屏模式播放视频？</p>
+
+<p><strong>1).</strong> 首先在 <strong>project target</strong> 中将 <strong>Device Orientation</strong> 勾选 <code class="highlighter-rouge">Portrait</code>, <code class="highlighter-rouge">Landscape left</code>, <code class="highlighter-rouge">Landscape right</code> 几项。</p>
+
+<p><strong>2).</strong> 在 <code class="highlighter-rouge">AppDelegate</code> 文件中添加下列代码</p>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">-</span> <span class="p">(</span><span class="n">NSUInteger</span><span class="p">)</span><span class="nf">application</span><span class="p">:(</span><span class="n">UIApplication</span> <span class="o">*</span><span class="p">)</span><span class="nv">application</span> <span class="nf">supportedInterfaceOrientationsForWindow</span><span class="p">:(</span><span class="n">UIWindow</span> <span class="o">*</span><span class="p">)</span><span class="nv">window</span><span class="p">{</span>
+
+    <span class="n">UIStoryboard</span> <span class="o">*</span><span class="n">mainStoryboard</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIStoryboard</span> <span class="nf">storyboardWithName</span><span class="p">:</span><span class="s">@"Main"</span> <span class="nf">bundle</span><span class="p">:</span> <span class="nb">nil</span><span class="p">];</span>
+
+    <span class="n">ViewControllerThatPlaysVideo</span> <span class="o">*</span><span class="n">currentViewController</span> <span class="o">=</span> <span class="n">ViewControllerThatPlaysVideo</span><span class="o">*</span><span class="p">)[</span><span class="n">mainStoryboard</span> <span class="nf">instantiateViewControllerWithIdentifier</span><span class="p">:</span><span class="s">@"postDetailView"</span><span class="p">];</span>
+    
+    <span class="k">if</span><span class="p">(</span><span class="n">navigationController</span><span class="p">.</span><span class="n">visibleViewController</span> <span class="n">isKindOfClass</span><span class="o">:</span> <span class="p">[</span><span class="n">ViewControllerThatPlaysVideo</span> <span class="nf">class</span><span class="p">]]){</span>
+       <span class="k">if</span><span class="p">([</span><span class="n">currentViewController</span> <span class="nf">playerState</span><span class="p">])</span>
+            <span class="k">return</span> <span class="n">UIInterfaceOrientationMaskLandscape</span><span class="o">|</span><span class="n">UIInterfaceOrientationMaskPortrait</span><span class="p">;</span>
+       <span class="k">return</span> <span class="n">UIInterfaceOrientationMaskPortrait</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">UIInterfaceOrientationMaskPortrait</span><span class="p">;</span>
+
+<span class="p">}</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="gcd-timer">5. GCD 定时器</h4>
+</blockquote>
+
+<p>创建一个GCD的定时器需要经过以下步骤。</p>
+
+<p><strong>1).</strong> 创建一个队列以决定GCD定时器将来回调的方法在哪种队列里执行。</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="p">=</span> <span class="nf">dispatch_get_global_queue</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span> 
+</code></pre></div></div>
+
+<p><strong>2).</strong> 创建一个定时器资源。</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">dispatch_source_t</span> <span class="n">timer</span> <span class="p">=</span> <span class="nf">dispatch_source_create</span><span class="p">(</span><span class="n">DISPATCH_SOURCE_TYPE_TIMER</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">queue</span><span class="p">);</span> 
+</code></pre></div></div>
+
+<p><strong>3).</strong> 设置定时器开始时间，开始后的间隔时间（单位纳秒 NSEC_PER_SEC），以及间隔精准度，代表多少秒的范围是可以接受的。</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">dispatch_source_set_timer</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span> <span class="p">&lt;</span><span class="err">#</span><span class="n">intervalInSeconds</span><span class="err">#</span><span class="p">&gt;</span> <span class="p">*</span> <span class="n">NSEC_PER_SEC</span><span class="p">,</span> <span class="p">&lt;</span><span class="err">#</span><span class="n">leewayInSeconds</span><span class="err">#</span><span class="p">&gt;</span> <span class="p">*</span> <span class="n">NSEC_PER_SEC</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>4).</strong> 设置定时器任务回调。</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">dispatch_source_set_event_handler</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="p">^{</span>
+    <span class="p">&lt;</span><span class="err">#</span><span class="n">code</span> <span class="n">to</span> <span class="n">be</span> <span class="n">executed</span> <span class="n">when</span> <span class="n">timer</span> <span class="n">fires</span><span class="err">#</span><span class="p">&gt;</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p><strong>5).</strong> 开始定时器任务（定时器默认开始是暂停的，需要复位开启）。</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">dispatch_resume</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p><strong>实际应用:</strong> 用GCD定时器实现验证码倒计时按钮。</p>
+
+<div class="language-c# highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">__block</span> <span class="n">NSInteger</span> <span class="n">time</span> <span class="p">=</span> <span class="m">59</span><span class="p">;</span> <span class="c1">//count down time</span>
+
+<span class="n">dispatch_queue_t</span> <span class="n">queue</span> <span class="p">=</span> <span class="nf">dispatch_get_global_queue</span><span class="p">(</span><span class="n">DISPATCH_QUEUE_PRIORITY_DEFAULT</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+
+<span class="n">dispatch_source_t</span> <span class="n">timer</span> <span class="p">=</span> <span class="nf">dispatch_source_create</span><span class="p">(</span><span class="n">DISPATCH_SOURCE_TYPE_TIMER</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">queue</span><span class="p">);</span>
+
+<span class="nf">dispatch_source_set_timer</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span><span class="n">DISPATCH_TIME_NOW</span><span class="p">,</span><span class="m">1.0</span><span class="p">*</span><span class="n">NSEC_PER_SEC</span><span class="p">,</span> <span class="m">0</span><span class="p">);</span>
+
+<span class="nf">dispatch_source_set_event_handler</span><span class="p">(</span><span class="n">timer</span><span class="p">,</span> <span class="p">^{</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">time</span> <span class="p">&lt;=</span> <span class="m">0</span><span class="p">){</span>
+        <span class="nf">dispatch_source_cancel</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>
+        <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">(),</span> <span class="p">^{</span>            
+            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">captchaButton</span> <span class="n">setTitle</span><span class="p">:</span><span class="s">@"send again"</span> <span class="n">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">timeLabel</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="s">@"start"</span><span class="p">;</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">captchaButton</span><span class="p">.</span><span class="n">userInteractionEnabled</span> <span class="p">=</span> <span class="n">YES</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="kt">int</span> <span class="n">seconds</span> <span class="p">=</span> <span class="n">time</span> <span class="p">%</span> <span class="m">60</span><span class="p">;</span>
+        <span class="nf">dispatch_async</span><span class="p">(</span><span class="nf">dispatch_get_main_queue</span><span class="p">(),</span> <span class="p">^{</span>  
+            <span class="n">self</span><span class="p">.</span><span class="n">timeLabel</span><span class="p">.</span><span class="n">text</span> <span class="p">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="n">stringWithFormat</span><span class="p">:</span><span class="s">@"send again (%.2d)s"</span><span class="p">,</span><span class="n">seconds</span><span class="p">];</span>
+            <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">captchaButton</span> <span class="n">setTitle</span><span class="p">:</span><span class="s">@"sent"</span> <span class="n">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+            <span class="n">self</span><span class="p">.</span><span class="n">captchaButton</span><span class="p">.</span><span class="n">userInteractionEnabled</span> <span class="p">=</span> <span class="n">NO</span><span class="p">;</span>
+        <span class="p">});</span>
+        <span class="n">time</span><span class="p">--;</span>
+    <span class="p">}</span>
+<span class="p">});</span> 
+
+<span class="nf">dispatch_resume</span><span class="p">(</span><span class="n">timer</span><span class="p">);</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="pod">6. Podfile语法</h4>
+</blockquote>
+
+<p>CocoaPods 是一款 iOS 开发包管理工具。 只要在你的项目中使用 <strong>pod</strong> 语法创建一个 <strong>Podfile</strong> 并引用, 就可以使用其去安装与管理你所需要的对应版本的开发包以及其相关依赖。 Podfile书写的语法如下:</p>
+
+<p><strong>安装指定版本号的开发库</strong></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  安装版本号为 0.9 的 Objection 库</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">Objection</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="mf">0.9</span><span class="err">'</span> 
+<span class="c1">//  安装版本号高于 0.9 的任何版本的 Objection 库</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">Objection</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="o">&gt;</span><span class="mf">0.9</span><span class="err">'</span> 
+<span class="c1">//  安装版本号为 0.9 或任何更高版本的 Objection 库</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">Objection</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="o">&gt;=</span><span class="mf">0.9</span><span class="err">'</span> 
+<span class="c1">//  安装版本号低于 0.9 的任何版本的 Objection 库</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">Objection</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="o">&lt;</span><span class="mf">0.9</span><span class="err">'</span> 
+<span class="c1">//  安装版本号为 0.9 或任何更低版本的 Objection 库</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">Objection</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="o">&lt;=</span><span class="mf">0.9</span><span class="err">'</span> 
+<span class="c1">//  安装版本号为 0.9.1 至 0.10 之间任何版本的 Objection 库, 但不包括 0.10 版本</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">Objection</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="o">~&gt;</span><span class="mf">0.9</span><span class="o">.</span><span class="mi">1</span><span class="err">'</span> 
+</code></pre></div></div>
+
+<p>对版本号的操作除了指定与不指定，你还可以做其他操作</p>
+
+<p>默认情况下， 依赖项会被安装在所有target的build configuration中。</p>
+
+<p>但为了调试或者处于其他原因，你可以指定依赖项只能在给定的build configuration中被启用</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  指定 PonyDebugger 只能在 Release 和 App Store 这两个 build configuration 中被启用</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">PonyDebugger</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">configurations</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="err">'</span><span class="kt">Release</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="kt">App</span> <span class="kt">Store</span><span class="err">'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>当你用一个名字装Pod的时候，它将安装所有定义在podspec里面的默认subspec。你可以这样指定:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">QueryKit</span><span class="o">/</span><span class="kt">Attribute</span><span class="err">'</span>
+</code></pre></div></div>
+
+<p>也可以指定一个集合，像下面这样:</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">QueryKit</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">subspecs</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="err">'</span><span class="kt">Attribute</span><span class="err">'</span><span class="p">,</span> <span class="err">'</span><span class="kt">QuerySet</span><span class="err">'</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>如果你想用一个自己开发的本地的Pod，你可以用path选项,使用这个选项后，Cocoapods会将给定的文件夹认为是Pod的源，并且在工程中直接引用这些文件。这就意味着你编辑的部分可以保留在CocoaPods安装中。注意：Pod的podspec文件也应该被放在这个文件夹当中</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">path</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="o">~/</span><span class="kt">Documents</span><span class="o">/</span><span class="kt">AFNetworking</span><span class="err">'</span>
+</code></pre></div></div>
+
+<p>有的时候你可能想要使用一个最新的开发版本，或者某一个二次开发版本。如果是这样，你可以在pod声明中特别标明</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  使用仓库中的master分支:</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">git</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/gowalla/AFNetworking.git'</span>
+<span class="c1">//  使用仓库的其他分支:</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">git</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/gowalla/AFNetworking.git', :branch =&gt; 'dev'</span>
+<span class="c1">//  使用仓库的某个tag:</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">git</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/gowalla/AFNetworking.git', :tag =&gt; '0.7.0'</span>
+<span class="c1">//  或者指定一个提交记录:</span>
+<span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">git</span> <span class="o">=&gt;</span> <span class="err">'</span><span class="nv">https</span><span class="p">:</span><span class="c1">//github.com/gowalla/AFNetworking.git', :commit =&gt; '082f8319af'</span>
+</code></pre></div></div>
+
+<p><strong>inhibit_all_warnings</strong> 可以用来屏蔽一个 target 下 cocoapods库里面的所有警告</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">target</span> <span class="err">'</span><span class="n">your</span><span class="o">-</span><span class="n">ios</span><span class="o">-</span><span class="n">project</span><span class="err">'</span> <span class="k">do</span>
+    <span class="n">inhibit_all_warnings</span><span class="o">!</span>
+    <span class="n">pod</span> <span class="err">'</span><span class="kt">AFNetworking</span><span class="err">'</span>
+    <span class="n">pod</span> <span class="err">'</span><span class="kt">QueryKit</span><span class="err">'</span>
+    <span class="o">...</span>
+<span class="n">end</span>
+</code></pre></div></div>
+
+<p>这个特性也能在不同的依赖项里定义,如果你只想屏蔽某个库里面的警告也是可以的</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pod</span> <span class="err">'</span><span class="kt">SSZipArchive</span><span class="err">'</span><span class="p">,</span> <span class="p">:</span><span class="n">inhibit_warnings</span> <span class="o">=&gt;</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="locate">7. 开启定位</h4>
+</blockquote>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  Location.h</span>
+<span class="cp">#import &lt;CoreLocation/CoreLocation.h&gt;
+</span>
+<span class="k">@interface</span> <span class="nc">Location</span> <span class="p">:</span> <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">CLLocationManagerDelegate</span><span class="o">&gt;</span>
+
+<span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="n">CLLocationManager</span> <span class="o">*</span><span class="n">locationManager</span><span class="p">;</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">startLocating</span><span class="p">;</span>
+
+<span class="k">@end</span>
+</code></pre></div></div>
+
+<div class="language-objc highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  Location.m</span>
+
+<span class="k">@implementation</span> <span class="nc">Location</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">startLocating</span><span class="p">{</span>
+     <span class="n">self</span><span class="p">.</span><span class="n">locationManager</span><span class="o">=</span><span class="p">[[</span><span class="n">CLLocationManager</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">locationManager</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">locationManager</span><span class="p">.</span><span class="n">desiredAccuracy</span> <span class="o">=</span> <span class="n">kCLLocationAccuracyBest</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">locationManager</span><span class="p">.</span><span class="n">distanceFilter</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">IS_OS_8_OR_LATER</span><span class="p">)</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">locationManager</span> <span class="nf">requestWhenInUseAuthorization</span><span class="p">];</span><span class="c1">//使用程序其间允许访问位置数据（iOS8定位需要）</span>
+    <span class="p">}</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">locationManager</span> <span class="nf">startUpdatingLocation</span><span class="p">];</span><span class="c1">//开启定位</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma mark - CLLocationManagerDelegate
+</span>
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">locationManager</span><span class="p">:(</span><span class="n">CLLocationManager</span> <span class="o">*</span><span class="p">)</span><span class="nv">manager</span> <span class="nf">didUpdateLocations</span><span class="p">:(</span><span class="n">NSArray</span><span class="o">&lt;</span><span class="n">CLLocation</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="nv">locations</span><span class="p">{</span>
+    <span class="n">CLLocation</span> <span class="o">*</span><span class="n">currLocation</span><span class="o">=</span><span class="p">[</span><span class="n">locations</span> <span class="nf">lastObject</span><span class="p">];</span>
+    <span class="c1">//  update location</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">locationManager</span><span class="p">:(</span><span class="n">CLLocationManager</span> <span class="o">*</span><span class="p">)</span><span class="nv">manager</span> <span class="nf">didFailWithError</span><span class="p">:(</span><span class="n">NSError</span> <span class="o">*</span><span class="p">)</span><span class="nv">error</span><span class="p">{</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">error</span> <span class="nf">code</span><span class="p">]</span><span class="o">==</span><span class="n">kCLErrorDenied</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//  request use authorization</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">([</span><span class="n">error</span> <span class="nf">code</span><span class="p">]</span><span class="o">==</span><span class="n">kCLErrorLocationUnknown</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">//  unknown location</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div></div>
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="launch-image">8. Outdated: 不同的 URL scheme 进入App展示不同的 launch image</h4>
+</blockquote>
+
+<p>如果想要从特定的 url scheme (例如起名为“myscheme”) 跳转到 App 内展示的 launch image 不同, 可以将 launch image 的名字这样设置:</p>
+
+<ul>
+  <li>Default-myscheme~iphone.png –&gt; for no Retina Display 3,5’’ iPhones</li>
+  <li>Default-myscheme@2x~iphone.png –&gt; for Retina Display 3.5’’ iPhones</li>
+  <li>Default-myscheme-568h@2x~iphone.png –&gt; for Retina Display 4’’ iPhones</li>
+  <li>Default-myscheme-Portrait~ipad.png –&gt; for no Retina Display iPads in portrait</li>
+  <li>Default-myscheme-Portrait@2x~ipad.png –&gt; for Retina Display iPads in portrait</li>
+  <li>Default-myscheme-Landscape~ipad.png –&gt; for no Retina Display iPads in landscape</li>
+  <li>Default-myscheme-Landscape@2x~ipad.png –&gt; for Retina Display iPads in landscape</li>
+</ul>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="参考链接">参考链接</h4>
+</blockquote>
+
+<ul>
+  <li><a href="https://www.jianshu.com/p/8af475c4f717">Podfile语法参考（译)</a></li>
+</ul>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>

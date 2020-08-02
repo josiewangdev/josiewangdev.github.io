@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<!--Post Page-->
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>
+		
+			运动计时器
+		
+	</title>
+	<meta name="description" content="运动计时器">
+	<link rel="preload" as="font" href="/fonts/Consolas.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/fonts/Brat.woff" type="font/woff2" crossorigin="anonymous">
+	<link rel="stylesheet" href="/css/main.css" />
+  	<link rel="canonical" href="http://localhost:4000/projects/2020-04-15/fitclock">
+</head>
+	<body>
+		<div class="post-container">
+			<div class="sidebar">
+				<div class="post-intro">
+					<h2>运动计时器</h2>
+					<!-- <p>一个SwiftUI项目的探索开发</p> -->
+					<span>2020.04</span>
+				</div>
+<!-- 				<nav id="lang-sel" >
+				    <ul class="lang">
+				        
+				        
+				        
+				        <li class="masthead_menu-item visible-links">
+					        <a href="/projects/2020-04-15/fitclock" class="enabled">中文 </a>|<a href="/en/projects/2020-04-15/fitclock"> Eng</a>
+				        </li>
+				        
+				    </ul>
+				 </nav> -->
+			</div>
+			<div class="post-content">
+				<h2 id="运动计时器">运动计时器</h2>
+
+<hr />
+
+<p><img src="/images/apps/fitclock.jpg" alt="img" /></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="目录">目录</h3>
+
+<hr />
+
+<h4 id="1-概述">1. <a href="#p1">概述</a></h4>
+
+<p>1.1 <a href="#p11">基本信息</a></p>
+
+<p>1.2 <a href="#p12">结构解读</a></p>
+
+<p>1.3 <a href="#p13">第三方框架的使用</a></p>
+
+<hr />
+
+<h4 id="2-开发随笔">2. <a href="#p2">开发随笔</a></h4>
+
+<p>2.1 <a href="#p21">使用 Swift Package Manager 导入第三方库</a></p>
+
+<p>2.2 <a href="#p22">删除使用 Swift Package Manager 导入的第三方库</a></p>
+
+<p>2.3 <a href="#p23">使用 PreviewProvider 在 Canvas 中预览不同的 UI</a></p>
+
+<p>2.4 <a href="#p24">在 Assets 里配置 Dark 模式下的颜色</a></p>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p1">1. 概述</h3>
+
+<hr />
+
+<p>SwiftUI 是苹果公司于 2019 年推出的 Apple Platform 的新一代声明式布局引擎，随着 WWDC 20 相关新特性和介绍视频的释出，都明确的宣告着 SwiftUI 元年已经到了，SwiftUI 已经成长为新时代的布局引擎。</p>
+
+<p>参考了一些 SwiftUI 开发的视频, 我也尝试性的使用 SwiftUI 开发了一个简单的运动计时App, 并且我已经在平日的锻炼中使用它了。</p>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p11">1.1 基本信息</h4>
+</blockquote>
+
+<p>使用语言: <strong>SwiftUI</strong></p>
+
+<p>系统要求: <strong>iOS</strong></p>
+
+<p>项目性质: <strong>个人开发项目</strong></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p12">1.2 结构解读</h4>
+</blockquote>
+
+<p><img src="/images/fit_clock/p12.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p13">1.3 第三方框架的使用</h4>
+</blockquote>
+
+<ul>
+  <li><a href="">JTAppleCalendar - 日历组件</a></li>
+</ul>
+
+<hr />
+
+<p><br /></p>
+
+<h3 id="p2">2. 开发随笔</h3>
+
+<hr />
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p21">2.1 使用 Swift Package Manager 导入第三方库</h4>
+</blockquote>
+
+<p>在 Xcode 11 中, 给我们提供了一个重要的更新，就是内置了一个名为 Swift Package Manager 的工具。</p>
+
+<p>这个工具让我们可以不再用 Cocoapods, 直接使用 XCode 就能完成对第三方库的集成。</p>
+
+<p><br /></p>
+
+<p><strong>1). File -&gt; Swift Packages -&gt; Add Package Dependency…</strong></p>
+
+<p><img src="/images/fit_clock/p21_1.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<p><strong>2).</strong> 输入第三方库的地址</p>
+
+<p><img src="/images/fit_clock/p21_2.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<p><strong>3).</strong> 选择要安装的版本, 可使用版本号、分支或某次提交的版本</p>
+
+<p><img src="/images/fit_clock/p21_3.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<p><strong>4).</strong> 安装成功</p>
+
+<p><img src="/images/fit_clock/p21_4.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p22">2.2 删除使用 Swift Package Manager 导入的第三方库</h4>
+</blockquote>
+
+<p><strong>PROJECT -&gt; Swift Packages -&gt; 选中要删除的 package -&gt; 点击 “—”</strong></p>
+
+<p><img src="/images/fit_clock/p21_5.jpg" alt="img" /></p>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p23">2.3 使用 PreviewProvider 在 Canvas 中预览不同的 UI</h4>
+</blockquote>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">MyView_Previews</span><span class="p">:</span> <span class="kt">PreviewProvider</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">previews</span><span class="p">:</span> <span class="kd">some</span> <span class="kt">View</span> <span class="p">{</span>
+        <span class="kt">Group</span> <span class="p">{</span>
+            <span class="c1">//  预览 dark 模式下的 UI</span>
+            <span class="kt">MyView</span><span class="p">()</span>
+                <span class="o">.</span><span class="nf">environment</span><span class="p">(\</span><span class="o">.</span><span class="n">colorScheme</span><span class="p">,</span> <span class="o">.</span><span class="n">dark</span><span class="p">)</span>
+            <span class="c1">//  预览 iPhone SE 机型下的 UI</span>
+            <span class="kt">MyView</span><span class="p">()</span>
+                <span class="o">.</span><span class="nf">previewDevice</span><span class="p">(</span><span class="s">"iPhone SE"</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<blockquote>
+  <h4 id="p24">2.4 在 Assets 里配置 Dark 模式下的颜色</h4>
+</blockquote>
+
+<p>在 Assets 资源文件里配置了 <strong>Dark Appearance</strong> 颜色后, 只要在项目中引用颜色时使用颜色名称, 当用户切换正常模式与暗黑模式时, App 就会自动使用另外一个自定义的配色方案。</p>
+
+<p><img src="/images/fit_clock/p24.jpg" alt="img" /></p>
+
+			</div>
+		</div>
+		<!-- Scripts -->
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/jquery.scrollex.min.js"></script>
+<script type="text/javascript" src="/js/skel.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!-- <script type="text/javascript" src="/js/yall.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/intersection-observer@0.7.0/intersection-observer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@14.0.0/dist/lazyload.min.js"></script>
+<script>
+  // document.addEventListener("DOMContentLoaded", yall);
+  var lazyLoadInstance = new LazyLoad({ elements_selector: ".lazy" });
+</script>
+
+	</body>
+</html>
