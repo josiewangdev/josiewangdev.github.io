@@ -27,36 +27,36 @@ Hatcher女士曾经是霍普顿小学的教师，现在已经退休，她的丈�
 
 **The house we use · 我们使用的房子**
 
-![hopetoun1](/images/hopetoun/503315119.jpg)
+![hopetoun1](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/hopetoun/503315119.jpg)
 
 **The house the old couple live in · 老夫妻住的房子**
 
-![hopetoun4](/images/hopetoun/1246712610.jpg)
+![hopetoun4](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/hopetoun/1246712610.jpg)
 
 ---
 
 **Mr Hatcher's workshop**
 
-![hopetoun2](/images/hopetoun/21652815.jpg)
+![hopetoun2](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/hopetoun/21652815.jpg)
 
 **Hatcher先生的工作室**
 
-![hopetoun3](/images/hopetoun/2086570178.jpg)
+![hopetoun3](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/hopetoun/2086570178.jpg)
 
 ---
 
 **Commute · 通勤方式**
 
-![hopetoun6](/images/hopetoun/2053658745.jpg)
+![hopetoun6](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/hopetoun/2053658745.jpg)
 
 **Their dogs · 他们家的牧羊犬**
 
-![hopetoun5](/images/hopetoun/20170410.jpg)
+![hopetoun5](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/hopetoun/20170410.jpg)
 
 **Scenery · 风景**
 
-![hopetoun5](/images/hopetoun/1148272684.jpg)
-
+![hopetoun5](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/hopetoun/1148272684.jpg
+)
 
 
 
