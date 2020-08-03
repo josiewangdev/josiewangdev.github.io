@@ -62,9 +62,11 @@ hr {
 		} 
 		ul {
 			list-style: square inside;
-			font-size: $content-font-size;
 			li {
 				margin: 0.5rem 0;
+			}
+			@include breakpoint(xsmall) {
+				padding-inline-start: 1rem;
 			}
 		}
 		img {
@@ -90,6 +92,9 @@ hr {
 		}
 		@include breakpoint(mid) {
 			column-count: 1;
+		}
+		@include breakpoint(xsmall) {
+			padding: 1.6rem;
 		}
 	}
 }

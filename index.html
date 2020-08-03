@@ -43,7 +43,7 @@ layout: home
 <section class="container-fluid design-section">
 	<div class="row">
 		{% for post in site.categories.Projects %}
-		<div class="col-lg-4 col-md-6 col-sm-6 col-xs-6">
+		<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
 			<div class="masonry-box">
 				<a href="{{ site.baseurl }}{{ post.url }}" title="">
 					<img class="lazy" src="images/loader_big.jpg" data-src="{{post.cover}}" alt="">
