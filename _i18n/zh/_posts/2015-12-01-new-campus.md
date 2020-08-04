@@ -4,7 +4,7 @@ title: 数字报道
 tags: ObjC
 categories: Projects
 cover: https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/campuscloud.jpg
-description: 2015.12 - 2016.03
+description: 2015.08 - 2016.03
 ---
 
 ## [数字报道](https://itunes.apple.com/cn/app/%E7%BE%9A%E8%B7%91%E4%BD%93%E8%82%B2-%E5%AE%B6%E6%A0%A1%E4%BA%92%E5%8A%A8-%E5%85%B1%E5%90%8C%E6%88%90%E9%95%BF/id1233542475?mt=8)
@@ -61,7 +61,7 @@ description: 2015.12 - 2016.03
 
 系统要求: **iOS**
 
-参与时间: **2015.12 - 2016.03**
+参与时间: **2015.08 - 2016.03**
 
 负责部分: 
 

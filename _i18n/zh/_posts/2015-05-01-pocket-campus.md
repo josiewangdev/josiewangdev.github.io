@@ -4,7 +4,7 @@ title: 口袋校园
 tags: ObjC
 categories: Projects
 cover: https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/pocket_campus/pocketcampus.jpg
-description: 2015.05 - 2015.11
+description: 2015.01 - 2015.07
 ---
 
 ## [口袋校园](https://itunes.apple.com/cn/app/kou-dai-xiao-yuan/id993705603?mt=8)  
@@ -63,7 +63,7 @@ description: 2015.05 - 2015.11
 
 系统要求: **iOS**
 
-参与时间: **2015.05 - 2015.11**
+参与时间: **2015.01 - 2015.07**
 
 负责部分:  
 
