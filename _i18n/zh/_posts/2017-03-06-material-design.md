@@ -1,24 +1,42 @@
 ---
 layout: post
-title: 老鞋刷新漆
+title: 设计 · 物
 tags: Design
 categories: Logs
-description: 帆布鞋改造
-cover: "images/shoes/126485415.jpg"
+cover: "https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/design/126485415.jpg"
 ---
 
-·旧帆布鞋
+<br>
 
-·丙烯颜料
-
-·剪掉了后跟(原来磨脚)
+### 目录
 
 ---
 
-**改造前**
+#### 1. [老鞋刷新漆](#p1)
 
-![Before](/images/shoes/1610077896.jpg) 
+#### 2. [班服设计](#p2)
 
-**改造后**
+---
 
-![After](/images/shoes/126485415.jpg)
+<br>
+
+> #### 1. 老鞋刷新漆 {#p1}
+
+![Before](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/design/1610077896.jpg)
+
+![After](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/design/126485415.jpg)
+
+---
+
+<br>
+
+> #### 2. 班服设计 {#p2}
+
+![V1.0](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/design/Tshirt0.jpg) 
+
+![V2.0](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/design/Tshirt1.jpg)
+
+![Show](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/design/show.jpg)
+
+
+

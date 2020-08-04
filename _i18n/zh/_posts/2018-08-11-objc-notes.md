@@ -43,7 +43,7 @@ categories: Dev
 
 通常情况下，在block中的变量默认是将外部变量复制到其数据结构中来访问实现的，在block中对变量的任何修改不会影响到外部变量。
 
-![block](/images/block/block2.png)
+![block](/images/objc_notes/block2.png)
 
 ```objc
 char localCharacter;
@@ -56,7 +56,7 @@ void (^aBlock)(void) = ^(void) {
 
 当使用 `__block` 关键字来修饰的外部变量时，在block中对变量的改变则会同样影响到外部变量，是因为在block中将不再是访问该外部变量复制的值，而是直接访问了该外部变量。
 
-![block](/images/block/block1.png)
+![block](/images/objc_notes/block1.png)
 
 ```objc
 __block char localCharacter;

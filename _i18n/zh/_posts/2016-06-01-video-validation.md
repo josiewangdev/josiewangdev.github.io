@@ -3,7 +3,7 @@ layout: post
 title: 快审
 tags: ObjC
 categories: Projects
-cover: images/apps/kuaishen.jpg
+cover: https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/video_validation/kuaishen.jpg
 description: 2016.07 - 2017.01
 ---
 
@@ -11,7 +11,7 @@ description: 2016.07 - 2017.01
 
 ---
 
-![img](/images/apps/kuaishen.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/video_validation/kuaishen.jpg)
 
 ---
 
@@ -96,7 +96,7 @@ description: 2016.07 - 2017.01
 
 #### 网络层结构
 
-![img](/images/video_validation/p12.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/video_validation/p12.jpg)
 
 <br>
 

@@ -3,7 +3,7 @@ layout: post
 title: 口袋校园
 tags: ObjC
 categories: Projects
-cover: images/apps/pocketcampus.jpg
+cover: https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/pocket_campus/pocketcampus.jpg
 description: 2015.05 - 2015.11
 ---
 
@@ -11,7 +11,7 @@ description: 2015.05 - 2015.11
 
 ---
 
-![img](/images/apps/pocketcampus.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/pocket_campus/pocketcampus.jpg)
 
 ---
 
@@ -95,7 +95,7 @@ description: 2015.05 - 2015.11
 
 #### 网络层结构
 
-![img](/images/pocket_campus/p12.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/pocket_campus/p12.jpg)
 
 <br>
 

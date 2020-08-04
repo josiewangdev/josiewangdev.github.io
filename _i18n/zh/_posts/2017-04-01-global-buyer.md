@@ -3,7 +3,7 @@ layout: post
 title: 环球买手
 tags: Swift
 categories: Projects
-cover: images/apps/globalbuyer.jpg
+cover: https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/globalbuyer.jpg
 description: 2017.04 - 2018.07
 ---
 
@@ -11,7 +11,7 @@ description: 2017.04 - 2018.07
 
 ---
 
-![img](/images/apps/globalbuyer.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/globalbuyer.jpg)
 
 ---
 
@@ -115,7 +115,7 @@ description: 2017.04 - 2018.07
 
 #### 网络层结构
 
-![img](/images/global_buyer/p12.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/p12.jpg)
 
 <br>
 
@@ -381,7 +381,7 @@ Mapbox可以只需要在Mapbox的Studio后台中编辑修改你的地图样式�
 
 <br>
 
-<img src="/images/mapbox/mapbox.gif" />
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/mapbox.gif)
 
 <br>
 
@@ -526,7 +526,7 @@ fileprivate func updateBuyerAnnotationsOnMapView(_ mapView: MGLMapView) {
 
 <br>
 
-<img src="/images/multi_scrollview/view_hierarchy.jpg"/> | <img src="/images/multi_scrollview/multi_scrollview.gif"/>  
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/view_hierarchy.jpg) | ![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/multi_scrollview.gif)
 
 <br>
 
@@ -681,7 +681,7 @@ navigationController.setNavigationBarHidden(true, animated: true)
 
 **问题描述:**
 
-![collectionview](/images/collectionview_flowlayout/shopping_subtypes.jpg)
+![collectionview](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/shopping_subtypes.jpg)
 
 通常在写这样的一个页面中，会需要使用到 `UICollectionView` 并且需要其中的 items 都要左对齐。
 
@@ -734,7 +734,7 @@ if ProcessInfo().isOperatingSystemAtLeast(operatingSystemVersion) {
 
 如果想要在 `cellForRowAtIndexPath` 方法中设置cell的选中状态，不要使用 `setSelected` 方法， 而是使用 `selectRowAtIndexPath` 方法，因为 `setSelected` 会被调起两遍。
 
-![Illustration](/images/20170901/cell_selected.png)
+![Illustration](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/cell_selected.png)
 
 <br>
 
@@ -744,19 +744,19 @@ if ProcessInfo().isOperatingSystemAtLeast(operatingSystemVersion) {
 
 **1). PROJECT -> Info -> Localizations -> 添加其他语言**
 
-![Step1](/images/localized_app/localized_step1.png) 
+![Step1](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/localized_step1.png) 
 
 <br>
 
 **2).** 在工程中，选择 **Resource** 下的 **Strings File** 文件类型，创建新文件，命名为 **Localizable.strings** 。
 
-![Step2](/images/localized_app/localized_step2.png) 
+![Step2](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/localized_step2.png) 
 
 <br>
 
 **3).** 选中创建的 **Localizable.strings** 文件，在右侧属性面板中点击 **Localize...** 创建本地化资源。
 
-![Step3](/images/localized_app/localized_step3.png) 
+![Step3](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/global_buyer/localized_step3.png) 
 
 <br>
 

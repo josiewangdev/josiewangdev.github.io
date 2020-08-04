@@ -3,7 +3,7 @@ layout: post
 title: 数字报道
 tags: ObjC
 categories: Projects
-cover: images/apps/campuscloud.jpg
+cover: https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/campuscloud.jpg
 description: 2015.12 - 2016.03
 ---
 
@@ -11,7 +11,7 @@ description: 2015.12 - 2016.03
 
 ---
 
-![img](/images/apps/campuscloud.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/campuscloud.jpg)
 
 ---
 
@@ -75,7 +75,7 @@ description: 2015.12 - 2016.03
 
 #### 网络层结构
 
-![img](/images/new_campus/p12.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/p12.jpg)
 
 <br>
 
@@ -112,13 +112,13 @@ description: 2015.12 - 2016.03
 
 所以在前端实现时, 所有的页面顺序是不固定的, 相比固定流程的页面, 需求复杂度就大幅上升了。
 
-![img](/images/new_campus/dynamic_flow.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/dynamic_flow.jpg)
 
 根据需求, 大概确定开放框架。
 
-![img](/images/new_campus/hierarchy.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/hierarchy.jpg)
 
-![img](/images/new_campus/p21_1.jpg) | ![img](/images/new_campus/p21_2.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/p21_1.jpg) | ![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/p21_2.jpg)
 
 <br>
 
@@ -126,7 +126,7 @@ description: 2015.12 - 2016.03
 
 项目中, 有个需求为下图中所示的水波纹效果作为背景, 并且需要有动态化的动画效果, 因此不能使用UI给的静态图片直接作为背景, 而是使用代码绘制。
 
-![img](/images/new_campus/water_wave.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/water_wave.jpg)
 
 ```objc
 //  WaterWaveView.h
@@ -234,7 +234,7 @@ description: 2015.12 - 2016.03
 
 <br>
 
-![img](/images/new_campus/p23.jpg)
+![img](https://coderjosie-1258689192.cos.ap-nanjing.myqcloud.com/projects/new_campus/p23.jpg)
 
 <br>
 

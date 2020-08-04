@@ -209,6 +209,7 @@ small {
 //Logs 
 .log-section {
 	.col-item-big,
+	.col-item-mid,
 	.col-item-small {
 		padding: 0;
 		border: 0.34rem solid #fff;
@@ -217,6 +218,18 @@ small {
 		.masonry-box {
 			/*设置图片高度是宽度1.5倍*/
 		    padding-top: 150%;
+			@include breakpoint(xsmall) {
+				padding-top: 100%;
+			}
+		}
+	}
+	.col-item-mid {
+		.masonry-box {
+			/*设置图片高度是宽度1.5倍*/
+		    padding-top: 150%;
+			@include breakpoint(small) {
+				padding-top: 60%;
+			}
 			@include breakpoint(xsmall) {
 				padding-top: 100%;
 			}

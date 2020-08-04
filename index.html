@@ -46,7 +46,7 @@ layout: home
 		<div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
 			<div class="masonry-box">
 				<a href="{{ site.baseurl }}{{ post.url }}" title="">
-					<img class="lazy" src="images/loader_big.jpg" data-src="{{post.cover}}" alt="">
+					<img class="lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="">
 				</a>
 			</div>
 			<div class="app-box">
@@ -158,7 +158,7 @@ layout: home
 		</div>
 
 		{% for post in site.categories.Logs limit:1 offset:4 %}
-		<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-item-big">
+		<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 col-item-mid">
 			<div class="masonry-box">
 				<a href="{{ site.baseurl }}{{ post.url }}" title="">
 					<img class="lazy" src="images/loader.jpg" data-src="{{post.cover}}" alt="">
