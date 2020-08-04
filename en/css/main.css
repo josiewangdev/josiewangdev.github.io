@@ -466,6 +466,7 @@ small {
         font-size: 2.4rem; } }
 
 .log-section .col-item-big,
+.log-section .col-item-mid,
 .log-section .col-item-small {
   padding: 0;
   border: 0.34rem solid #fff; }
@@ -474,6 +475,15 @@ small {
   padding-top: 150%; }
   @media screen and (max-width: 480px) {
     .log-section .col-item-big .masonry-box {
+      padding-top: 100%; } }
+.log-section .col-item-mid .masonry-box {
+  /*设置图片高度是宽度1.5倍*/
+  padding-top: 150%; }
+  @media screen and (max-width: 768px) {
+    .log-section .col-item-mid .masonry-box {
+      padding-top: 60%; } }
+  @media screen and (max-width: 480px) {
+    .log-section .col-item-mid .masonry-box {
       padding-top: 100%; } }
 .log-section .col-item-small {
   border-top: 0.17rem solid #fff; }
@@ -610,7 +620,10 @@ hr {
         .post-container .post-content ul {
           padding-inline-start: 1rem; } }
     .post-container .post-content img {
-      max-width: 80%; }
+      margin-bottom: 2rem;
+      padding: 6px;
+      max-width: 90%;
+      border: 1px dashed #303030; }
     .post-container .post-content strong {
       margin: 1rem 0;
       font-family: inherit, serif;
